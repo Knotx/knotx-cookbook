@@ -17,7 +17,6 @@
 # limitations under the License.
 
 include_recipe 'java::default'
-include_recipe 'maven::default'
 
 group node['knotx']['group'] do
   system true
@@ -37,5 +36,3 @@ directory node['knotx']['base_dir'] do
   group node['knotx']['group']
   mode 0755
 end
-
-package 'git'

@@ -19,17 +19,27 @@
 # This recipe is just PoC to verify potential issues during knotx installation
 # It will be rewritten to HWRP
 
-instance_dir = "#{node['knotx']['base_dir']}/#{node['knotx']['id']}"
+# instance_dir = "#{node['knotx']['base_dir']}/#{node['knotx']['id']}"
+#
+# directory instance_dir do
+#   owner node['knotx']['user']
+#   group node['knotx']['group']
+#   mode 0755
+# end
+#
+# git instance_dir do
+#   user node['knotx']['user']
+#   group node['knotx']['group']
+#   repository node['knotx']['repository']['url']
+#   revision node['knotx']['repository']['revision']
+# end
 
-directory instance_dir do
-  owner node['knotx']['user']
-  group node['knotx']['group']
-  mode 0755
+knotx_instance 'super-knotx' do
+  id 'main'
+  version '0.2.0'
 end
 
-git instance_dir do
-  user node['knotx']['user']
-  group node['knotx']['group']
-  repository node['knotx']['repository']['url']
-  revision node['knotx']['repository']['revision']
+service 'knotx-main' do
+  supports :status => true
+  action [:enable, :start]
 end

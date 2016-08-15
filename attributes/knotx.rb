@@ -20,12 +20,26 @@
 default['knotx']['user'] = 'knotx'
 default['knotx']['group'] = 'knotx'
 default['knotx']['base_dir'] = '/opt/knotx'
+default['knotx']['log_dir'] = '/var/log/knotx'
 
 # Knotx source attributes
-default['knotx']['repository']['url'] =
-  'https://github.com/Cognifide/knotx.git'
-default['knotx']['repository']['revision'] = 'feature/extract-mock-server'
+default['knotx']['release_url'] =
+  'https://github.com/Cognifide/knotx/releases/download'
 
-# Instance name
-# This just temporary placeholder until whoel recipe is rewritten to HWRP
-default['knotx']['id'] = 'main'
+default['knotx']['init_script']['source_cookbook'] = 'knotx'
+default['knotx']['config']['source_cookbook'] = 'knotx'
+
+# JVM default parameters
+default['knotx']['debug_enabled'] = false
+default['knotx']['jmx_enabled'] = true
+
+default['knotx']['port'] = '3000'
+default['knotx']['jmx_ip'] = '0.0.0.0'
+default['knotx']['jmx_port'] = '13000'
+default['knotx']['debug_port'] = '23000'
+
+default['knotx']['min_heap'] = '256'
+default['knotx']['max_heap'] = '1024'
+default['knotx']['max_permsize'] = '256'
+default['knotx']['code_cache'] = '64'
+default['knotx']['extra_opts'] = ''
