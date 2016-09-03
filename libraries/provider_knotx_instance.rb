@@ -20,185 +20,15 @@
 class Chef
   class Provider
     class KnotxInstance < Chef::Provider
-      include Knotx::Helper
+      include Knotx::Helpers
+      include Knotx::LoaderHelpers
+      include Knotx::ResourceHelpers
 
       provides :knotx_instance if Chef::Provider.respond_to?(:provides)
 
       def whyrun_supported?
         true
       end
-
-      #########################################################################
-      # CHECKS
-      #########################################################################
-
-      def knotx_state
-        @current_resource.installed = knotx_installed?
-      end
-
-      # Check if appropriate knotx is installed
-      def knotx_installed?
-        installed = false
-
-        # Currently deployed JAR checksum verification
-
-        if ::File.exist?(new_resource.install_path)
-          new_checksum = new_resource.checksum
-          current_checksum = md5sum(new_resource.install_path)
-          # If checksum doesn't match deployment is required
-          installed = false unless new_checksum == current_checksum
-        end
-
-        installed
-      end
-
-      #########################################################################
-      # CORE ELEMENTS
-      #########################################################################
-
-      # Download of webapp package to work on it
-      def download_file
-        remote_file = Chef::Resource::RemoteFile.new(
-          new_resource.download_path,
-          run_context
-        )
-        remote_file.owner(node['knotx']['user'])
-        remote_file.group(node['knotx']['group'])
-        remote_file.source(new_resource.source)
-        remote_file.mode('0644')
-        remote_file.backup(false)
-
-        remote_file.run_action(:create)
-
-        # Returning downloaded file checksum
-        md5sum(new_resource.download_path)
-      end
-
-      def create_directory(name)
-        directory = Chef::Resource::Directory.new(
-          name,
-          run_context
-        )
-        directory.owner(node['knotx']['user'])
-        directory.group(node['knotx']['group'])
-        directory.mode('0755')
-        directory.recursive(true)
-
-        directory.run_action(:create)
-
-        directory.updated_by_last_action?
-      end
-
-      def init_script_update
-
-        init_script = ::File.join('/etc/init.d/', new_resource.full_id)
-
-        template = Chef::Resource::Template.new(
-          init_script,
-          run_context
-        )
-        template.owner('root')
-        template.group('root')
-        template.cookbook(node['knotx']['init_script']['source_cookbook'])
-        template.source('etc/init.d/knotx.erb')
-        template.mode('0755')
-        template.variables(
-          knotx_root_dir: new_resource.install_dir,
-          knotx_log_dir:  new_resource.log_dir,
-          knotx_id:       new_resource.full_id,
-          knotx_user:     node['knotx']['user']
-        )
-
-        template.run_action(:create)
-
-        template.updated_by_last_action?
-      end
-
-      def jvm_config_update
-        template = Chef::Resource::Template.new(
-          new_resource.config_path,
-          run_context
-        )
-        template.owner(node['knotx']['user'])
-        template.group(node['knotx']['group'])
-        template.cookbook(
-          node['knotx']['config']['source_cookbook']
-        )
-        template.source('knotx/knotx.conf.erb')
-        template.mode('0644')
-        template.variables(
-          knotx_root_dir: new_resource.install_dir,
-          knotx_log_dir:  new_resource.log_dir,
-          debug_enabled:  new_resource.debug_enabled,
-          jmx_enabled:    new_resource.jmx_enabled,
-          jmx_ip:         new_resource.jmx_ip,
-          jmx_port:       new_resource.jmx_port,
-          debug_port:     new_resource.debug_port,
-          min_heap:       new_resource.min_heap,
-          max_heap:       new_resource.max_heap,
-          max_permsize:   new_resource.max_permsize,
-          code_cache:     new_resource.code_cache,
-          extra_opts:     new_resource.extra_opts
-        )
-
-        template.run_action(:create)
-
-        template.updated_by_last_action?
-      end
-
-      def local_copy
-        local_path = "file://#{new_resource.download_path}"
-
-        remote_file = Chef::Resource::RemoteFile.new(
-          new_resource.install_path,
-          run_context
-        )
-        remote_file.owner(node['knotx']['user'])
-        remote_file.group(node['knotx']['group'])
-        remote_file.source(local_path)
-        remote_file.mode('0755')
-        remote_file.backup(false)
-
-        remote_file.run_action(:create)
-      end
-
-      def link_current_version
-        link_name = ::File.join(new_resource.install_dir, '/knotx.jar')
-
-        link = Chef::Resource::Link.new(
-          link_name,
-          run_context
-        )
-        link.to(new_resource.install_path)
-
-        link.run_action(:create)
-
-        link.updated_by_last_action?
-      end
-
-      def install_knotx
-        # Create base installation directory
-        create_directory(new_resource.install_dir)
-
-        # Create logging directory
-        create_directory(new_resource.log_dir)
-
-        # Configure init script
-        init_script_update
-
-        # Create config
-        jvm_config_update
-
-        # Copy current knotx version to install directory
-        local_copy
-
-        # Link current knotx version to common name
-        link_current_version
-      end
-
-      #########################################################################
-      # MAIN ACTIONS
-      #########################################################################
 
       # Downloading appropriate knotx and getting current state
       def load_current_resource
@@ -254,26 +84,115 @@ class Chef
           "Knotx install path: #{new_resource.download_path}"
         )
 
-        # Cummulative JVM opts loader for brevity
+        @new_resource.checksum =
+          get_file(new_resource.source, new_resource.download_path)
+
+        # Cumulative JVM opts loader for brevity
         load_jvm_vars
 
-        @new_resource.checksum = download_file
-
         knotx_state
+      end
+
+      def knotx_state
+        @current_resource.installed = knotx_installed?
+        @current_resource.reconfigured = knotx_reconfigured?
+      end
+
+      # Check if appropriate knotx is installed
+      def knotx_installed?
+        # Currently deployed JAR checksum verification
+        if ::File.exist?(new_resource.install_path)
+
+          new_checksum = new_resource.checksum
+          current_checksum = md5sum(new_resource.install_path)
+          # If checksum doesn't match deployment is required
+          return true if new_checksum == current_checksum
+        end
+
+        # TODO: Implement additional checks for log_dir, base_dir etc.
+
+        false
+      end
+
+      def knotx_reconfigured?
+        # Mark as reconfigured if not yet installed or reconfiguration happend
+        return true if !current_resource.installed || configure_knotx
+        false
+      end
+
+      def configure_knotx
+        changed = false
+
+        # Update init script
+        changed = true if init_script_update(
+          new_resource.full_id,
+          new_resource.install_dir,
+          new_resource.log_dir
+        )
+
+        # Update startup JVM config
+        changed = true if jvm_config_update(
+          new_resource.config_path,
+          new_resource.install_dir,
+          new_resource.log_dir,
+          new_resource.debug_enabled,
+          new_resource.jmx_enabled,
+          new_resource.jmx_ip,
+          new_resource.jmx_port,
+          new_resource.debug_port,
+          new_resource.min_heap,
+          new_resource.max_heap,
+          new_resource.max_permsize,
+          new_resource.code_cache,
+          new_resource.extra_opts
+        )
+
+        # Update knotx config
+        # configured = knotx_config_update
+
+        # We cannot assing reconfiged directly to input as it can have false
+        # value and override status from install action
+        new_resource.updated_by_last_action(true) if changed
+        changed
+      end
+
+      def install_knotx
+        changed = false
+
+        # Create base installation directory
+        changed = true if create_directory(new_resource.install_dir)
+
+        # Create logging directory
+        changed = true if create_directory(new_resource.log_dir)
+
+        # Copy current knotx version to install directory
+        get_file(
+          "file://#{new_resource.download_path}",
+          new_resource.install_path
+        )
+
+        # Link current knotx version to common name
+        changed = true if link_current_version(
+          new_resource.install_path,
+          new_resource.install_dir
+        )
+
+        new_resource.updated_by_last_action(true) if changed
+        changed
+      end
+
+      def restart_knotx
+        true
       end
 
       # Performing install action
       def action_install
         install_required = false
+        restart_required = false
 
         # Install requirement check
         if !current_resource.installed
-          puts '\n///////////////////////////////'
-          puts current_resource.installed
-          puts '///////////////////////////////'
-
           install_required = true
-
           Chef::Log.info("Knotx instance #{current_resource.id}' "\
             'requires installation. Installing...')
         else
@@ -281,8 +200,24 @@ class Chef
             'is already installed in appropriate version.')
         end
 
-        # If install is required, install knotx
-        install_knotx if install_required
+        # If install is required, install knotx and perform first time config
+        if install_required
+          install_knotx
+          configure_knotx
+        end
+
+        # Restart requirement check
+        if current_resource.reconfigured
+          restart_required = true
+          Chef::Log.info("Knotx instance #{current_resource.id}' "\
+            'requires restart. Restart scheduled...')
+        else
+          Chef::Log.info("Knotx instance '#{current_resource.id}' "\
+            'does not require restart.')
+        end
+
+        # If restart required, restart knotx
+        restart_knotx if restart_required
       rescue
         Chef::Application.fatal!(
           "Installing knotx instance '#{new_resource.id}' failed!"

@@ -27,20 +27,17 @@ default['knotx']['release_url'] =
   # 'https://github.com/Cognifide/knotx/releases/download'
   'https://github.com/karoldrazek/cookbook-knotx/releases/download'
 
-default['knotx']['init_script']['source_cookbook'] = 'knotx'
-default['knotx']['config']['source_cookbook'] = 'knotx'
-
 # JVM default parameters
 default['knotx']['debug_enabled'] = false
 default['knotx']['jmx_enabled'] = true
 
 default['knotx']['port'] = '8092'
 default['knotx']['jmx_ip'] = '0.0.0.0'
-default['knotx']['jmx_port'] = '18092'
+default['knotx']['jmx_port'] = '18091'
 default['knotx']['debug_port'] = '28092'
 
 default['knotx']['min_heap'] = '256'
-default['knotx']['max_heap'] = '1023'
+default['knotx']['max_heap'] = '1024'
 default['knotx']['max_permsize'] = '256'
 default['knotx']['code_cache'] = '64'
 default['knotx']['extra_opts'] = ''

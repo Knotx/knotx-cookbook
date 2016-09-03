@@ -23,6 +23,7 @@ class Chef
       provides :knotx_instance
 
       attr_accessor :installed
+      attr_accessor :reconfigured
       attr_accessor :download_path
       attr_accessor :install_path
       attr_accessor :install_dir
