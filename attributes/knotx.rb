@@ -27,6 +27,54 @@ default['knotx']['release_url'] =
   # 'https://github.com/Cognifide/knotx/releases/download'
   'https://github.com/karoldrazek/cookbook-knotx/releases/download'
 
+# Knotx setup attributes
+
+# TODO: add possibility to provide config in json form in single variable
+
+# Server settings
+default['knotx']['server_config']['http.port'] = 8092
+default['knotx']['server_config']['preserved.headers'] = [
+  'User-Agent',
+  'X-Solr-Core-Key',
+  'X-Language-Code'
+]
+default['knotx']['server_config']['dependencies']['repository.address'] =
+  'template-repository'
+default['knotx']['server_config']['dependencies']['engine.address'] =
+  'template-engine'
+
+# Repositories settings
+default['knotx']['repo_config']['service.name'] = 'template-repository'
+default['knotx']['repo_config']['repositories'] = [
+  {
+    'type' => 'local',
+    'path' => '/content/local/.*',
+    'catalogue' => ''
+  },
+  {
+    'type' => 'remote',
+    'path' => '/content/.*',
+    'domain' => 'localhost',
+    'part' => 3001
+  }
+]
+
+# Engine settings
+default['knotx']['engine_config']['service.name'] = 'template-engine'
+default['knotx']['engine_config']['template-debug'] = true
+default['knotx']['engine_config']['services'] = [
+  {
+    'path' => '/service/mock/.*',
+    'domain' => 'localhost',
+    'port' => 3000
+  },
+  {
+    'path' => '/service/.*',
+    'domain' => 'localhost',
+    'port' => 8080
+  }
+]
+
 # JVM default parameters (those can be specifically overridden per instance)
 #
 # For example default['knotx']['main']['debug_enabled'] = true will override

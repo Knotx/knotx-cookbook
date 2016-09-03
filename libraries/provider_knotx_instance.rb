@@ -20,7 +20,7 @@
 class Chef
   class Provider
     class KnotxInstance < Chef::Provider
-      include Knotx::Helpers
+      include Knotx::HttpHelpers
       include Knotx::LoaderHelpers
       include Knotx::ResourceHelpers
 
@@ -33,6 +33,8 @@ class Chef
       # Downloading appropriate knotx and getting current state
       def load_current_resource
         @current_resource = Chef::Resource::KnotxInstance.new(new_resource.name)
+
+        # TODO: This part will have to be simplified
 
         if new_resource.source.nil?
           ver = new_resource.version
@@ -151,10 +153,12 @@ class Chef
         )
 
         # Update knotx config
-        # configured = knotx_config_update
+        changed = true if knotx_config_update(
+          "#{new_resource.install_dir}/config.json"
+        )
 
-        # We cannot assing reconfiged directly to input as it can have false
-        # value and override status from install action
+        # We cannot assign 'changed' directly to input as it can have false
+        # value and it can override status from install action
         new_resource.updated_by_last_action(true) if changed
         changed
       end

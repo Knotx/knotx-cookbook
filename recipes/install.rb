@@ -22,18 +22,3 @@ knotx_instance 'Knotx Main: Install' do
   id 'main'
   version '0.3.0-SNAPSHOT'
 end
-
-knotx_instance 'Knotx Slave: Install' do
-  id 'slave'
-  version '0.3.0-SNAPSHOT'
-end
-
-knotx_instance 'Knotx Slave2: Install' do
-  id 'slave2'
-  version '0.3.0-SNAPSHOT'
-end
-
-knotx_instance 'Knotx Slave3: Install' do
-  id 'slave3'
-  version '0.3.0-SNAPSHOT'
-end

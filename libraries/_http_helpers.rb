@@ -17,7 +17,7 @@
 # limitations under the License.
 
 module Knotx
-  module Helpers
+  module HttpHelpers
     def parse_uri(addr, path)
       uri = escape_uri(addr + path)
       URI.parse(uri)

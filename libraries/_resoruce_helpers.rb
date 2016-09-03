@@ -18,6 +18,7 @@
 
 module Knotx
   module ResourceHelpers
+    include Knotx::ConfigHelpers
 
     # Download of webapp package to work on it
     def get_file(src, dst)
@@ -112,6 +113,22 @@ module Knotx
         code_cache:     code_cache,
         extra_opts:     extra_opts
       )
+      template.run_action(:create)
+      template.updated_by_last_action?
+    end
+
+    # TODO: Consider rewrite to File operations
+    def knotx_config_update(config_path)
+      template = Chef::Resource::Template.new(
+        config_path,
+        run_context
+      )
+      template.owner(node['knotx']['user'])
+      template.group(node['knotx']['group'])
+      template.cookbook('knotx')
+      template.source('knotx/config.json.erb')
+      template.mode('0644')
+      template.variables(generated_config: generate_config)
       template.run_action(:create)
       template.updated_by_last_action?
     end
