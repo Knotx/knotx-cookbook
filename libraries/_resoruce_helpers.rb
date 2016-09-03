@@ -126,5 +126,27 @@ module Knotx
       link.run_action(:create)
       link.updated_by_last_action?
     end
+
+    def configure_service(service_name)
+      service = Chef::Resource::Service.new(
+        service_name,
+        run_context
+      )
+      service.service_name(service_name)
+      service.supports(status: true)
+      service.run_action(:start)
+      service.run_action(:enable)
+      service.updated_by_last_action?
+    end
+
+    def execute_restart(service_name)
+      # This restart happens exatly at the end of current knotx resource
+      service = Chef::Resource::Service.new(
+        "restart-#{service_name}",
+        run_context
+      )
+      service.service_name(service_name)
+      service.run_action(:restart)
+    end
   end
 end

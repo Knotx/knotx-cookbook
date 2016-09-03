@@ -1,8 +1,7 @@
 # knotx
 
 TODO:
-* way better handling of idempotency in provider (top priority!)
+* further improve logic in HWRP
 * switch between core and example possible
-* repository.yml, service.yml management
 * jar cleanup after version switch
 * start action

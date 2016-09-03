@@ -130,6 +130,9 @@ class Chef
           new_resource.log_dir
         )
 
+        # Add knotx service to managed resources
+        configure_service(new_resource.full_id)
+
         # Update startup JVM config
         changed = true if jvm_config_update(
           new_resource.config_path,
@@ -182,7 +185,7 @@ class Chef
       end
 
       def restart_knotx
-        true
+        execute_restart(new_resource.full_id)
       end
 
       # Performing install action

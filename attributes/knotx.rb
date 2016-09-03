@@ -27,13 +27,17 @@ default['knotx']['release_url'] =
   # 'https://github.com/Cognifide/knotx/releases/download'
   'https://github.com/karoldrazek/cookbook-knotx/releases/download'
 
-# JVM default parameters
+# JVM default parameters (those can be specifically overridden per instance)
+#
+# For example default['knotx']['main']['debug_enabled'] = true will override
+# current setting for 'main' knotx instance.
+
 default['knotx']['debug_enabled'] = false
 default['knotx']['jmx_enabled'] = true
 
 default['knotx']['port'] = '8092'
 default['knotx']['jmx_ip'] = '0.0.0.0'
-default['knotx']['jmx_port'] = '18091'
+default['knotx']['jmx_port'] = '18092'
 default['knotx']['debug_port'] = '28092'
 
 default['knotx']['min_heap'] = '256'
