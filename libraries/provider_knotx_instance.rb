@@ -103,10 +103,10 @@ class Chef
         template.source('etc/init.d/knotx.erb')
         template.mode('0755')
         template.variables(
-          :knotx_root_dir  => new_resource.install_dir,
-          :knotx_log_dir  => new_resource.log_dir,
-          :knotx_id  => new_resource.full_id,
-          :knotx_user => node['knotx']['user']
+          knotx_root_dir: new_resource.install_dir,
+          knotx_log_dir:  new_resource.log_dir,
+          knotx_id:       new_resource.full_id,
+          knotx_user:     node['knotx']['user']
         )
 
         template.run_action(:create)
@@ -127,8 +127,18 @@ class Chef
         template.source('knotx/knotx.conf.erb')
         template.mode('0644')
         template.variables(
-          :min_heap => new_resource.min_heap,
-          :max_heap => new_resource.max_heap
+          knotx_root_dir: new_resource.install_dir,
+          knotx_log_dir:  new_resource.log_dir,
+          debug_enabled:  new_resource.debug_enabled,
+          jmx_enabled:    new_resource.jmx_enabled,
+          jmx_ip:         new_resource.jmx_ip,
+          jmx_port:       new_resource.jmx_port,
+          debug_port:     new_resource.debug_port,
+          min_heap:       new_resource.min_heap,
+          max_heap:       new_resource.max_heap,
+          max_permsize:   new_resource.max_permsize,
+          code_cache:     new_resource.code_cache,
+          extra_opts:     new_resource.extra_opts
         )
 
         template.run_action(:create)
@@ -245,7 +255,7 @@ class Chef
         )
 
         # Cummulative JVM opts loader for brevity
-        load_vars
+        load_jvm_vars
 
         @new_resource.checksum = download_file
 
@@ -258,6 +268,10 @@ class Chef
 
         # Install requirement check
         if !current_resource.installed
+          puts '\n///////////////////////////////'
+          puts current_resource.installed
+          puts '///////////////////////////////'
+
           install_required = true
 
           Chef::Log.info("Knotx instance #{current_resource.id}' "\

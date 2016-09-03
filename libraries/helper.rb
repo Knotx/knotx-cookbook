@@ -76,7 +76,7 @@ module Knotx
       Digest::MD5.file(filepath).hexdigest
     end
 
-    def load_vars
+    def load_jvm_vars
       %w(
         debug_enabled
         jmx_enabled
@@ -93,7 +93,6 @@ module Knotx
            node['knotx'][new_resource.id].key?(var)
           @new_resource.send("#{var}=", node['knotx'][new_resource.id][var])
         else
-          puts "Common var: #{node['knotx'][var]}"
           @new_resource.send("#{var}=", node['knotx'][var])
         end
         Chef::Log.debug("Value of #{var}: #{new_resource.send(var)}")

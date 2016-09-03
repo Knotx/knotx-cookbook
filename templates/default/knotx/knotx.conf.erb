@@ -2,21 +2,21 @@
 
 # Knotx general attributes
 
-KNOTX_GENERAL_OPTS="-conf "
+KNOTX_GENERAL_OPTS="-conf <%= @knotx_root_dir %>/standalone.json"
 
 # Knotx JVM attributes
 
 KNOTX_MIN_HEAP=<%= @min_heap %>
 KNOTX_MAX_HEAP=<%= @max_heap %>
-KNOTX_MAX_PERMSIZE=<%= node['knotx']['max_permsize'] %>
-KNOTX_CODE_CACHE=<%= node['knotx']['code_cache'] %>
-KNOTX_JMX_IP=<%= node['knotx']['jmx_ip'] %>
-KNOTX_JMX_PORT=<%= node['knotx']['jmx_port'] %>
-KNOTX_DEBUG_PORT=<%= node['knotx']['debug_port'] %>
-KNOTX_EXTRA_OPTS=<%= node['knotx']['extra_opts'] %>
+KNOTX_MAX_PERMSIZE=<%= @max_permsize %>
+KNOTX_CODE_CACHE=<%= @code_cache %>
+KNOTX_JMX_IP=<%= @jmx_ip %>
+KNOTX_JMX_PORT=<%= @jmx_port %>
+KNOTX_DEBUG_PORT=<%= @debug_port %>
+KNOTX_EXTRA_OPTS=<%= @extra_opts %>
 
 KNOTX_GC_OPTS="
-  -Xloggc:<%= node['knotx']['log_dir'] %>/gc.log
+  -Xloggc:<%= @knotx_log_dir %>/gc.log
   -XX:+PrintGCApplicationStoppedTime
   -XX:+PrintGCApplicationConcurrentTime
   -XX:+PrintGC
@@ -26,7 +26,7 @@ KNOTX_GC_OPTS="
   -XX:NumberOfGCLogFiles=10
   -XX:GCLogFileSize=5M"
 
-<%- if node['knotx']['jmx_enabled'] == true -%>
+<%- if @jmx_enabled == true -%>
 KNOTX_JMX_OPTS="
   -Dcom.sun.management.jmxremote
   -Dcom.sun.management.jmxremote.port=${KNOTX_JMX_PORT}
@@ -36,7 +36,7 @@ KNOTX_JMX_OPTS="
   -Dcom.sun.management.jmxremote.authenticate=false"
 <%- end -%>
 
-<%- if node['knotx']['debug_enabled'] == true -%>
+<%- if @debug_enabled == true -%>
 KNOTX_DEBUG_OPTS="
   -Xdebug
   -Xrunjdwp:transport=dt_socket,address=${KNOTX_DEBUG_PORT},server=y,suspend=n"
