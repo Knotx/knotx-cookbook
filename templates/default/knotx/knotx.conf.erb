@@ -1,54 +1,54 @@
-# #!/bin/bash
-#
-# # Knotx JVM attributes
-#
-# KNOTX_MIN_HEAP=<%= @jvm_min_heap %>
-# KNOTX_MAX_HEAP=<%= @jvm_max_heap %>
-# KNOTX_MAX_PERMSIZE=<%= node['knotx']['max_permsize'] %>
-# KNOTX_CODE_CACHE=<%= node['knotx']['code_cache'] %>
-# KNOTX_JMX_IP=<%= node['knotx']['jmx_ip'] %>
-# KNOTX_JMX_PORT=<%= node['knotx']['jmx_port'] %>
-# KNOTX_DEBUG_PORT=<%= node['knotx']['debug_port'] %>
-# KNOTX_EXTRA_OPTS=<%= node['knotx']['extra_opts'] %>
-#
-# KNOTX_GENERAL_OPTS="
-#   -Dservice.configuration=service.yml
-#   -Drepository.configuration=repository.yml"
-#
-# KNOTX_GC_OPTS="
-#   -Xloggc:<%= node['knotx']['log_dir'] %>/gc.log
-#   -XX:+PrintGCApplicationStoppedTime
-#   -XX:+PrintGCApplicationConcurrentTime
-#   -XX:+PrintGC
-#   -XX:+PrintGCTimeStamps
-#   -XX:+PrintGCDetails
-#   -XX:+UseGCLogFileRotation
-#   -XX:NumberOfGCLogFiles=10
-#   -XX:GCLogFileSize=5M"
-#
-# <%- if node['knotx']['jmx_enabled'] == true -%>
-# KNOTX_JMX_OPTS="
-#   -Dcom.sun.management.jmxremote
-#   -Dcom.sun.management.jmxremote.port=${KNOTX_JMX_PORT}
-#   -Dcom.sun.management.jmxremote.rmi.port=${KNOTX_JMX_PORT}
-#   -Djava.rmi.server.hostname=${KNOTX_JMX_IP}
-#   -Dcom.sun.management.jmxremote.ssl=false
-#   -Dcom.sun.management.jmxremote.authenticate=false"
-# <%- end -%>
-#
-# <%- if node['knotx']['debug_enabled'] == true -%>
-# KNOTX_DEBUG_OPTS="
-#   -Xdebug
-#   -Xrunjdwp:transport=dt_socket,address=${KNOTX_DEBUG_PORT},server=y,suspend=n"
-# <%- end -%>
-#
-# JAVA_OPTS="
-#   ${KNOTX_GENERAL_OPTS}
-#   -Xms${KNOTX_MIN_HEAP}m
-#   -Xmx${KNOTX_MAX_HEAP}m
-#   -XX:MaxPermSize=${KNOTX_MAX_PERMSIZE}m
-#   -XX:ReservedCodeCacheSize=${KNOTX_CODE_CACHE}m
-#   ${KNOTX_JMX_OPTS}
-#   ${KNOTX_DEBUG_OPTS}
-#   ${KNOTX_GC_OPTS}
-#   ${KNOTX_EXTRA_OPTS}"
+#!/bin/bash
+
+# Knotx general attributes
+
+KNOTX_GENERAL_OPTS="-conf "
+
+# Knotx JVM attributes
+
+KNOTX_MIN_HEAP=<%= @min_heap %>
+KNOTX_MAX_HEAP=<%= @max_heap %>
+KNOTX_MAX_PERMSIZE=<%= node['knotx']['max_permsize'] %>
+KNOTX_CODE_CACHE=<%= node['knotx']['code_cache'] %>
+KNOTX_JMX_IP=<%= node['knotx']['jmx_ip'] %>
+KNOTX_JMX_PORT=<%= node['knotx']['jmx_port'] %>
+KNOTX_DEBUG_PORT=<%= node['knotx']['debug_port'] %>
+KNOTX_EXTRA_OPTS=<%= node['knotx']['extra_opts'] %>
+
+KNOTX_GC_OPTS="
+  -Xloggc:<%= node['knotx']['log_dir'] %>/gc.log
+  -XX:+PrintGCApplicationStoppedTime
+  -XX:+PrintGCApplicationConcurrentTime
+  -XX:+PrintGC
+  -XX:+PrintGCTimeStamps
+  -XX:+PrintGCDetails
+  -XX:+UseGCLogFileRotation
+  -XX:NumberOfGCLogFiles=10
+  -XX:GCLogFileSize=5M"
+
+<%- if node['knotx']['jmx_enabled'] == true -%>
+KNOTX_JMX_OPTS="
+  -Dcom.sun.management.jmxremote
+  -Dcom.sun.management.jmxremote.port=${KNOTX_JMX_PORT}
+  -Dcom.sun.management.jmxremote.rmi.port=${KNOTX_JMX_PORT}
+  -Djava.rmi.server.hostname=${KNOTX_JMX_IP}
+  -Dcom.sun.management.jmxremote.ssl=false
+  -Dcom.sun.management.jmxremote.authenticate=false"
+<%- end -%>
+
+<%- if node['knotx']['debug_enabled'] == true -%>
+KNOTX_DEBUG_OPTS="
+  -Xdebug
+  -Xrunjdwp:transport=dt_socket,address=${KNOTX_DEBUG_PORT},server=y,suspend=n"
+<%- end -%>
+
+STARTUP_OPTS="
+  ${KNOTX_GENERAL_OPTS}
+  -Xms${KNOTX_MIN_HEAP}m
+  -Xmx${KNOTX_MAX_HEAP}m
+  -XX:MaxPermSize=${KNOTX_MAX_PERMSIZE}m
+  -XX:ReservedCodeCacheSize=${KNOTX_CODE_CACHE}m
+  ${KNOTX_JMX_OPTS}
+  ${KNOTX_DEBUG_OPTS}
+  ${KNOTX_GC_OPTS}
+  ${KNOTX_EXTRA_OPTS}"

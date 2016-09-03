@@ -114,7 +114,7 @@ class Chef
         template.updated_by_last_action?
       end
 
-      def config_update
+      def jvm_config_update
         template = Chef::Resource::Template.new(
           new_resource.config_path,
           run_context
@@ -127,8 +127,8 @@ class Chef
         template.source('knotx/knotx.conf.erb')
         template.mode('0644')
         template.variables(
-          :jvm_min_heap => new_resource.jvm_min_heap,
-          :jvm_max_heap => new_resource.jvm_max_heap
+          :min_heap => new_resource.min_heap,
+          :max_heap => new_resource.max_heap
         )
 
         template.run_action(:create)
@@ -152,7 +152,7 @@ class Chef
         remote_file.run_action(:create)
       end
 
-      def link_knotx
+      def link_current_version
         link_name = ::File.join(new_resource.install_dir, '/knotx.jar')
 
         link = Chef::Resource::Link.new(
@@ -177,92 +177,18 @@ class Chef
         init_script_update
 
         # Create config
-        config_update
+        jvm_config_update
 
-        # Manage current active knotx
+        # Copy current knotx version to install directory
         local_copy
-        link_knotx
 
+        # Link current knotx version to common name
+        link_current_version
       end
 
       #########################################################################
       # MAIN ACTIONS
       #########################################################################
-
-      def load_jvm_opts
-        # Load minimum heap size
-        if defined? node['knotx'][new_resource.id]['min_heap']
-          @new_resource.jvm_min_heap =
-            node['knotx'][new_resource.id]['min_heap']
-        else
-          @new_resource.jvm_min_heap = node['knotx']['min_heap']
-
-        end
-        Chef::Log.debug("Minimum heap size: #{new_resource.jvm_min_heap}")
-
-        # Load maximum heap size
-        if defined? node['knotx'][new_resource.id]['max_heap']
-          @new_resource.jvm_max_heap =
-            node['knotx'][new_resource.id]['max_heap']
-        else
-          @new_resource.jvm_max_heap = node['knotx']['max_heap']
-        end
-        Chef::Log.debug("Maximum heap size: #{new_resource.jvm_max_heap}")
-
-        # Load maximum perm size
-        if defined? node['knotx'][new_resource.id]['max_permsize']
-          @new_resource.jvm_max_permsize =
-            node['knotx'][new_resource.id]['max_permsize']
-        else
-          @new_resource.jvm_max_permsize = node['knotx']['max_permsize']
-        end
-        Chef::Log.debug("Max perm size: #{new_resource.jvm_max_permsize}")
-
-        # Load code cache size
-        if defined? node['knotx'][new_resource.id]['code_cache']
-          @new_resource.jvm_code_cache =
-            node['knotx'][new_resource.id]['code_cache']
-        else
-          @new_resource.jvm_code_cache = node['knotx']['code_cache']
-        end
-        Chef::Log.debug("Code cache size: #{new_resource.jvm_code_cache}")
-
-        # Load extra opts
-        if defined? node['knotx'][new_resource.id]['extra_opts']
-          @new_resource.jvm_extra_opts =
-            node['knotx'][new_resource.id]['extra_opts']
-        else
-          @new_resource.jvm_extra_opts = node['knotx']['extra_opts']
-        end
-        Chef::Log.debug("Extra opts: #{new_resource.jvm_extra_opts}")
-
-        # Set JMX IP
-        if defined? node['knotx'][new_resource.id]['jmx_ip']
-          @new_resource.jvm_jmx_ip =
-            node['knotx'][new_resource.id]['jmx_ip']
-        else
-          @new_resource.jvm_jmx_ip = node['knotx']['jmx_ip']
-        end
-        Chef::Log.debug("JMX IP: #{new_resource.jvm_jmx_ip}")
-
-        # Set JMX port
-        if defined? node['knotx'][new_resource.id]['jmx_port']
-          @new_resource.jvm_jmx_port =
-            node['knotx'][new_resource.id]['jmx_port']
-        else
-          @new_resource.jvm_jmx_port = node['knotx']['jmx_port']
-        end
-        Chef::Log.debug("JMX port: #{new_resource.jvm_jmx_port}")
-
-        # Set debug port
-        if defined? node['knotx'][new_resource.id]['debug_port']
-          @new_resource.jvm_debug_port =
-            node['knotx'][new_resource.id]['debug_port']
-        else
-          @new_resource.jvm_debug_port = node['knotx']['debug_port']
-        end
-        Chef::Log.debug("Debug port: #{new_resource.jvm_debug_port}")
-      end
 
       # Downloading appropriate knotx and getting current state
       def load_current_resource
@@ -273,7 +199,7 @@ class Chef
           Chef::Log.debug("Knotx download version: #{new_resource.version}")
 
           @new_resource.source = "#{node['knotx']['release_url']}/"\
-            "#{ver}/knotx-example-#{ver}.jar"
+            "#{ver}/knotx-standalone-#{ver}-fat.jar"
 
           Chef::Log.debug("Knotx download source: #{new_resource.source}")
         end
@@ -319,7 +245,7 @@ class Chef
         )
 
         # Cummulative JVM opts loader for brevity
-        load_jvm_opts
+        load_vars
 
         @new_resource.checksum = download_file
 

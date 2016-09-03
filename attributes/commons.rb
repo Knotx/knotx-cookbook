@@ -20,9 +20,3 @@
 default['java']['oracle']['accept_oracle_download_terms'] = 'true'
 default['java']['jdk_version'] = '8'
 default['java']['install_flavor'] = 'oracle'
-
-# Maven attributes
-default['maven']['version'] = '3.3.9'
-default['maven']['checksum'] =
-  '6e3e9c949ab4695a204f74038717aa7b2689b1be94875899ac1b3fe42800ff82'
-default['maven']['setup_bin'] = true

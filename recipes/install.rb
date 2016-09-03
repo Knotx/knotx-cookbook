@@ -16,27 +16,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This recipe is just PoC to verify potential issues during knotx installation
-# It will be rewritten to HWRP
-
-# instance_dir = "#{node['knotx']['base_dir']}/#{node['knotx']['id']}"
-#
-# directory instance_dir do
-#   owner node['knotx']['user']
-#   group node['knotx']['group']
-#   mode 0755
-# end
-#
-# git instance_dir do
-#   user node['knotx']['user']
-#   group node['knotx']['group']
-#   repository node['knotx']['repository']['url']
-#   revision node['knotx']['repository']['revision']
-# end
-
-knotx_instance 'super-knotx' do
+knotx_instance 'Knotx Main: Install' do
   id 'main'
-  version '0.2.0'
+  version '0.3.0-SNAPSHOT'
+
+  notifies :restart, 'service[knotx-main]', :delayed
 end
 
 service 'knotx-main' do

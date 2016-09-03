@@ -34,16 +34,16 @@ class Chef
       attr_accessor :filename
 
       # JVM opts
-      attr_accessor :jvm_min_heap
-      attr_accessor :jvm_max_heap
-      attr_accessor :jvm_max_permsize
-      attr_accessor :jvm_code_cache
-      attr_accessor :jvm_extra_opts
-      attr_accessor :jvm_jmx_ip
-      attr_accessor :jvm_jmx_port
-      attr_accessor :jvm_debug_port
-      attr_accessor :jvm_jmx_enabled
-      attr_accessor :jvm_debug_enabled
+      attr_accessor :min_heap
+      attr_accessor :max_heap
+      attr_accessor :max_permsize
+      attr_accessor :code_cache
+      attr_accessor :extra_opts
+      attr_accessor :jmx_ip
+      attr_accessor :jmx_port
+      attr_accessor :debug_port
+      attr_accessor :jmx_enabled
+      attr_accessor :debug_enabled
 
       def initialize(id, run_context = nil)
         super

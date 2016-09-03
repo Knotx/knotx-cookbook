@@ -24,7 +24,8 @@ default['knotx']['log_dir'] = '/var/log/knotx'
 
 # Knotx source attributes
 default['knotx']['release_url'] =
-  'https://github.com/Cognifide/knotx/releases/download'
+  # 'https://github.com/Cognifide/knotx/releases/download'
+  'https://github.com/karoldrazek/cookbook-knotx/releases/download'
 
 default['knotx']['init_script']['source_cookbook'] = 'knotx'
 default['knotx']['config']['source_cookbook'] = 'knotx'
@@ -33,10 +34,10 @@ default['knotx']['config']['source_cookbook'] = 'knotx'
 default['knotx']['debug_enabled'] = false
 default['knotx']['jmx_enabled'] = true
 
-default['knotx']['port'] = '3000'
+default['knotx']['port'] = '8092'
 default['knotx']['jmx_ip'] = '0.0.0.0'
-default['knotx']['jmx_port'] = '13000'
-default['knotx']['debug_port'] = '23000'
+default['knotx']['jmx_port'] = '18092'
+default['knotx']['debug_port'] = '28092'
 
 default['knotx']['min_heap'] = '256'
 default['knotx']['max_heap'] = '1024'

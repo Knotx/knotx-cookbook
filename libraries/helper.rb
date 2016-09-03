@@ -75,5 +75,29 @@ module Knotx
     def md5sum(filepath)
       Digest::MD5.file(filepath).hexdigest
     end
+
+    def load_vars
+      %w(
+        debug_enabled
+        jmx_enabled
+        jmx_ip
+        jmx_port
+        debug_port
+        min_heap
+        max_heap
+        max_permsize
+        code_cache
+        extra_opts
+      ).each do |var|
+        if node['knotx'].key?(new_resource.id) &&
+           node['knotx'][new_resource.id].key?(var)
+          @new_resource.send("#{var}=", node['knotx'][new_resource.id][var])
+        else
+          puts "Common var: #{node['knotx'][var]}"
+          @new_resource.send("#{var}=", node['knotx'][var])
+        end
+        Chef::Log.debug("Value of #{var}: #{new_resource.send(var)}")
+      end
+    end
   end
 end
