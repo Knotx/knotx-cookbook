@@ -16,6 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# TODO: Consider if this is worth including in HWRP
+
 include_recipe 'java::default'
 
 group node['knotx']['group'] do
