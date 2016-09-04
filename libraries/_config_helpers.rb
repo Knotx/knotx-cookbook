@@ -20,20 +20,53 @@ module Knotx
   module ConfigHelpers
     require 'json'
 
-    def get_attr(config)
-      # TODO: instance dedicated config
-      config
+    def get_attr(config_branch)
+      # TODO: would be really nice to have recursion over here
+
+      case config_branch
+      when 'server_config'
+        branch = %w(
+          http.port
+          preserved.headers
+          dependencies
+        )
+      when 'repo_config'
+        branch = %w(
+          service.name
+          repositories
+        )
+      when 'engine_config'
+        branch = %w(
+          service.name
+          template.debug
+          services
+        )
+      end
+
+      # Assigning current config branch to temporary variable as we don't want
+      # to operate directly on chef attributes
+      config_hash = Hash[node['knotx'][config_branch]]
+
+      branch.each do |var|
+        config_hash[var] =
+          node['knotx'][new_resource.id][config_branch][var] if
+            node['knotx'].key?(new_resource.id) &&
+            node['knotx'][new_resource.id].key?(config_branch) &&
+            node['knotx'][new_resource.id][config_branch].key?(var)
+      end
+
+      config_hash
     end
 
     def generate_config
       # Initalize config root
       knotx_config = Hash[
         'server' =>
-          Hash['config' => get_attr(node['knotx']['server_config'])],
+          Hash['config' => get_attr('server_config')],
         'repository' =>
-          Hash['config' => get_attr(node['knotx']['repo_config'])],
+          Hash['config' => get_attr('repo_config')],
         'engine' =>
-          Hash['config' => get_attr(node['knotx']['engine_config'])]
+          Hash['config' => get_attr('engine_config')]
       ]
 
       # Prettify and generate

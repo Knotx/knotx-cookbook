@@ -27,7 +27,10 @@ default['knotx']['release_url'] =
   # 'https://github.com/Cognifide/knotx/releases/download'
   'https://github.com/karoldrazek/cookbook-knotx/releases/download'
 
-# Knotx setup attributes
+# Knotx setup attributes (those can be specifically overridden per instance)
+#
+# For example default['knotx']['main']['server_config']['http.port'] = 123 will
+# override current setting for 'main' knotx instance.
 
 # TODO: add possibility to provide config in json form in single variable
 
@@ -90,6 +93,7 @@ default['knotx']['debug_port'] = '28092'
 
 default['knotx']['min_heap'] = '256'
 default['knotx']['max_heap'] = '1024'
+default['knotx']['main']['max_heap'] = '524'
 default['knotx']['max_permsize'] = '256'
 default['knotx']['code_cache'] = '64'
 default['knotx']['extra_opts'] = ''
