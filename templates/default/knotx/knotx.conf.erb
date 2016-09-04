@@ -2,7 +2,9 @@
 
 # Knotx general attributes
 
-KNOTX_GENERAL_OPTS="-conf <%= @knotx_root_dir %>/config.json"
+KNOTX_GENERAL_OPTS="
+  -conf <%= @knotx_root_dir %>/config.json
+  -Dvertx.cacheDirBase=<%= @knotx_root_dir %>/.vertx"
 
 # Knotx JVM attributes
 

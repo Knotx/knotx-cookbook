@@ -24,16 +24,15 @@ group node['knotx']['group'] do
   system true
 end
 
+directory node['knotx']['base_dir'] do
+  recursive true
+end
+
 user node['knotx']['user'] do
   comment 'Knotx User'
   gid node['knotx']['group']
+  home node['knotx']['base_dir']
   shell '/bin/bash'
+  supports manage_home: true
   system true
-end
-
-directory node['knotx']['base_dir'] do
-  owner node['knotx']['user']
-  group node['knotx']['group']
-  mode 0755
-  recursive true
 end

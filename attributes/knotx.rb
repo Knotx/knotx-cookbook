@@ -58,13 +58,13 @@ default['knotx']['repo_config']['repositories'] = [
     'type' => 'remote',
     'path' => '/content/.*',
     'domain' => 'localhost',
-    'part' => 3001
+    'port' => 3001
   }
 ]
 
 # Engine settings
 default['knotx']['engine_config']['service.name'] = 'template-engine'
-default['knotx']['engine_config']['template-debug'] = true
+default['knotx']['engine_config']['template.debug'] = true
 default['knotx']['engine_config']['services'] = [
   {
     'path' => '/service/mock/.*',
