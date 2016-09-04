@@ -86,7 +86,6 @@ default['knotx']['engine_config']['services'] = [
 default['knotx']['debug_enabled'] = false
 default['knotx']['jmx_enabled'] = true
 
-default['knotx']['port'] = '8092'
 default['knotx']['jmx_ip'] = '0.0.0.0'
 default['knotx']['jmx_port'] = '18092'
 default['knotx']['debug_port'] = '28092'
