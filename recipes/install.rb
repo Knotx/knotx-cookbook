@@ -20,5 +20,5 @@ include_recipe 'knotx::commons'
 
 knotx_instance 'Knotx Main: Install' do
   id 'main'
-  version '0.3.0-SNAPSHOT'
+  version '0.3.0'
 end

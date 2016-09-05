@@ -24,8 +24,7 @@ default['knotx']['log_dir'] = '/var/log/knotx'
 
 # Knotx source attributes
 default['knotx']['release_url'] =
-  # 'https://github.com/Cognifide/knotx/releases/download'
-  'https://github.com/karoldrazek/cookbook-knotx/releases/download'
+  'https://github.com/Cognifide/knotx/releases/download'
 
 # Knotx setup attributes (those can be specifically overridden per instance)
 #

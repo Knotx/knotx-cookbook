@@ -132,9 +132,6 @@ class Chef
           new_resource.log_dir
         )
 
-        # Add knotx service to managed resources
-        configure_service(new_resource.full_id)
-
         # Update startup JVM config
         changed = true if jvm_config_update(
           new_resource.config_path,
@@ -156,6 +153,9 @@ class Chef
         changed = true if knotx_config_update(
           "#{new_resource.install_dir}/config.json"
         )
+
+        # Add knotx service to managed resources
+        configure_service(new_resource.full_id)
 
         # We cannot assign 'changed' directly to input as it can have false
         # value and it can override status from install action
