@@ -2,15 +2,12 @@
 
 # Knotx general attributes
 
-KNOTX_GENERAL_OPTS="
-  -conf <%= @knotx_root_dir %>/config.json
-  -Dvertx.cacheDirBase=<%= @knotx_root_dir %>/.vertx"
+KNOTX_CONFIG="-conf <%= @knotx_root_dir %>/config.json"
 
 # Knotx JVM attributes
 
 KNOTX_MIN_HEAP=<%= @min_heap %>
 KNOTX_MAX_HEAP=<%= @max_heap %>
-KNOTX_MAX_PERMSIZE=<%= @max_permsize %>
 KNOTX_CODE_CACHE=<%= @code_cache %>
 KNOTX_JMX_IP=<%= @jmx_ip %>
 KNOTX_JMX_PORT=<%= @jmx_port %>
@@ -44,11 +41,10 @@ KNOTX_DEBUG_OPTS="
   -Xrunjdwp:transport=dt_socket,address=${KNOTX_DEBUG_PORT},server=y,suspend=n"
 <%- end -%>
 
-STARTUP_OPTS="
-  ${KNOTX_GENERAL_OPTS}
+KNOTX_OPTS="
+  -Dvertx.cacheDirBase=<%= @knotx_root_dir %>/.vertx
   -Xms${KNOTX_MIN_HEAP}m
   -Xmx${KNOTX_MAX_HEAP}m
-  -XX:MaxPermSize=${KNOTX_MAX_PERMSIZE}m
   -XX:ReservedCodeCacheSize=${KNOTX_CODE_CACHE}m
   ${KNOTX_JMX_OPTS}
   ${KNOTX_DEBUG_OPTS}

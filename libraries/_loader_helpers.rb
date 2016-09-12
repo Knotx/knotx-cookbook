@@ -27,7 +27,6 @@ module Knotx
         debug_port
         min_heap
         max_heap
-        max_permsize
         code_cache
         extra_opts
       ).each do |var|
