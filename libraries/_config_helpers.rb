@@ -27,18 +27,25 @@ module Knotx
       when 'server_config'
         branch = %w(
           http.port
-          preserved.headers
-          dependencies
-        )
-      when 'repo_config'
-        branch = %w(
-          service.name
+          allowed.response.headers
           repositories
+          engine
+        )
+      when 'http_repo_config'
+        branch = %w(
+          address
+          configuration
+        )
+      when 'file_repo_config'
+        branch = %w(
+          address
+          configuration
         )
       when 'engine_config'
         branch = %w(
-          service.name
+          address
           template.debug
+          client.options
           services
         )
       end
@@ -61,12 +68,16 @@ module Knotx
     def generate_config
       # Initalize config root
       knotx_config = Hash[
-        'server' =>
-          Hash['config' => get_attr('server_config')],
-        'repository' =>
-          Hash['config' => get_attr('repo_config')],
-        'engine' =>
-          Hash['config' => get_attr('engine_config')]
+        'verticles' => Hash[
+          'com.cognifide.knotx.server.KnotxServerVerticle' =>
+            Hash['config' => get_attr('server_config')],
+          'com.cognifide.knotx.repository.HttpRepositoryVerticle' =>
+            Hash['config' => get_attr('http_repo_config')],
+          'com.cognifide.knotx.repository.FilesystemRepositoryVerticle' =>
+            Hash['config' => get_attr('file_repo_config')],
+          'com.cognifide.knotx.engine.TemplateEngineVerticle' =>
+            Hash['config' => get_attr('engine_config')]
+        ]
       ]
 
       # Prettify and generate
