@@ -20,6 +20,8 @@
 
 include_recipe 'java::default'
 
+package 'git'
+
 group node['knotx']['group'] do
   system true
 end

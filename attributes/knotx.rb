@@ -34,6 +34,9 @@ default['knotx']['release_url'] =
 default['knotx']['debug_enabled'] = false
 default['knotx']['jmx_enabled'] = true
 
+# JVM config file relative to instance root dir
+default['knotx']['jvm_config_path'] = 'knotx.conf'
+
 default['knotx']['jmx_ip'] = '0.0.0.0'
 default['knotx']['jmx_port'] = '18092'
 default['knotx']['debug_port'] = '28092'

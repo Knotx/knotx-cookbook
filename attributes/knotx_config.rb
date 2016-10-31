@@ -23,6 +23,19 @@
 
 # TODO: add possibility to provide config in json form in single variable
 
+# Knotx app config file relative to instance root dir
+default['knotx']['app_config_path'] = 'config.json'
+
+default['knotx']['app_config_path'] =
+  'config/knotx-example/knotx-example-monolith/src/main/resources/knotx-example-monolith.json'
+
+default['knotx']['config']['git_enabled'] = true
+default['knotx']['config']['git_url'] =
+  'https://github.com/Cognifide/knotx.git'
+default['knotx']['config']['git_user'] = ''
+default['knotx']['config']['git_pass'] = ''
+default['knotx']['config']['git_revision'] = 'master'
+
 # Server settings
 default['knotx']['server_config']['http.port'] = 8092
 default['knotx']['server_config']['allowed.response.headers'] = [

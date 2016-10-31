@@ -67,11 +67,11 @@ class Chef
           "Knotx install path: #{new_resource.install_path}"
         )
 
-        @new_resource.config_path = ::File.join(
-          new_resource.install_dir, '/knotx.conf'
+        @new_resource.jvm_config_path = ::File.join(
+          new_resource.install_dir, "/knotx.conf"
         )
         Chef::Log.debug(
-          "Knotx config path: #{new_resource.config_path}"
+          "Knotx config path: #{new_resource.jvm_config_path}"
         )
 
         if new_resource.log_dir.nil?
@@ -89,8 +89,11 @@ class Chef
         @new_resource.checksum =
           get_file(new_resource.source, new_resource.download_path)
 
-        # Cumulative JVM opts loader for brevity
-        load_jvm_vars
+        # Cumulative Knotx and JVM opts loader for brevity
+        load_config_vars
+
+        # Cumulative git config loader for brevity
+        load_git_vars
 
         knotx_state
       end
@@ -134,7 +137,8 @@ class Chef
 
         # Update startup JVM config
         changed = true if jvm_config_update(
-          new_resource.config_path,
+          new_resource.jvm_config_path,
+          new_resource.app_config_path,
           new_resource.install_dir,
           new_resource.log_dir,
           new_resource.debug_enabled,
@@ -150,9 +154,7 @@ class Chef
         )
 
         # Update knotx config
-        changed = true if knotx_config_update(
-          "#{new_resource.install_dir}/config.json"
-        )
+        changed = true if knotx_config_update
 
         # Add knotx service to managed resources
         configure_service(new_resource.full_id)

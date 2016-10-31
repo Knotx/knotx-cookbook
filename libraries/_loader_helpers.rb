@@ -18,8 +18,10 @@
 
 module Knotx
   module LoaderHelpers
-    def load_jvm_vars
+    def load_config_vars
       %w(
+        jvm_config_path
+        app_config_path
         debug_enabled
         jmx_enabled
         jmx_ip
@@ -35,6 +37,28 @@ module Knotx
           @new_resource.send("#{var}=", node['knotx'][new_resource.id][var])
         else
           @new_resource.send("#{var}=", node['knotx'][var])
+        end
+        Chef::Log.debug("Value of #{var}: #{new_resource.send(var)}")
+      end
+    end
+
+    def load_git_vars
+      %w(
+        git_enabled
+        git_url
+        git_user
+        git_pass
+        git_revision
+      ).each do |var|
+        if node['knotx'].key?(new_resource.id) &&
+           node['knotx'][new_resource.id].key?('config') &&
+           node['knotx'][new_resource.id]['config'].key?(var)
+          @new_resource.send(
+            "#{var}=",
+            node['knotx'][new_resource.id]['config'][var]
+          )
+        else
+          @new_resource.send("#{var}=", node['knotx']['config'][var])
         end
         Chef::Log.debug("Value of #{var}: #{new_resource.send(var)}")
       end

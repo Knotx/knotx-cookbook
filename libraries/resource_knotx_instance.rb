@@ -27,7 +27,7 @@ class Chef
       attr_accessor :download_path
       attr_accessor :install_path
       attr_accessor :install_dir
-      attr_accessor :config_path
+      attr_accessor :app_config_path
       attr_accessor :full_id
       attr_accessor :log_dir
       attr_accessor :checksum
@@ -35,6 +35,7 @@ class Chef
       attr_accessor :filename
 
       # JVM opts
+      attr_accessor :jvm_config_path
       attr_accessor :min_heap
       attr_accessor :max_heap
       attr_accessor :max_permsize
@@ -45,6 +46,13 @@ class Chef
       attr_accessor :debug_port
       attr_accessor :jmx_enabled
       attr_accessor :debug_enabled
+
+      # GIT opts
+      attr_accessor :git_enabled
+      attr_accessor :git_url
+      attr_accessor :git_user
+      attr_accessor :git_pass
+      attr_accessor :git_revision
 
       def initialize(id, run_context = nil)
         super
