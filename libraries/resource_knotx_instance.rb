@@ -28,6 +28,7 @@ class Chef
       attr_accessor :install_path
       attr_accessor :install_dir
       attr_accessor :app_config_path
+      attr_accessor :app_config_extra
       attr_accessor :full_id
       attr_accessor :log_dir
       attr_accessor :checksum

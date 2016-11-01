@@ -95,6 +95,7 @@ module Knotx
     def jvm_config_update(
       jvm_config_path,
       app_config_path,
+      app_config_extra,
       root_dir,
       log_dir,
       debug_enabled,
@@ -118,19 +119,20 @@ module Knotx
       template.source('knotx/knotx.conf.erb')
       template.mode('0644')
       template.variables(
-        knotx_app_config_path: app_config_path,
-        knotx_root_dir:        root_dir,
-        knotx_log_dir:         log_dir,
-        debug_enabled:         debug_enabled,
-        jmx_enabled:           jmx_enabled,
-        jmx_ip:                jmx_ip,
-        jmx_port:              jmx_port,
-        debug_port:            debug_port,
-        min_heap:              min_heap,
-        max_heap:              max_heap,
-        max_permsize:          max_permsize,
-        code_cache:            code_cache,
-        extra_opts:            extra_opts
+        knotx_app_config_path:  app_config_path,
+        knotx_app_config_extra: app_config_extra,
+        knotx_root_dir:         root_dir,
+        knotx_log_dir:          log_dir,
+        debug_enabled:          debug_enabled,
+        jmx_enabled:            jmx_enabled,
+        jmx_ip:                 jmx_ip,
+        jmx_port:               jmx_port,
+        debug_port:             debug_port,
+        min_heap:               min_heap,
+        max_heap:               max_heap,
+        max_permsize:           max_permsize,
+        code_cache:             code_cache,
+        extra_opts:             extra_opts
       )
       template.run_action(:create)
       template.updated_by_last_action?

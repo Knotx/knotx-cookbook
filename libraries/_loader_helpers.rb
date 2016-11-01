@@ -22,6 +22,7 @@ module Knotx
       %w(
         jvm_config_path
         app_config_path
+        app_config_extra
         debug_enabled
         jmx_enabled
         jmx_ip

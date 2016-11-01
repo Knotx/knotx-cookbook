@@ -25,6 +25,7 @@
 
 # Knotx app config file relative to instance root dir
 default['knotx']['app_config_path'] = 'config.json'
+default['knotx']['app_config_extra'] = ''
 
 default['knotx']['config']['git_enabled'] = false
 default['knotx']['config']['git_url'] =

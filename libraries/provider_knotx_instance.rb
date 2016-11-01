@@ -139,6 +139,7 @@ class Chef
         changed = true if jvm_config_update(
           new_resource.jvm_config_path,
           new_resource.app_config_path,
+          new_resource.app_config_extra,
           new_resource.install_dir,
           new_resource.log_dir,
           new_resource.debug_enabled,

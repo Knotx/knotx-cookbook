@@ -32,7 +32,7 @@ do_start()
 {
   if [ ! -f "$LOCK_FILE" ] ; then
     echo -n $"Starting <%= @knotx_id %>: "
-    runuser -l "<%= @knotx_user %>" -c "java $KNOTX_OPTS -jar $JAR_FILE $KNOTX_CONFIG >> <%= @knotx_log_dir %>/<%= @knotx_id %>.log 2>&1 &" && echo_success || echo_failure
+    runuser -l "<%= @knotx_user %>" -c "java $KNOTX_OPTS -jar $JAR_FILE $KNOTX_CONFIG $KNOTX_CONFIG_EXTRA >> <%= @knotx_log_dir %>/<%= @knotx_id %>.log 2>&1 &" && echo_success || echo_failure
     RETVAL=$?
     echo
     if [ $RETVAL -eq 0 ] ; then
