@@ -22,6 +22,10 @@ default['knotx']['group'] = 'knotx'
 default['knotx']['base_dir'] = '/opt/knotx'
 default['knotx']['log_dir'] = '/var/log/knotx'
 
+default['knotx']['log_level']['main'] = 'INFO'
+default['knotx']['log_level']['netty'] = 'INFO'
+default['knotx']['log_level']['root'] = 'ERROR'
+
 # Knotx source attributes
 default['knotx']['release_url'] =
   'https://github.com/Cognifide/knotx/releases/download'

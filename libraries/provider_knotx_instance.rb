@@ -157,6 +157,9 @@ class Chef
         # Update knotx config
         changed = true if knotx_config_update
 
+        # Update logging config
+        changed = true if log_config_update
+
         # Add knotx service to managed resources
         configure_service(new_resource.full_id)
 
@@ -174,6 +177,11 @@ class Chef
 
         # Create logging directory
         changed = true if create_directory(new_resource.log_dir)
+
+        # Temporary workaround for file-upload directory
+        changed = true if create_directory(
+          "#{node['knotx']['base_dir']}/file-uploads"
+        )
 
         # Copy current knotx version to install directory
         get_file(

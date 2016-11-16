@@ -43,6 +43,7 @@ KNOTX_DEBUG_OPTS="
 <%- end -%>
 
 KNOTX_OPTS="
+  -Dlogback.configurationFile=<%= @knotx_root_dir %>/logback.xml
   -Dvertx.cacheDirBase=<%= @knotx_root_dir %>/.vertx
   -Xms${KNOTX_MIN_HEAP}m
   -Xmx${KNOTX_MAX_HEAP}m

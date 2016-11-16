@@ -178,6 +178,25 @@ module Knotx
       end
     end
 
+    def log_config_update
+      template = Chef::Resource::Template.new(
+        "#{new_resource.install_dir}/logback.xml",
+        run_context
+      )
+      template.owner(node['knotx']['user'])
+      template.group(node['knotx']['group'])
+      template.cookbook('knotx')
+      template.source('knotx/logback.xml.erb')
+      template.mode('0644')
+      template.variables(
+        main_log_level: node['knotx']['log_level']['main'],
+        netty_log_level: node['knotx']['log_level']['netty'],
+        root_log_level: node['knotx']['log_level']['root']
+      )
+      template.run_action(:create)
+      template.updated_by_last_action?
+    end
+
     def link_current_version(src, dst)
       link_name = ::File.join(dst, '/knotx.jar')
       link = Chef::Resource::Link.new(
