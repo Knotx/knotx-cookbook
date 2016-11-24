@@ -29,22 +29,41 @@ module Knotx
           http.port
           allowed.response.headers
           repositories
-          engine
+          splitter
+          routing
         )
       when 'http_repo_config'
         branch = %w(
           address
-          configuration
+          client.options
+          client.destination
+          allowed.request.headers
         )
       when 'file_repo_config'
         branch = %w(
           address
-          configuration
+          catalogue
         )
-      when 'engine_config'
+      when 'splitter_config'
+        branch = %w(
+          address
+        )
+      when 'view_config'
         branch = %w(
           address
           template.debug
+          client.options
+          services
+        )
+      when 'action_config'
+        branch = %w(
+          address
+          formIdentifierName
+          adapters
+        )
+      when 'adapter_config'
+        branch = %w(
+          address
           client.options
           services
         )
@@ -75,8 +94,15 @@ module Knotx
             Hash['config' => get_attr('http_repo_config')],
           'com.cognifide.knotx.repository.FilesystemRepositoryVerticle' =>
             Hash['config' => get_attr('file_repo_config')],
-          'com.cognifide.knotx.engine.TemplateEngineVerticle' =>
-            Hash['config' => get_attr('engine_config')]
+          'com.cognifide.knotx.splitter.FragmentSplitterVerticle' =>
+            Hash['config' => get_attr('splitter_config')],
+          'com.cognifide.knotx.knot.view.ViewKnotVerticle' =>
+            Hash['config' => get_attr('view_config')],
+          'com.cognifide.knotx.knot.action.ActionKnotVerticle' =>
+            Hash['config' => get_attr('action_config')],
+          'com.cognifide.knotx.adapter.service.http.'\
+          'HttpServiceAdapterVerticle' =>
+            Hash['config' => get_attr('adapter_config')]
         ]
       ]
 

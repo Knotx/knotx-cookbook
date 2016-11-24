@@ -37,45 +37,7 @@ default['knotx']['config']['git_revision'] = 'master'
 # Server settings
 default['knotx']['server_config']['http.port'] = 8092
 default['knotx']['server_config']['allowed.response.headers'] = [
-  'referer',
-  'user-agent',
-  'from',
-  'content-type',
-  'content-length',
-  'accept-charset',
-  'accept-encoding',
-  'accept-language',
-  'accept',
-  'host',
-  'if-match',
-  'if-none-match',
-  'if-range',
-  'if-unmodified-since',
-  'if-modified-since',
-  'max-forwards',
-  'proxy-authorization',
-  'proxy-connection',
-  'range',
-  'cookie',
-  'cq-action',
-  'cq-handle',
-  'handle',
-  'action',
-  'cqstats',
-  'depth',
-  'translate',
-  'expires',
-  'date',
-  'dav',
-  'ms-author-via',
-  'if',
-  'destination',
-  'access-control-allow-origin',
-  'x-original-requested-uri',
-  'x-solr-core-key',
-  'x-language-code',
-  'x-requested-with',
-  'location'
+  '*'
 ]
 
 default['knotx']['server_config']['repositories'] = [
@@ -88,48 +50,102 @@ default['knotx']['server_config']['repositories'] = [
     'address' => 'knotx.core.repository.http'
   }
 ]
-default['knotx']['server_config']['engine']['address'] = 'knotx.core.engine'
+default['knotx']['server_config']['splitter']['address'] = 'knotx.core.splitter'
+
+default['knotx']['server_config']['routing'] = {
+  'GET' => [
+    {
+      'path' => '/content/.*',
+      'address' => 'knotx.knot.view'
+    }
+  ]
+}
 
 ###############################################################################
 # Repositories settings
 
-# File repository
+# HTTP repository
 default['knotx']['http_repo_config']['address'] = 'knotx.core.repository.http'
 
 # Using this style due to long config paths
-default['knotx']['http_repo_config']['configuration'] = {
-  'client.options' => {
-    'maxPoolSize' => 1000,
-    'keepAlive' => false,
-    'tryUseCompression' => true
-  },
-  'client.destination' => {
-    'domain' => '127.0.0.1',
-    'port' => 80
-  }
+default['knotx']['http_repo_config']['client.options'] = {
+  'maxPoolSize' => 1000,
+  'keepAlive' => false,
+  'tryUseCompression' => true
 }
 
-# HTTP repository
+default['knotx']['http_repo_config']['client.destination'] = {
+  'domain' => '127.0.0.1',
+  'port' => 80
+}
+
+default['knotx']['http_repo_config']['allowed.request.headers'] = [
+  '*'
+]
+
+# File repository
 default['knotx']['file_repo_config']['address'] =
   'knotx.core.repository.filesystem'
-default['knotx']['file_repo_config']['configuration']['catalogue'] = ''
+default['knotx']['file_repo_config']['catalogue'] = ''
 
 ###############################################################################
-# Engine settings
-default['knotx']['engine_config']['address'] = 'knotx.core.engine'
-default['knotx']['engine_config']['template.debug'] = true
-default['knotx']['engine_config']['client.options'] = {
+# Splitter settings
+default['knotx']['splitter_config']['address'] = 'knotx.core.splitter'
+
+###############################################################################
+# View settings
+default['knotx']['view_config']['address'] = 'knotx.knot.view'
+default['knotx']['view_config']['template.debug'] = true
+default['knotx']['view_config']['client.options'] = {
   'maxPoolSize' => 1000,
   'keepAlive' => false
 }
-default['knotx']['engine_config']['services'] = [
+default['knotx']['view_config']['services'] = [
   {
     'path' => '/service/.*',
     'domain' => 'localhost',
     'port' => 8080,
     'allowed.request.headers' => [
-      'Content-Type',
-      'X-*'
+      '*'
+    ]
+  }
+]
+
+###############################################################################
+# Action settings
+default['knotx']['action_config']['address'] = 'knotx.knot.action'
+default['knotx']['action_config']['formIdentifierName'] = '_frmId'
+default['knotx']['action_config']['adapters'] = [
+  {
+    'name' => 'step1',
+    'address' => 'knotx.adapter.action.http',
+    'params' => {
+      'path' => '/service/mock/post-step-1.json'
+    },
+    'allowed.request.headers' => [
+      '*'
+    ],
+    'allowed.response.headers' => [
+      '*'
+    ]
+  }
+]
+
+###############################################################################
+# Adapter settings
+default['knotx']['adapter_config']['address'] = 'knotx.adapter.service.http'
+default['knotx']['adapter_config']['client.options'] = {
+  'maxPoolSize' => 1000,
+  'keepAlive' => false,
+  'logActivity' => true
+}
+default['knotx']['adapter_config']['services'] = [
+  {
+    'path' => '/service/.*',
+    'domain' => 'localhost',
+    'port' => 8080,
+    'allowed.request.headers' => [
+      '*'
     ]
   }
 ]
