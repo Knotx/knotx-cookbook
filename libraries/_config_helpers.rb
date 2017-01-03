@@ -27,10 +27,11 @@ module Knotx
       when 'server_config'
         branch = %w(
           http.port
+          displayExceptionDetails
           allowed.response.headers
           repositories
-          splitter
           routing
+          splitter
         )
       when 'http_repo_config'
         branch = %w(
@@ -48,17 +49,20 @@ module Knotx
         branch = %w(
           address
         )
-      when 'view_config'
+      when 'srv_config'
         branch = %w(
           address
-          template.debug
           client.options
           services
         )
-      when 'action_config'
+      when 'templating_config'
         branch = %w(
           address
-          formIdentifierName
+          templating.debug
+        )
+      when 'auth_config'
+        branch = %w(
+          address
           adapters
         )
       when 'adapter_config'
@@ -90,16 +94,19 @@ module Knotx
         'verticles' => Hash[
           'com.cognifide.knotx.server.KnotxServerVerticle' =>
             Hash['config' => get_attr('server_config')],
-          'com.cognifide.knotx.repository.HttpRepositoryVerticle' =>
+          'com.cognifide.knotx.repository.HttpRepositoryConnectorVerticle' =>
             Hash['config' => get_attr('http_repo_config')],
-          'com.cognifide.knotx.repository.FilesystemRepositoryVerticle' =>
+          'com.cognifide.knotx.repository.'\
+          'FilesystemRepositoryConnectorVerticle' =>
             Hash['config' => get_attr('file_repo_config')],
           'com.cognifide.knotx.splitter.FragmentSplitterVerticle' =>
             Hash['config' => get_attr('splitter_config')],
-          'com.cognifide.knotx.knot.view.ViewKnotVerticle' =>
-            Hash['config' => get_attr('view_config')],
-          'com.cognifide.knotx.knot.action.ActionKnotVerticle' =>
-            Hash['config' => get_attr('action_config')],
+          'com.cognifide.knotx.knot.service.ServiceKnotVerticle' =>
+            Hash['config' => get_attr('srv_config')],
+          'com.cognifide.knotx.knot.templating.HandlebarsKnotVerticle' =>
+            Hash['config' => get_attr('templating_config')],
+          'com.cognifide.knotx.knot.authorization.AuthorizationKnotVerticle' =>
+            Hash['config' => get_attr('auth_config')],
           'com.cognifide.knotx.adapter.service.http.'\
           'HttpServiceAdapterVerticle' =>
             Hash['config' => get_attr('adapter_config')]

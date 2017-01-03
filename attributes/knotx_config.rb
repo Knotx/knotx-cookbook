@@ -36,6 +36,7 @@ default['knotx']['config']['git_revision'] = 'master'
 
 # Server settings
 default['knotx']['server_config']['http.port'] = 8092
+default['knotx']['server_config']['displayExceptionDetails'] = true
 default['knotx']['server_config']['allowed.response.headers'] = [
   '*'
 ]
@@ -56,7 +57,12 @@ default['knotx']['server_config']['routing'] = {
   'GET' => [
     {
       'path' => '/content/.*',
-      'address' => 'knotx.knot.view'
+      'address' => 'knotx.knot.view',
+      'onTransition' => {
+        'next' => {
+          'address' => 'knotx.knot.handlebars'
+        }
+      }
     }
   ]
 }
@@ -93,34 +99,38 @@ default['knotx']['file_repo_config']['catalogue'] = ''
 default['knotx']['splitter_config']['address'] = 'knotx.core.splitter'
 
 ###############################################################################
-# View settings
-default['knotx']['view_config']['address'] = 'knotx.knot.view'
-default['knotx']['view_config']['template.debug'] = true
-default['knotx']['view_config']['client.options'] = {
+# Service settings
+default['knotx']['srv_config']['address'] = 'knotx.knot.service'
+default['knotx']['srv_config']['client.options'] = {
   'maxPoolSize' => 1000,
   'keepAlive' => false
 }
-default['knotx']['view_config']['services'] = [
+default['knotx']['srv_config']['services'] = [
   {
     'path' => '/service/.*',
     'domain' => 'localhost',
     'port' => 8080,
     'allowed.request.headers' => [
       '*'
-    ]
+    ],
+    'params' => {}
   }
 ]
 
 ###############################################################################
-# Action settings
-default['knotx']['action_config']['address'] = 'knotx.knot.action'
-default['knotx']['action_config']['formIdentifierName'] = '_frmId'
-default['knotx']['action_config']['adapters'] = [
+# Templating settings
+default['knotx']['templating_config']['address'] = 'knotx.knot.handlebars'
+default['knotx']['templating_config']['template.debug'] = true
+
+###############################################################################
+# Auth settings
+default['knotx']['auth_config']['address'] = 'knotx.knot.auth'
+default['knotx']['auth_config']['adapters'] = [
   {
-    'name' => 'step1',
-    'address' => 'knotx.adapter.action.http',
+    'name' => 'auth-handler',
+    'address' => 'knotx.adapter.service.http',
     'params' => {
-      'path' => '/service/mock/post-step-1.json'
+      'path' => '/service/mock/auth.json?statusCode={param.statusCode}'
     },
     'allowed.request.headers' => [
       '*'

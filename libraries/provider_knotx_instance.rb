@@ -175,6 +175,9 @@ class Chef
         # Create base installation directory
         changed = true if create_directory(new_resource.install_dir)
 
+        # Create jar directory
+        changed = true if create_directory("#{new_resource.install_dir}/app")
+
         # Create logging directory
         changed = true if create_directory(new_resource.log_dir)
 
@@ -192,7 +195,7 @@ class Chef
         # Link current knotx version to common name
         changed = true if link_current_version(
           new_resource.install_path,
-          new_resource.install_dir
+          "#{new_resource.install_dir}/app"
         )
 
         new_resource.updated_by_last_action(true) if changed
