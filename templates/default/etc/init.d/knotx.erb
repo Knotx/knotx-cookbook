@@ -18,7 +18,7 @@
 . /etc/rc.d/init.d/functions
 
 LOCK_FILE="/var/lock/subsys/<%= @knotx_id %>"
-JAR_DIR="<%= @knotx_root_dir %>/app/*"
+JAR_DIR="<%= @knotx_root_dir %>/app/\*"
 
 CONFIG_FILE="<%= @knotx_root_dir %>/knotx.conf"
 
@@ -48,7 +48,7 @@ do_start()
 do_stop()
 {
   echo -n $"Stopping <%= @knotx_id %>: "
-  pid=`ps -aefw | grep "jar $JAR_FILE" | grep -v " grep " | awk '{print $2}'`
+  pid=`ps -aefw | grep "cp $JAR_FILE" | grep -v " grep " | awk '{print $2}'`
   kill -9 $pid > /dev/null 2>&1 && echo_success || echo_failure
   RETVAL=$?
   echo
