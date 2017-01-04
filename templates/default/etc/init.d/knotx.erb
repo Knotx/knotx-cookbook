@@ -18,7 +18,7 @@
 . /etc/rc.d/init.d/functions
 
 LOCK_FILE="/var/lock/subsys/<%= @knotx_id %>"
-JAR_DIR="<%= @knotx_root_dir %>/app/\*"
+ROOT_DIR="<%= @knotx_root_dir %>"
 
 CONFIG_FILE="<%= @knotx_root_dir %>/knotx.conf"
 
@@ -32,7 +32,7 @@ do_start()
 {
   if [ ! -f "$LOCK_FILE" ] ; then
     echo -n $"Starting <%= @knotx_id %>: "
-    runuser -l "<%= @knotx_user %>" -c "java $KNOTX_OPTS -cp $JAR_DIR com.cognifide.knotx.launcher.LogbackLauncher $KNOTX_CONFIG $KNOTX_CONFIG_EXTRA >> <%= @knotx_log_dir %>/<%= @knotx_id %>.log 2>&1 &" && echo_success || echo_failure
+    runuser -l "<%= @knotx_user %>" -c "java $KNOTX_OPTS -cp $ROOT_DIR/app/\* com.cognifide.knotx.launcher.LogbackLauncher $KNOTX_CONFIG $KNOTX_CONFIG_EXTRA >> <%= @knotx_log_dir %>/<%= @knotx_id %>.log 2>&1 &" && echo_success || echo_failure
     RETVAL=$?
     echo
     if [ $RETVAL -eq 0 ] ; then
@@ -48,7 +48,7 @@ do_start()
 do_stop()
 {
   echo -n $"Stopping <%= @knotx_id %>: "
-  pid=`ps -aefw | grep "cp $JAR_FILE" | grep -v " grep " | awk '{print $2}'`
+  pid=`ps -aefw | grep "cp $ROOT_DIR/" | grep -v " grep " | awk '{print $2}'`
   kill -9 $pid > /dev/null 2>&1 && echo_success || echo_failure
   RETVAL=$?
   echo
