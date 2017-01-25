@@ -22,8 +22,3 @@ knotx_instance 'Knotx Main: Install' do
   id 'main'
   version '1.0.0-RC2'
 end
-
-knotx_instance 'Knotx Main2: Install' do
-  id 'main2'
-  version '1.0.0-RC2'
-end

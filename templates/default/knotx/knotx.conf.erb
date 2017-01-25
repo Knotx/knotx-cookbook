@@ -48,6 +48,8 @@ KNOTX_OPTS="
   -Xms${KNOTX_MIN_HEAP}m
   -Xmx${KNOTX_MAX_HEAP}m
   -XX:ReservedCodeCacheSize=${KNOTX_CODE_CACHE}m
+  -XX:+UseBiasedLocking 
+  -XX:BiasedLockingStartupDelay=0
   ${KNOTX_JMX_OPTS}
   ${KNOTX_DEBUG_OPTS}
   ${KNOTX_GC_OPTS}
