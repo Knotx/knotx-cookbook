@@ -28,6 +28,7 @@ module Knotx
         jmx_ip
         jmx_port
         debug_port
+        port
         min_heap
         max_heap
         code_cache

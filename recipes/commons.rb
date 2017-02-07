@@ -35,6 +35,6 @@ user node['knotx']['user'] do
   gid node['knotx']['group']
   home node['knotx']['base_dir']
   shell '/bin/bash'
-  supports manage_home: true
+  manage_home true
   system true
 end

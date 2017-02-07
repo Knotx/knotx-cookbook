@@ -45,6 +45,7 @@ class Chef
       attr_accessor :jmx_ip
       attr_accessor :jmx_port
       attr_accessor :debug_port
+      attr_accessor :port
       attr_accessor :jmx_enabled
       attr_accessor :debug_enabled
 
@@ -63,7 +64,7 @@ class Chef
         @action = :install
 
         @id = name
-        @version = '0.4.1'
+        @version = '1.0.0-RC7'
         @source = nil
         @install_dir = nil
         @log_dir = nil

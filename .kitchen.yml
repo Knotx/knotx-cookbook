@@ -1,13 +1,14 @@
 ---
 driver:
   name: vagrant
+  linked_clone: true
 
 provisioner:
   name: chef_zero
 
 platforms:
-  - name: centos-6.7
-  - name: centos-7.2
+  - name: centos-6.8
+  - name: centos-7.3
 
 suites:
   - name: default

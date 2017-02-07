@@ -137,6 +137,7 @@ class Chef
 
         # Update startup JVM config
         changed = true if jvm_config_update(
+          new_resource.id,
           new_resource.jvm_config_path,
           new_resource.app_config_path,
           new_resource.app_config_extra,
@@ -147,6 +148,7 @@ class Chef
           new_resource.jmx_ip,
           new_resource.jmx_port,
           new_resource.debug_port,
+          new_resource.port,
           new_resource.min_heap,
           new_resource.max_heap,
           new_resource.max_permsize,

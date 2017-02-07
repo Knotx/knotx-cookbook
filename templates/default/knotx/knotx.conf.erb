@@ -10,13 +10,14 @@ KNOTX_CONFIG_EXTRA="<%= @knotx_app_config_extra %>"
 KNOTX_MIN_HEAP=<%= @min_heap %>
 KNOTX_MAX_HEAP=<%= @max_heap %>
 KNOTX_CODE_CACHE=<%= @code_cache %>
+KNOTX_PORT=<%= @port %>
 KNOTX_JMX_IP=<%= @jmx_ip %>
 KNOTX_JMX_PORT=<%= @jmx_port %>
 KNOTX_DEBUG_PORT=<%= @debug_port %>
 KNOTX_EXTRA_OPTS=<%= @extra_opts %>
 
 KNOTX_GC_OPTS="
-  -Xloggc:<%= @knotx_log_dir %>/gc.log
+  -Xloggc:<%= @knotx_log_dir %>/gc-<%= @knotx_id %>.log
   -XX:+PrintGCApplicationStoppedTime
   -XX:+PrintGCApplicationConcurrentTime
   -XX:+PrintGC
@@ -50,6 +51,7 @@ KNOTX_OPTS="
   -XX:ReservedCodeCacheSize=${KNOTX_CODE_CACHE}m
   -XX:+UseBiasedLocking 
   -XX:BiasedLockingStartupDelay=0
+  -Dio.knotx.KnotxServer.options.config.httpPort=${KNOTX_PORT}
   ${KNOTX_JMX_OPTS}
   ${KNOTX_DEBUG_OPTS}
   ${KNOTX_GC_OPTS}

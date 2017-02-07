@@ -18,7 +18,7 @@
 
 module Knotx
   module ResourceHelpers
-    include Knotx::ConfigHelpers
+    #include Knotx::ConfigHelpers
 
     # Parse repo url to include credentials
     def repo_url(address, login, password)
@@ -93,6 +93,7 @@ module Knotx
     end
 
     def jvm_config_update(
+      id,
       jvm_config_path,
       app_config_path,
       app_config_extra,
@@ -103,6 +104,7 @@ module Knotx
       jmx_ip,
       jmx_port,
       debug_port,
+      port,
       min_heap,
       max_heap,
       max_permsize,
@@ -119,6 +121,7 @@ module Knotx
       template.source('knotx/knotx.conf.erb')
       template.mode('0644')
       template.variables(
+        knotx_id:               id,
         knotx_app_config_path:  app_config_path,
         knotx_app_config_extra: app_config_extra,
         knotx_root_dir:         root_dir,
@@ -128,6 +131,7 @@ module Knotx
         jmx_ip:                 jmx_ip,
         jmx_port:               jmx_port,
         debug_port:             debug_port,
+        port:                   port,
         min_heap:               min_heap,
         max_heap:               max_heap,
         max_permsize:           max_permsize,
@@ -163,18 +167,31 @@ module Knotx
           new_resource.git_revision
         )
       else
-        template = Chef::Resource::Template.new(
+        file = Chef::Resource::CookbookFile.new(
           "#{new_resource.install_dir}/config.json",
           run_context
         )
-        template.owner(node['knotx']['user'])
-        template.group(node['knotx']['group'])
-        template.cookbook('knotx')
-        template.source('knotx/config.json.erb')
-        template.mode('0644')
-        template.variables(generated_config: generate_config)
-        template.run_action(:create)
-        template.updated_by_last_action?
+        file.owner(node['knotx']['user'])
+        file.group(node['knotx']['group'])
+        file.cookbook('knotx')
+        file.source('knotx/config.json')
+        file.mode('0644')
+        file.run_action(:create)
+        file.updated_by_last_action?
+
+
+        # template = Chef::Resource::Template.new(
+        #   "#{new_resource.install_dir}/config.json",
+        #   run_context
+        # )
+        # template.owner(node['knotx']['user'])
+        # template.group(node['knotx']['group'])
+        # template.cookbook('knotx')
+        # template.source('knotx/config.json.erb')
+        # template.mode('0644')
+        # template.variables(generated_config: generate_config)
+        # template.run_action(:create)
+        # template.updated_by_last_action?
       end
     end
 
