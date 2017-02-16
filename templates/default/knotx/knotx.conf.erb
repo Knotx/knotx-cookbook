@@ -1,0 +1,58 @@
+#!/bin/bash
+
+# Knotx general attributes
+
+KNOTX_CONFIG="-conf <%= @knotx_root_dir %>/<%= @knotx_app_config_path %>"
+KNOTX_CONFIG_EXTRA="<%= @knotx_app_config_extra %>"
+
+# Knotx JVM attributes
+
+KNOTX_MIN_HEAP=<%= @min_heap %>
+KNOTX_MAX_HEAP=<%= @max_heap %>
+KNOTX_CODE_CACHE=<%= @code_cache %>
+KNOTX_PORT=<%= @port %>
+KNOTX_JMX_IP=<%= @jmx_ip %>
+KNOTX_JMX_PORT=<%= @jmx_port %>
+KNOTX_DEBUG_PORT=<%= @debug_port %>
+KNOTX_EXTRA_OPTS=<%= @extra_opts %>
+
+KNOTX_GC_OPTS="
+  -Xloggc:<%= @knotx_log_dir %>/gc-<%= @knotx_id %>.log
+  -XX:+PrintGCApplicationStoppedTime
+  -XX:+PrintGCApplicationConcurrentTime
+  -XX:+PrintGC
+  -XX:+PrintGCTimeStamps
+  -XX:+PrintGCDetails
+  -XX:+UseGCLogFileRotation
+  -XX:NumberOfGCLogFiles=10
+  -XX:GCLogFileSize=5M"
+
+<%- if @jmx_enabled == true -%>
+KNOTX_JMX_OPTS="
+  -Dcom.sun.management.jmxremote
+  -Dcom.sun.management.jmxremote.port=${KNOTX_JMX_PORT}
+  -Dcom.sun.management.jmxremote.rmi.port=${KNOTX_JMX_PORT}
+  -Djava.rmi.server.hostname=${KNOTX_JMX_IP}
+  -Dcom.sun.management.jmxremote.ssl=false
+  -Dcom.sun.management.jmxremote.authenticate=false"
+<%- end -%>
+
+<%- if @debug_enabled == true -%>
+KNOTX_DEBUG_OPTS="
+  -Xdebug
+  -Xrunjdwp:transport=dt_socket,address=${KNOTX_DEBUG_PORT},server=y,suspend=n"
+<%- end -%>
+
+KNOTX_OPTS="
+  -Dlogback.configurationFile=<%= @knotx_root_dir %>/logback.xml
+  -Dvertx.cacheDirBase=<%= @knotx_root_dir %>/.vertx
+  -Xms${KNOTX_MIN_HEAP}m
+  -Xmx${KNOTX_MAX_HEAP}m
+  -XX:ReservedCodeCacheSize=${KNOTX_CODE_CACHE}m
+  -XX:+UseBiasedLocking 
+  -XX:BiasedLockingStartupDelay=0
+  -Dio.knotx.KnotxServer.options.config.httpPort=${KNOTX_PORT}
+  ${KNOTX_JMX_OPTS}
+  ${KNOTX_DEBUG_OPTS}
+  ${KNOTX_GC_OPTS}
+  ${KNOTX_EXTRA_OPTS}"

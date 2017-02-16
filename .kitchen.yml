@@ -1,0 +1,17 @@
+---
+driver:
+  name: vagrant
+  linked_clone: true
+
+provisioner:
+  name: chef_zero
+
+platforms:
+  - name: centos-6.8
+  - name: centos-7.3
+
+suites:
+  - name: default
+    run_list:
+      - recipe[knotx::_install]
+    attributes:
