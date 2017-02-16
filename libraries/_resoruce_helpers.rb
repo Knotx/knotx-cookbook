@@ -18,7 +18,6 @@
 
 module Knotx
   module ResourceHelpers
-    #include Knotx::ConfigHelpers
 
     # Parse repo url to include credentials
     def repo_url(address, login, password)
@@ -178,20 +177,6 @@ module Knotx
         file.mode('0644')
         file.run_action(:create)
         file.updated_by_last_action?
-
-
-        # template = Chef::Resource::Template.new(
-        #   "#{new_resource.install_dir}/config.json",
-        #   run_context
-        # )
-        # template.owner(node['knotx']['user'])
-        # template.group(node['knotx']['group'])
-        # template.cookbook('knotx')
-        # template.source('knotx/config.json.erb')
-        # template.mode('0644')
-        # template.variables(generated_config: generate_config)
-        # template.run_action(:create)
-        # template.updated_by_last_action?
       end
     end
 

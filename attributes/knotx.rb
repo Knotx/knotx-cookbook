@@ -53,9 +53,6 @@ default['knotx']['extra_opts'] = ''
 
 # KNOTX CONFIG
 
-# 'local', 'git', 'remote'
-default['knotx']['config']['type'] = 'local'
-
 default['knotx']['app_config_path'] = 'config.json'
 default['knotx']['app_config_extra'] = ''
 
