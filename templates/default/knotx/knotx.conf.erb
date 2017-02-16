@@ -2,7 +2,7 @@
 
 # Knotx general attributes
 
-KNOTX_CONFIG="-conf <%= @knotx_root_dir %>/<%= @knotx_app_config_path %>"
+KNOTX_CONFIG="-conf <%= @knotx_app_config_path %>"
 KNOTX_CONFIG_EXTRA="<%= @knotx_app_config_extra %>"
 
 # Knotx JVM attributes
@@ -51,7 +51,9 @@ KNOTX_OPTS="
   -XX:ReservedCodeCacheSize=${KNOTX_CODE_CACHE}m
   -XX:+UseBiasedLocking 
   -XX:BiasedLockingStartupDelay=0
+<%- unless @port.nil? -%>
   -Dio.knotx.KnotxServer.options.config.httpPort=${KNOTX_PORT}
+<%- end -%>
   ${KNOTX_JMX_OPTS}
   ${KNOTX_DEBUG_OPTS}
   ${KNOTX_GC_OPTS}

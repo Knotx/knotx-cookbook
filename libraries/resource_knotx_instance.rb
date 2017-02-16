@@ -51,6 +51,7 @@ class Chef
 
       # GIT opts
       attr_accessor :git_enabled
+      attr_accessor :git_dir
       attr_accessor :git_url
       attr_accessor :git_user
       attr_accessor :git_pass
@@ -64,7 +65,7 @@ class Chef
         @action = :install
 
         @id = name
-        @version = '1.0.0-RC7'
+        @version = '1.0.0-RC8'
         @source = nil
         @install_dir = nil
         @log_dir = nil

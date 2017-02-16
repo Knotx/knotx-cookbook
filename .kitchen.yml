@@ -15,3 +15,13 @@ suites:
     run_list:
       - recipe[knotx::_install]
     attributes:
+  - name: git_config
+    run_list:
+      - recipe[knotx::_install]
+    attributes:
+      knotx:
+        config:
+          git_enabled: true
+          git_dir: '/opt/knotx/config'
+        app_config_path: '/opt/knotx/config/knotx-standalone/src/main/resources/knotx-standalone.json'
+

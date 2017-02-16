@@ -57,6 +57,7 @@ default['knotx']['app_config_path'] = 'config.json'
 default['knotx']['app_config_extra'] = ''
 
 default['knotx']['config']['git_enabled'] = false
+default['knotx']['config']['git_dir'] = nil
 default['knotx']['config']['git_url'] =
   'https://github.com/Cognifide/knotx.git'
 default['knotx']['config']['git_user'] = ''

@@ -195,6 +195,14 @@ Cookbook that installs and knotx instance.
     <td><tt>false</tt></td>
   </tr>
   <tr>
+    <td><tt>default['knotx']['config']['git_dir']</tt></td>
+    <td>String</td>
+    <td>
+      Directory where git config should be cloned
+    </td>
+    <td><tt></tt></td>
+  </tr>
+  <tr>
     <td><tt>default['knotx']['config']['git_url']</tt></td>
     <td>String</td>
     <td>

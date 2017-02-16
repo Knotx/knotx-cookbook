@@ -47,6 +47,7 @@ module Knotx
     def load_git_vars
       %w(
         git_enabled
+        git_dir
         git_url
         git_user
         git_pass

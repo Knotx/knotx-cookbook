@@ -51,6 +51,14 @@ module Knotx
       directory.updated_by_last_action?
     end
 
+    # Get absolute path
+    def absolute_path(dir, path)
+      require 'pathname'
+
+      return path if (Pathname.new(path)).absolute?
+      Pathname.new(dir) + Pathname.new(path)
+    end
+
     # Download of webapp package to work on it
     def get_file(src, dst)
       remote_file = Chef::Resource::RemoteFile.new(
@@ -110,6 +118,8 @@ module Knotx
       code_cache,
       extra_opts)
 
+      app_config_path = absolute_path(root_dir, app_config_path)
+
       template = Chef::Resource::Template.new(
         ::File.join(root_dir, jvm_config_path),
         run_context
@@ -149,6 +159,8 @@ module Knotx
       git_url = repo_url(address, login, password)
 
       git = Chef::Resource::Git.new(dir, run_context)
+      git.user(node['knotx']['user'])
+      git.group(node['knotx']['group'])
       git.repository(git_url)
       git.revision(revision)
       git.run_action(:sync)
@@ -158,8 +170,11 @@ module Knotx
     # TODO: Consider rewrite to File operations
     def knotx_config_update
       if new_resource.git_enabled
+        git_dir = "#{new_resource.install_dir}/config"
+        git_dir = new_resource.git_dir unless new_resource.git_dir.nil? 
+
         get_remote_config(
-          "#{new_resource.install_dir}/config",
+          git_dir,
           new_resource.git_url,
           new_resource.git_user,
           new_resource.git_pass,
