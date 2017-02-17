@@ -49,11 +49,9 @@ KNOTX_OPTS="
   -Xms${KNOTX_MIN_HEAP}m
   -Xmx${KNOTX_MAX_HEAP}m
   -XX:ReservedCodeCacheSize=${KNOTX_CODE_CACHE}m
-  -XX:+UseBiasedLocking 
+  -XX:+UseBiasedLocking
   -XX:BiasedLockingStartupDelay=0
-<%- unless @port.nil? -%>
   -Dio.knotx.KnotxServer.options.config.httpPort=${KNOTX_PORT}
-<%- end -%>
   ${KNOTX_JMX_OPTS}
   ${KNOTX_DEBUG_OPTS}
   ${KNOTX_GC_OPTS}

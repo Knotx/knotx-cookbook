@@ -28,7 +28,7 @@ default['knotx']['log_level']['root'] = 'ERROR'
 
 # Knotx source attributes
 default['knotx']['release_url'] =
-  'https://github.com/Cognifide/knotx/releases/download'
+  'https://oss.sonatype.org/content/groups/public/io/knotx/knotx-standalone'
 
 # JVM default parameters (those can be specifically overridden per instance)
 #

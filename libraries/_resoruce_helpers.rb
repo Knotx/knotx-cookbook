@@ -55,7 +55,7 @@ module Knotx
     def absolute_path(dir, path)
       require 'pathname'
 
-      return path if (Pathname.new(path)).absolute?
+      return path if Pathname.new(path).absolute?
       Pathname.new(dir) + Pathname.new(path)
     end
 
@@ -171,7 +171,7 @@ module Knotx
     def knotx_config_update
       if new_resource.git_enabled
         git_dir = "#{new_resource.install_dir}/config"
-        git_dir = new_resource.git_dir unless new_resource.git_dir.nil? 
+        git_dir = new_resource.git_dir unless new_resource.git_dir.nil?
 
         get_remote_config(
           git_dir,

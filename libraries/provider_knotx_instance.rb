@@ -41,7 +41,7 @@ class Chef
           Chef::Log.debug("Knotx download version: #{new_resource.version}")
 
           @new_resource.source = "#{node['knotx']['release_url']}/"\
-            "#{ver}/knotx-standalone-#{ver}-fat.jar"
+            "#{ver}/knotx-standalone-#{ver}.fat.jar"
 
           Chef::Log.debug("Knotx download source: #{new_resource.source}")
         end
