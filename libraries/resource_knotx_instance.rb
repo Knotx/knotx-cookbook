@@ -49,8 +49,9 @@ class Chef
       attr_accessor :jmx_enabled
       attr_accessor :debug_enabled
 
-      # GIT opts
-      attr_accessor :git_enabled
+      # CONFIG opts
+      attr_accessor :config_type
+      attr_accessor :remote_url
       attr_accessor :git_dir
       attr_accessor :git_url
       attr_accessor :git_user

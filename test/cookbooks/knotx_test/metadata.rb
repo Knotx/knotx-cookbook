@@ -1,0 +1,11 @@
+name 'knotx_test'
+maintainer 'Karol Drazek'
+maintainer_email 'karol.drazek@cognifide.com'
+license 'apachev2'
+description 'Installs/Configures knotx_test'
+long_description 'Installs/Configures knotx_test'
+version '0.1.0'
+issues_url 'https://github.com/knotx/knotx-cookbook/issues'
+source_url 'https://github.com/Knotx/knotx-cookbook'
+
+depends 'knotx'

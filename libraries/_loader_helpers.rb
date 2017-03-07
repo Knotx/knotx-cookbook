@@ -44,9 +44,10 @@ module Knotx
       end
     end
 
-    def load_git_vars
+    def load_config_mgmt_vars
       %w(
-        git_enabled
+        config_type
+        remote_url
         git_dir
         git_url
         git_user

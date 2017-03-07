@@ -1,6 +1,6 @@
 #
-# Cookbook Name:: knotx
-# Attributes:: commons
+# Cookbook Name:: knotx_test
+# Attributes:: main
 #
 # Copyright 2016 Karol Drazek
 #
@@ -16,7 +16,3 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Java attributes
-default['java']['oracle']['accept_oracle_download_terms'] = 'true'
-default['java']['jdk_version'] = '8'
-default['java']['install_flavor'] = 'oracle'

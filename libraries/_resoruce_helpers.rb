@@ -116,7 +116,8 @@ module Knotx
       max_heap,
       max_permsize,
       code_cache,
-      extra_opts)
+      extra_opts
+      )
 
       app_config_path = absolute_path(root_dir, app_config_path)
 
@@ -167,12 +168,34 @@ module Knotx
       git.updated_by_last_action?
     end
 
-    # TODO: Consider rewrite to File operations
     def knotx_config_update
-      if new_resource.git_enabled
+      case new_resource.config_type
+      when 'local'
+        local_file = Chef::Resource::CookbookFile.new(
+          "#{new_resource.install_dir}/config.json",
+          run_context
+        )
+        local_file.owner(node['knotx']['user'])
+        local_file.group(node['knotx']['group'])
+        local_file.cookbook('knotx')
+        local_file.source('knotx/config.json')
+        local_file.mode('0644')
+        local_file.run_action(:create)
+        local_file.updated_by_last_action?
+      when 'remote'
+        remote_file = Chef::Resource::RemoteFile.new(
+          "#{new_resource.install_dir}/config.json",
+          run_context
+        )
+        remote_file.owner(node['knotx']['user'])
+        remote_file.group(node['knotx']['group'])
+        remote_file.source(new_resource.remote_url)
+        remote_file.mode('0644')
+        remote_file.run_action(:create)
+        remote_file.updated_by_last_action?
+      when 'git'
         git_dir = "#{new_resource.install_dir}/config"
         git_dir = new_resource.git_dir unless new_resource.git_dir.nil?
-
         get_remote_config(
           git_dir,
           new_resource.git_url,
@@ -181,9 +204,9 @@ module Knotx
           new_resource.git_revision
         )
       else
-        file = Chef::Resource::CookbookFile.new(
-          "#{new_resource.install_dir}/config.json",
-          run_context
+        Chef::Application.fatal!(
+          "Wrong config type. Must be on of the following: \
+          \'local\', \'remote\', \'git\'"
         )
         file.owner(node['knotx']['user'])
         file.group(node['knotx']['group'])
@@ -223,6 +246,30 @@ module Knotx
       link.to(src)
       link.run_action(:create)
       link.updated_by_last_action?
+    end
+
+    def configure_commons
+      pkg = Chef::Resource::YumPackage.new('git', run_context)
+      pkg.run_action(:install)
+
+      group = Chef::Resource::Group.new(node['knotx']['group'], run_context)
+      group.system(true)
+      group.run_action(:create)
+
+      user = Chef::Resource::User::LinuxUser.new(
+        node['knotx']['user'], run_context
+      )
+      user.comment('Knotx User')
+      user.gid(node['knotx']['group'])
+      user.home(node['knotx']['base_dir'])
+      user.shell('/bin/bash')
+      user.manage_home(true)
+      user.system(true)
+      user.run_action(:create)
+
+      pkg.updated_by_last_action? ||
+        group.updated_by_last_action? ||
+        user.updated_by_last_action?
     end
 
     def configure_service(service_name)

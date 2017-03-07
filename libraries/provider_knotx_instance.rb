@@ -86,14 +86,16 @@ class Chef
           "Knotx install path: #{new_resource.download_path}"
         )
 
+        configure_commons
+
         @new_resource.checksum =
           get_file(new_resource.source, new_resource.download_path)
 
         # Cumulative Knotx and JVM opts loader for brevity
         load_config_vars
 
-        # Cumulative git config loader for brevity
-        load_git_vars
+        # Cumulative config management loader for brevity
+        load_config_mgmt_vars
 
         knotx_state
       end

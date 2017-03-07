@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: knotx
-# Recipe:: install
+# Recipe:: prereq
 #
 # Copyright 2016 Karol Drazek
 #
@@ -16,16 +16,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-include_recipe 'knotx::commons'
-
-knotx_instance 'Knotx Main: Install' do
-  id 'main'
-end
-
-node.default['knotx']['main2']['jmx_port'] = '18093'
-node.default['knotx']['main2']['debug_port'] = '28093'
-node.default['knotx']['main2']['port'] = '8093'
-
-knotx_instance 'Knotx Main2: Install' do
-  id 'main2'
-end
+# JAVA has to be present on the environment before we can install knotx
+include_recipe 'java::default'

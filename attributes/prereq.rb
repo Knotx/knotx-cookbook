@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: knotx
-# Recipe:: commons
+# Attributes:: prereq
 #
 # Copyright 2016 Karol Drazek
 #
@@ -16,25 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# TODO: Consider if this is worth including in HWRP
-
-include_recipe 'java::default'
-
-package 'git'
-
-group node['knotx']['group'] do
-  system true
-end
-
-directory node['knotx']['base_dir'] do
-  recursive true
-end
-
-user node['knotx']['user'] do
-  comment 'Knotx User'
-  gid node['knotx']['group']
-  home node['knotx']['base_dir']
-  shell '/bin/bash'
-  manage_home true
-  system true
-end
+# Java attributes
+default['java']['oracle']['accept_oracle_download_terms'] = 'true'
+default['java']['jdk_version'] = '8'
+default['java']['install_flavor'] = 'oracle'

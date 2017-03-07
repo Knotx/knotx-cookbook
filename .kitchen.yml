@@ -13,11 +13,13 @@ platforms:
 suites:
   - name: default
     run_list:
-      - recipe[knotx::_install]
+      - recipe[knotx_test::install_main]
+      - recipe[knotx_test::install_main2]
     attributes:
   - name: git_config
     run_list:
-      - recipe[knotx::_install]
+      - recipe[knotx_test::install_main]
+      - recipe[knotx_test::install_main2]
     attributes:
       knotx:
         config:
