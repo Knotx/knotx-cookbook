@@ -63,3 +63,9 @@ default['knotx']['config']['git_url'] =
 default['knotx']['config']['git_user'] = ''
 default['knotx']['config']['git_pass'] = ''
 default['knotx']['config']['git_revision'] = 'master'
+
+# TEMPLATE SOURCES
+default['knotx']['source']['knotx_init'] = 'knotx'
+default['knotx']['source']['knotx_conf'] = 'knotx'
+default['knotx']['source']['config_json'] = 'knotx'
+default['knotx']['source']['logback_xml'] = 'knotx'

@@ -89,11 +89,10 @@ class Chef
         @new_resource.checksum =
           get_file(new_resource.source, new_resource.download_path)
 
-        # Cumulative Knotx and JVM opts loader for brevity
+        # Cumulative loaders for bervity
         load_config_vars
-
-        # Cumulative git config loader for brevity
         load_git_vars
+        load_source_vars
 
         knotx_state
       end

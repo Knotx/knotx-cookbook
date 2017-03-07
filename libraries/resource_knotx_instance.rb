@@ -57,6 +57,12 @@ class Chef
       attr_accessor :git_pass
       attr_accessor :git_revision
 
+      # SOURCE opts
+      attr_accessor :knotx_init
+      attr_accessor :knotx_conf
+      attr_accessor :config_json
+      attr_accessor :logback_xml
+
       def initialize(id, run_context = nil)
         super
 

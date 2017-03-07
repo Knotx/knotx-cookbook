@@ -86,7 +86,7 @@ module Knotx
       )
       template.owner('root')
       template.group('root')
-      template.cookbook('knotx')
+      template.cookbook(node['knotx']['source']['knotx_init'])
       template.source('etc/init.d/knotx.erb')
       template.mode('0755')
       template.variables(
@@ -126,7 +126,7 @@ module Knotx
       )
       template.owner(node['knotx']['user'])
       template.group(node['knotx']['group'])
-      template.cookbook('knotx')
+      template.cookbook(node['knotx']['source']['knotx_conf'])
       template.source('knotx/knotx.conf.erb')
       template.mode('0644')
       template.variables(
@@ -187,7 +187,7 @@ module Knotx
         )
         file.owner(node['knotx']['user'])
         file.group(node['knotx']['group'])
-        file.cookbook('knotx')
+        file.cookbook(node['knotx']['source']['config_json'])
         file.source('knotx/config.json')
         file.mode('0644')
         file.run_action(:create)
@@ -202,7 +202,7 @@ module Knotx
       )
       template.owner(node['knotx']['user'])
       template.group(node['knotx']['group'])
-      template.cookbook('knotx')
+      template.cookbook(node['knotx']['source']['logback_xml'])
       template.source('knotx/logback.xml.erb')
       template.mode('0644')
       template.variables(

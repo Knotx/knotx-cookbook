@@ -66,5 +66,26 @@ module Knotx
         Chef::Log.debug("Value of #{var}: #{new_resource.send(var)}")
       end
     end
+
+    def load_source_vars
+      %w(
+        knotx_init
+        knotx_conf
+        config_json
+        logback_xml
+      ).each do |var|
+        if node['knotx'].key?(new_resource.id) &&
+           node['knotx'][new_resource.id].key?('source') &&
+           node['knotx'][new_resource.id]['source'].key?(var)
+          @new_resource.send(
+            "#{var}=",
+            node['knotx'][new_resource.id]['source'][var]
+          )
+        else
+          @new_resource.send("#{var}=", node['knotx']['source'][var])
+        end
+        Chef::Log.debug("Value of #{var}: #{new_resource.send(var)}")
+      end
+    end
   end
 end

@@ -4,7 +4,7 @@ Cookbook that installs and knotx instance.
 
 ## Supported Platforms
 
-* CentOS/RHEL 6.x 
+* CentOS/RHEL 6.x
 * CentOS/RHEL 7.x
 
 ## Attributes
@@ -190,7 +190,7 @@ Cookbook that installs and knotx instance.
     <td><tt>default['knotx']['config']['git_enabled']</tt></td>
     <td>String</td>
     <td>
-      If true, then configuration is pulled from git to 'config' directory residing in instance directory 
+      If true, then configuration is pulled from git to 'config' directory residing in instance directory
     </td>
     <td><tt>false</tt></td>
   </tr>
@@ -234,6 +234,38 @@ Cookbook that installs and knotx instance.
     </td>
     <td><tt>master</tt></td>
   </tr>
+  <tr>
+    <td><tt>default['knotx']['source']['knotx_init']</tt></td>
+    <td>String</td>
+    <td>
+      Source cookbook for knotx init script template
+    </td>
+    <td><tt>knotx</tt></td>
+  </tr>
+  <tr>
+    <td><tt>default['knotx']['source']['knotx_conf']</tt></td>
+    <td>String</td>
+    <td>
+      Source cookbook for knotx.conf template
+    </td>
+    <td><tt>knotx</tt></td>
+  </tr>
+  <tr>
+    <td><tt>default['knotx']['source']['config_json']</tt></td>
+    <td>String</td>
+    <td>
+      Source cookbook for config.json file
+    </td>
+    <td><tt>knotx</tt></td>
+  </tr>
+  <tr>
+    <td><tt>default['knotx']['source']['logback_xml']</tt></td>
+    <td>String</td>
+    <td>
+      Source cookbook for logback.xml template
+    </td>
+    <td><tt>knotx</tt></td>
+  </tr>
 </table>
 
 ### knotx_instance resource attributes
@@ -274,7 +306,7 @@ Cookbook that installs and knotx instance.
 ## Instance specific attributes
 
 In case we want to create second instance of knotx on the same server
-named 'main2' we can just define instance specific atrributes that will 
+named 'main2' we can just define instance specific atrributes that will
 overwrite the default ones.
 
 ```ruby
@@ -319,7 +351,7 @@ remote_file "#{base_dir}/knotx-ext.jar" do
   action :create
 
   notifies :restart, 'service[knotx-main]', :delayed
-end 
+end
 
 knotx_instance 'Knotx Main: Install' do
   id 'main'
