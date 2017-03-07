@@ -28,13 +28,7 @@
     </layout>
   </appender>
 
-  <logger name="com.cognifide.knotx" level="<%= @main_log_level %>"
-          additivity="false">
-    <appender-ref ref="STDOUT"/>
-  </logger>
-
-  <logger name="io.netty.handler.logging" level="<%= @netty_log_level %>"
-          additivity="false">
+  <logger name="io.knotx" level="<%= @main_log_level %>" additivity="false">
     <appender-ref ref="STDOUT"/>
   </logger>
 

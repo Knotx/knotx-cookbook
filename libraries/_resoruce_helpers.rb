@@ -207,7 +207,6 @@ module Knotx
       template.mode('0644')
       template.variables(
         main_log_level: node['knotx']['log_level']['main'],
-        netty_log_level: node['knotx']['log_level']['netty'],
         root_log_level: node['knotx']['log_level']['root']
       )
       template.run_action(:create)
