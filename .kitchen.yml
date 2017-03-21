@@ -6,16 +6,21 @@ driver:
 provisioner:
   name: chef_zero
 
+verifier:
+  name: inspec
+  inspec_tests:
+    - test/inspec
+
 platforms:
   - name: centos-6.8
   - name: centos-7.3
 
 suites:
-  - name: default
+  - name: config_file
     run_list:
       - recipe[knotx::_install]
     attributes:
-  - name: git_config
+  - name: config_git
     run_list:
       - recipe[knotx::_install]
     attributes:
