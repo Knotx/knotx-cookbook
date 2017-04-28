@@ -291,7 +291,7 @@ Cookbook that installs and knotx instance.
     <td>
       Which version of knotx should be deployed
     </td>
-    <td><tt>1.0.0-RC7</tt></td>
+    <td><tt>[1.0.1](https://github.com/Cognifide/knotx/releases)</tt></td>
   </tr>
   <tr>
     <td><tt>source</tt></td>
@@ -324,7 +324,7 @@ include_recipe 'knotx::commons'
 
 knotx_instance 'Knotx Main: Install' do
   id 'main'
-  version '1.0.0-RC2'
+  version '1.0.1'
 end
 ```
 
@@ -355,7 +355,7 @@ end
 
 knotx_instance 'Knotx Main: Install' do
   id 'main'
-  version '1.0.0-RC2'
+  version '1.0.1'
 end
 
 service 'knotx-main' do
