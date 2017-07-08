@@ -29,3 +29,8 @@ node.default['knotx']['main2']['port'] = '8093'
 knotx_instance 'Knotx Main2: Install' do
   id 'main2'
 end
+
+service 'knotx-main' do
+  supports :status => true, :restart => true, :reload => true
+  action :start
+end

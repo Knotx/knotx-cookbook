@@ -243,6 +243,14 @@ Cookbook that installs and knotx instance.
     <td><tt>knotx</tt></td>
   </tr>
   <tr>
+    <td><tt>default['knotx']['source']['knotx_systemd']</tt></td>
+    <td>String</td>
+    <td>
+      Source cookbook for knotx systemd script template
+    </td>
+    <td><tt>knotx</tt></td>
+  </tr>
+  <tr>
     <td><tt>default['knotx']['source']['knotx_conf']</tt></td>
     <td>String</td>
     <td>
@@ -291,7 +299,7 @@ Cookbook that installs and knotx instance.
     <td>
       Which version of knotx should be deployed
     </td>
-    <td><tt>1.0.0-RC7</tt></td>
+    <td><tt>1.0.1</tt></td>
   </tr>
   <tr>
     <td><tt>source</tt></td>

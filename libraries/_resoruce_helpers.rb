@@ -19,6 +19,15 @@
 module Knotx
   module ResourceHelpers
 
+    # Check if systemd is available
+    def systemd_available?
+      File.directory?('/etc/systemd/system')
+    end
+
+    def systemd_daemon_reload
+      `systemctl daemon-reload`
+    end
+
     # Parse repo url to include credentials
     def repo_url(address, login, password)
       require 'uri'
@@ -97,6 +106,27 @@ module Knotx
       )
       template.run_action(:create)
       template.updated_by_last_action?
+    end
+
+    def systemd_script_update(full_id, root_dir, log_dir)
+      systemd_script = ::File.join('/etc/systemd/system/', "#{full_id}.service")
+      template = Chef::Resource::Template.new(
+        systemd_script,
+        run_context
+      )
+      template.owner('root')
+      template.group('root')
+      template.cookbook(node['knotx']['source']['knotx_systemd'])
+      template.source('etc/systemd/system/knotx.service.erb')
+      template.mode('0755')
+      template.variables(
+        knotx_root_dir: root_dir,
+        knotx_log_dir:  log_dir,
+        knotx_id:       full_id,
+        knotx_user:     node['knotx']['user']
+      )
+      template.run_action(:create)
+      systemd_daemon_reload if template.updated_by_last_action?
     end
 
     def jvm_config_update(

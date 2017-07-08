@@ -127,12 +127,20 @@ class Chef
       def configure_knotx
         changed = false
 
-        # Update init script
-        changed = true if init_script_update(
-          new_resource.full_id,
-          new_resource.install_dir,
-          new_resource.log_dir
-        )
+        # Update startup script
+        if systemd_available?
+          changed = true if systemd_script_update(
+            new_resource.full_id,
+            new_resource.install_dir,
+            new_resource.log_dir
+          )
+        else
+          changed = true if init_script_update(
+            new_resource.full_id,
+            new_resource.install_dir,
+            new_resource.log_dir
+          )
+        end
 
         # Update startup JVM config
         changed = true if jvm_config_update(

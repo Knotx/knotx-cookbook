@@ -17,20 +17,29 @@
 
 . /etc/rc.d/init.d/functions
 
-ROOT_DIR="<%= @knotx_root_dir %>"
-
 CONFIG_FILE="<%= @knotx_root_dir %>/knotx.conf"
 
 [ -e $CONFIG_FILE ] && . $CONFIG_FILE
 
-# Removing endlines from variable for loading
-KNOTX_OPTS=$(echo $KNOTX_OPTS|tr -d '\n')
-KNOTX_CONFIG=$(echo $KNOTX_CONFIG|tr -d '\n')
-
 start()
 {
   echo -n $"Starting <%= @knotx_id %>: "
-  runuser -l "<%= @knotx_user %>" -c "java $KNOTX_OPTS -cp $ROOT_DIR/app/\* io.knotx.launcher.LogbackLauncher $KNOTX_CONFIG $KNOTX_CONFIG_EXTRA >> <%= @knotx_log_dir %>/<%= @knotx_id %>.log 2>&1 &" && echo_success || echo_failure
+  runuser -l "<%= @knotx_user %>" -c "java \
+  -Dlogback.configurationFile=<%= @knotx_root_dir %>/logback.xml \
+  -Dvertx.cacheDirBase=<%= @knotx_root_dir %>/.vertx \
+  -Xms${KNOTX_MIN_HEAP}m \
+  -Xmx${KNOTX_MAX_HEAP}m \
+  -XX:ReservedCodeCacheSize=${KNOTX_CODE_CACHE}m \
+  -XX:+UseBiasedLocking \
+  -XX:BiasedLockingStartupDelay=0 \
+  -Dio.knotx.KnotxServer.options.config.httpPort=${KNOTX_PORT} \
+  -cp <%= @knotx_root_dir %>/app/\* io.knotx.launcher.LogbackLauncher \
+  ${KNOTX_JMX_OPTS} \
+  ${KNOTX_DEBUG_OPTS} \
+  ${KNOTX_GC_OPTS} \
+  ${KNOTX_EXTRA_OPTS} \
+  ${KNOTX_CONFIG} \
+  ${KNOTX_CONFIG_EXTRA} >> <%= @knotx_log_dir %>/<%= @knotx_id %>.log 2>&1 &" && echo_success || echo_failure
   RETVAL=$?
   echo
   if [ $RETVAL -ne 0 ] ; then
@@ -40,7 +49,7 @@ start()
 
 get_pid()
 {
-  ps -aefw | grep "cp $ROOT_DIR/" | grep -v " grep " | awk '{print $2}'
+  ps -aefw | grep "cp <%= @knotx_root_dir %>/" | grep -v " grep " | awk '{print $2}'
 }
 
 do_start()

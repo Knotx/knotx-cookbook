@@ -65,6 +65,7 @@ default['knotx']['config']['git_revision'] = 'master'
 
 # TEMPLATE SOURCES
 default['knotx']['source']['knotx_init'] = 'knotx'
+default['knotx']['source']['knotx_systemd'] = 'knotx'
 default['knotx']['source']['knotx_conf'] = 'knotx'
 default['knotx']['source']['config_json'] = 'knotx'
 default['knotx']['source']['logback_xml'] = 'knotx'

@@ -2,6 +2,7 @@
 driver:
   name: vagrant
   linked_clone: true
+  require_chef_omnibus: 12
 
 provisioner:
   name: chef_zero
