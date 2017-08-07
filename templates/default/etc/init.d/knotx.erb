@@ -33,7 +33,7 @@ start()
   -XX:+UseBiasedLocking \
   -XX:BiasedLockingStartupDelay=0 \
   -Dio.knotx.KnotxServer.options.config.httpPort=${KNOTX_PORT} \
-  -cp <%= @knotx_root_dir %>/app/\* io.knotx.launcher.LogbackLauncher \
+  -cp \"<%= @knotx_root_dir %>/app/*\" io.knotx.launcher.LogbackLauncher \
   ${KNOTX_JMX_OPTS} \
   ${KNOTX_DEBUG_OPTS} \
   ${KNOTX_GC_OPTS} \
