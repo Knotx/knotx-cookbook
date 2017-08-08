@@ -21,6 +21,8 @@ suites:
     run_list:
       - recipe[knotx::_install]
     attributes:
+      knotx:
+        debug_enabled: true
   - name: config_git
     run_list:
       - recipe[knotx::_install]
