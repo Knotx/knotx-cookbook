@@ -36,6 +36,5 @@ KNOTX_JMX_OPTS="\
 
 <%- if @debug_enabled == true -%>
 KNOTX_DEBUG_OPTS="\
-  -Xdebug \
-  -Xrunjdwp:transport=dt_socket,address=<%= @debug_port %>,server=y,suspend=n"
+  -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=<%= @debug_port %>"
 <%- end -%>
