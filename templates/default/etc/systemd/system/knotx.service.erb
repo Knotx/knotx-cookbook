@@ -12,12 +12,12 @@ ExecStart=/bin/sh -c '/usr/bin/java \
   -XX:ReservedCodeCacheSize=${KNOTX_CODE_CACHE}m \
   -XX:+UseBiasedLocking \
   -XX:BiasedLockingStartupDelay=0 \
-  -Dio.knotx.KnotxServer.options.config.httpPort=${KNOTX_PORT} \
-  -cp "<%= @knotx_root_dir %>/app/*" io.knotx.launcher.LogbackLauncher \
   ${KNOTX_JMX_OPTS} \
   ${KNOTX_DEBUG_OPTS} \
   ${KNOTX_GC_OPTS} \
   ${KNOTX_EXTRA_OPTS} \
+  -Dio.knotx.KnotxServer.options.config.httpPort=${KNOTX_PORT} \
+  -cp "<%= @knotx_root_dir %>/app/*" io.knotx.launcher.LogbackLauncher \
   ${KNOTX_CONFIG} \
   ${KNOTX_CONFIG_EXTRA} >> <%= @knotx_log_dir %>/<%= @knotx_id %>.log 2>&1'
 Type=simple
