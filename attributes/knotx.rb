@@ -51,7 +51,6 @@ default['knotx']['code_cache'] = '64'
 default['knotx']['extra_opts'] = ''
 
 # KNOTX CONFIG
-
 default['knotx']['app_config_path'] = 'config.json'
 default['knotx']['app_config_extra'] = ''
 
