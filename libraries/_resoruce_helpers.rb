@@ -21,8 +21,16 @@ module Knotx
 
     # Check if systemd is available
     def systemd_available?
-      File.directory?('/etc/systemd/system') && node['platform'] != 'amazon'
+      require 'rubygems'
+      require 'ohai'
+
+      @ohai = Ohai::System.new
+      @ohai.all_plugins
+      # Temporarily excluding Amazon Linux.
+      File.directory?('/etc/systemd/system') && @ohai[:platform] != 'amazon'
     end
+
+
 
     def systemd_daemon_reload
       `systemctl daemon-reload`
