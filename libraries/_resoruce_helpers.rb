@@ -21,7 +21,7 @@ module Knotx
 
     # Check if systemd is available
     def systemd_available?
-      File.directory?('/etc/systemd/system')
+      File.directory?('/etc/systemd/system') && node['platform'] != 'amazon'
     end
 
     def systemd_daemon_reload
