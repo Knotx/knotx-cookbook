@@ -30,8 +30,6 @@ module Knotx
       File.directory?('/etc/systemd/system') && @ohai[:platform] != 'amazon'
     end
 
-
-
     def systemd_daemon_reload
       `systemctl daemon-reload`
     end
