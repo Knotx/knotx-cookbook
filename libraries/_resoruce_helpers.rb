@@ -30,8 +30,6 @@ module Knotx
       File.directory?('/etc/systemd/system') && @ohai[:platform] != 'amazon'
     end
 
-
-
     def systemd_daemon_reload
       `systemctl daemon-reload`
     end
@@ -103,8 +101,8 @@ module Knotx
       )
       template.owner('root')
       template.group('root')
-      template.cookbook(node['knotx']['source']['knotx_init'])
-      template.source('etc/init.d/knotx.erb')
+      template.cookbook(new_resource.knotx_init_cookbook)
+      template.source(new_resource.knotx_init_path)
       template.mode('0755')
       template.variables(
         knotx_root_dir: root_dir,
@@ -117,15 +115,17 @@ module Knotx
     end
 
     def systemd_script_update(full_id, root_dir, log_dir)
-      systemd_script = ::File.join('/etc/systemd/system/', "#{full_id}.service")
+      systemd_script = ::File.join(
+        '/etc/systemd/system/', "#{full_id}.service"
+      )
       template = Chef::Resource::Template.new(
         systemd_script,
         run_context
       )
       template.owner('root')
       template.group('root')
-      template.cookbook(node['knotx']['source']['knotx_systemd'])
-      template.source('etc/systemd/system/knotx.service.erb')
+      template.cookbook(new_resource.knotx_systemd_cookbook)
+      template.source(new_resource.knotx_systemd_path)
       template.mode('0755')
       template.variables(
         knotx_root_dir: root_dir,
@@ -154,8 +154,8 @@ module Knotx
       max_heap,
       max_permsize,
       code_cache,
-      extra_opts)
-
+      extra_opts
+    )
       app_config_path = absolute_path(root_dir, app_config_path)
 
       template = Chef::Resource::Template.new(
@@ -164,8 +164,8 @@ module Knotx
       )
       template.owner(node['knotx']['user'])
       template.group(node['knotx']['group'])
-      template.cookbook(node['knotx']['source']['knotx_conf'])
-      template.source('knotx/knotx.conf.erb')
+      template.cookbook(new_resource.knotx_conf_cookbook)
+      template.source(new_resource.knotx_conf_path)
       template.mode('0644')
       template.variables(
         knotx_id:               id,
@@ -225,8 +225,8 @@ module Knotx
         )
         file.owner(node['knotx']['user'])
         file.group(node['knotx']['group'])
-        file.cookbook(node['knotx']['source']['config_json'])
-        file.source('knotx/config.json')
+        file.cookbook(new_resource.config_json_cookbook)
+        file.source(new_resource.config_json_path)
         file.mode('0644')
         file.run_action(:create)
         file.updated_by_last_action?
@@ -240,8 +240,8 @@ module Knotx
       )
       template.owner(node['knotx']['user'])
       template.group(node['knotx']['group'])
-      template.cookbook(node['knotx']['source']['logback_xml'])
-      template.source('knotx/logback.xml.erb')
+      template.cookbook(new_resource.logback_xml_cookbook)
+      template.source(new_resource.logback_xml_path)
       template.mode('0644')
       template.variables(
         main_log_level: node['knotx']['log_level']['main'],

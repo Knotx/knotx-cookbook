@@ -32,7 +32,9 @@ class Chef
 
       # Downloading appropriate knotx and getting current state
       def load_current_resource
-        @current_resource = Chef::Resource::KnotxInstance.new(new_resource.name)
+        @current_resource = Chef::Resource::KnotxInstance.new(
+          new_resource.name
+        )
 
         # TODO: This part will have to be simplified
 
