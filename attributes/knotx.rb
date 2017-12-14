@@ -63,8 +63,18 @@ default['knotx']['config']['git_pass'] = ''
 default['knotx']['config']['git_revision'] = 'master'
 
 # TEMPLATE SOURCES
-default['knotx']['source']['knotx_init'] = 'knotx'
-default['knotx']['source']['knotx_systemd'] = 'knotx'
-default['knotx']['source']['knotx_conf'] = 'knotx'
-default['knotx']['source']['config_json'] = 'knotx'
-default['knotx']['source']['logback_xml'] = 'knotx'
+default['knotx']['source']['knotx_init']['cookbook'] = 'knotx'
+default['knotx']['source']['knotx_init']['path'] = 'etc/init.d/knotx.erb'
+
+default['knotx']['source']['knotx_systemd']['cookbook'] = 'knotx'
+default['knotx']['source']['knotx_systemd']['path'] =
+  'etc/systemd/system/knotx.service.erbt'
+
+default['knotx']['source']['knotx_conf']['cookbook'] = 'knotx'
+default['knotx']['source']['knotx_conf']['path'] = 'knotx/knotx.conf.erb'
+
+default['knotx']['source']['config_json']['cookbook'] = 'knotx'
+default['knotx']['source']['config_json']['path'] = 'knotx/config.json'
+
+default['knotx']['source']['logback_xml']['cookbook'] = 'knotx'
+default['knotx']['source']['logback_xml']['path'] = 'knotx/logback.xml.erb'
