@@ -58,10 +58,14 @@ class Chef
       attr_accessor :git_revision
 
       # SOURCE opts
-      attr_accessor :knotx_init
-      attr_accessor :knotx_conf
-      attr_accessor :config_json
-      attr_accessor :logback_xml
+      attr_accessor :knotx_init_cookbook
+      attr_accessor :knotx_init_path
+      attr_accessor :knotx_conf_cookbook
+      attr_accessor :knotx_conf_path
+      attr_accessor :config_json_cookbook
+      attr_accessor :config_json_path
+      attr_accessor :logback_xml_cookbook
+      attr_accessor :logback_xml_path
 
       def initialize(id, run_context = nil)
         super
