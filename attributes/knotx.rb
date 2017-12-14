@@ -68,7 +68,7 @@ default['knotx']['source']['knotx_init_path'] = 'etc/init.d/knotx.erb'
 
 default['knotx']['source']['knotx_systemd_cookbook'] = 'knotx'
 default['knotx']['source']['knotx_systemd_path'] =
-  'etc/systemd/system/knotx.service.erbt'
+  'etc/systemd/system/knotx.service.erb'
 
 default['knotx']['source']['knotx_conf_cookbook'] = 'knotx'
 default['knotx']['source']['knotx_conf_path'] = 'knotx/knotx.conf.erb'
