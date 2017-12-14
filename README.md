@@ -235,7 +235,7 @@ Cookbook that installs and knotx instance.
     <td><tt>master</tt></td>
   </tr>
   <tr>
-    <td><tt>default['knotx']['source']['knotx_init']['cookbook']</tt></td>
+    <td><tt>default['knotx']['source']['knotx_init_cookbook']</tt></td>
     <td>String</td>
     <td>
       Source cookbook for knotx init script template
@@ -243,7 +243,7 @@ Cookbook that installs and knotx instance.
     <td><tt>knotx</tt></td>
   </tr>
   <tr>
-    <td><tt>default['knotx']['source']['knotx_init']['path']</tt></td>
+    <td><tt>default['knotx']['source']['knotx_init_path']</tt></td>
     <td>String</td>
     <td>
       Template path for knotx init script
@@ -251,7 +251,7 @@ Cookbook that installs and knotx instance.
     <td><tt>etc/init.d/knotx.erb</tt></td>
   </tr>
   <tr>
-    <td><tt>default['knotx']['source']['knotx_systemd']['cookbook']</tt></td>
+    <td><tt>default['knotx']['source']['knotx_systemd_cookbook']</tt></td>
     <td>String</td>
     <td>
       Source cookbook for knotx systemd script template
@@ -259,7 +259,7 @@ Cookbook that installs and knotx instance.
     <td><tt>knotx</tt></td>
   </tr>
   <tr>
-    <td><tt>default['knotx']['source']['knotx_systemd']['path']</tt></td>
+    <td><tt>default['knotx']['source']['knotx_systemd_path']</tt></td>
     <td>String</td>
     <td>
       Template path for knotx systemd script
@@ -267,7 +267,7 @@ Cookbook that installs and knotx instance.
     <td><tt>knotx</tt></td>
   </tr>
   <tr>
-    <td><tt>default['knotx']['source']['knotx_conf']['cookbook']</tt></td>
+    <td><tt>default['knotx']['source']['knotx_conf_cookbook']</tt></td>
     <td>String</td>
     <td>
       Source cookbook for knotx.conf template
@@ -275,7 +275,7 @@ Cookbook that installs and knotx instance.
     <td><tt>knotx</tt></td>
   </tr>
   <tr>
-    <td><tt>default['knotx']['source']['knotx_conf']['path']</tt></td>
+    <td><tt>default['knotx']['source']['knotx_conf_path']</tt></td>
     <td>String</td>
     <td>
       Template path for knotx.conf file
@@ -283,7 +283,7 @@ Cookbook that installs and knotx instance.
     <td><tt>knotx</tt></td>
   </tr>
   <tr>
-    <td><tt>default['knotx']['source']['config_json']['cookbook']</tt></td>
+    <td><tt>default['knotx']['source']['config_json_cookbook']</tt></td>
     <td>String</td>
     <td>
       Source cookbook for config.json file
@@ -299,7 +299,7 @@ Cookbook that installs and knotx instance.
     <td><tt>knotx</tt></td>
   </tr>
   <tr>
-    <td><tt>default['knotx']['source']['logback_xml']['cookbook']</tt></td>
+    <td><tt>default['knotx']['source']['logback_xml_cookbook']</tt></td>
     <td>String</td>
     <td>
       Source cookbook for logback.xml template
@@ -307,7 +307,7 @@ Cookbook that installs and knotx instance.
     <td><tt>knotx</tt></td>
   </tr>
   <tr>
-    <td><tt>default['knotx']['source']['logback_xml']['path']</tt></td>
+    <td><tt>default['knotx']['source']['logback_xml_path']</tt></td>
     <td>String</td>
     <td>
       Template path for logback.xml file

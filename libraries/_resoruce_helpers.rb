@@ -101,8 +101,8 @@ module Knotx
       )
       template.owner('root')
       template.group('root')
-      template.cookbook(node['knotx']['source']['knotx_init']['cookbook'])
-      template.source(node['knotx']['source']['knotx_init']['path'])
+      template.cookbook(node['knotx']['source']['knotx_init_cookbook'])
+      template.source(node['knotx']['source']['knotx_init_path'])
       template.mode('0755')
       template.variables(
         knotx_root_dir: root_dir,
@@ -124,8 +124,8 @@ module Knotx
       )
       template.owner('root')
       template.group('root')
-      template.cookbook(node['knotx']['source']['knotx_systemd']['cookbook'])
-      template.source(node['knotx']['source']['knotx_systemd']['path'])
+      template.cookbook(node['knotx']['source']['knotx_systemd_cookbook'])
+      template.source(node['knotx']['source']['knotx_systemd_path'])
       template.mode('0755')
       template.variables(
         knotx_root_dir: root_dir,
@@ -164,8 +164,8 @@ module Knotx
       )
       template.owner(node['knotx']['user'])
       template.group(node['knotx']['group'])
-      template.cookbook(node['knotx']['source']['knotx_conf']['source'])
-      template.source(node['knotx']['source']['knotx_conf']['path'])
+      template.cookbook(node['knotx']['source']['knotx_conf_source'])
+      template.source(node['knotx']['source']['knotx_conf_path'])
       template.mode('0644')
       template.variables(
         knotx_id:               id,
@@ -225,8 +225,8 @@ module Knotx
         )
         file.owner(node['knotx']['user'])
         file.group(node['knotx']['group'])
-        file.cookbook(node['knotx']['source']['config_json']['cookbook'])
-        file.source(node['knotx']['source']['config_json']['path'])
+        file.cookbook(node['knotx']['source']['config_json_cookbook'])
+        file.source(node['knotx']['source']['config_json_path'])
         file.mode('0644')
         file.run_action(:create)
         file.updated_by_last_action?
@@ -240,8 +240,8 @@ module Knotx
       )
       template.owner(node['knotx']['user'])
       template.group(node['knotx']['group'])
-      template.cookbook(node['knotx']['source']['logback_xml']['cookbook'])
-      template.source(node['knotx']['source']['logback_xml']['path'])
+      template.cookbook(node['knotx']['source']['logback_xml_cookbook'])
+      template.source(node['knotx']['source']['logback_xml_path'])
       template.mode('0644')
       template.variables(
         main_log_level: node['knotx']['log_level']['main'],
