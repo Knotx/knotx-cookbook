@@ -69,10 +69,14 @@ module Knotx
 
     def load_source_vars
       %w(
-        knotx_init
-        knotx_conf
-        config_json
-        logback_xml
+        knotx_init_cookbook
+        knotx_init_path
+        knotx_conf_cookbook
+        knotx_conf_path
+        config_json_cookbook
+        config_json_path
+        logback_xml_cookbook
+        logback_xml_path
       ).each do |var|
         if node['knotx'].key?(new_resource.id) &&
            node['knotx'][new_resource.id].key?('source') &&
