@@ -164,7 +164,7 @@ module Knotx
       )
       template.owner(node['knotx']['user'])
       template.group(node['knotx']['group'])
-      template.cookbook(node['knotx']['source']['knotx_conf_source'])
+      template.cookbook(node['knotx']['source']['knotx_conf_cookbook'])
       template.source(node['knotx']['source']['knotx_conf_path'])
       template.mode('0644')
       template.variables(
