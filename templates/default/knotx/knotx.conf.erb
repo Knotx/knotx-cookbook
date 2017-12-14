@@ -13,6 +13,8 @@ KNOTX_CODE_CACHE=<%= @code_cache %>
 KNOTX_PORT=<%= @port %>
 KNOTX_EXTRA_OPTS=<%= @extra_opts %>
 
+KNOTX_GENERAL_OPTS="-Djava.net.preferIPv4Stack=true"
+
 KNOTX_GC_OPTS="\
   -Xloggc:<%= @knotx_log_dir %>/gc-<%= @knotx_id %>.log \
   -XX:+PrintGCApplicationStoppedTime \

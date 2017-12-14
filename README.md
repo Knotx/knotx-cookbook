@@ -381,4 +381,4 @@ TODO:
 * jar cleanup after version switch
 * all actions including restart/start/stop
 * add extensions testing with multiple knotx instances
->>>>>>> develop
+
