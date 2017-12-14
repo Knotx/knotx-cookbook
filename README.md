@@ -264,7 +264,7 @@ Cookbook that installs and knotx instance.
     <td>
       Template path for knotx systemd script
     </td>
-    <td><tt>knotx</tt></td>
+    <td><tt>etc/systemd/system/knotx.service.erb</tt></td>
   </tr>
   <tr>
     <td><tt>default['knotx']['source']['knotx_conf_cookbook']</tt></td>
@@ -280,7 +280,7 @@ Cookbook that installs and knotx instance.
     <td>
       Template path for knotx.conf file
     </td>
-    <td><tt>knotx</tt></td>
+    <td><tt>knotx/knotx.conf.erb</tt></td>
   </tr>
   <tr>
     <td><tt>default['knotx']['source']['config_json_cookbook']</tt></td>
@@ -296,7 +296,7 @@ Cookbook that installs and knotx instance.
     <td>
       Template path for config.json file
     </td>
-    <td><tt>knotx</tt></td>
+    <td><tt>knotx/config.json</tt></td>
   </tr>
   <tr>
     <td><tt>default['knotx']['source']['logback_xml_cookbook']</tt></td>
@@ -312,7 +312,7 @@ Cookbook that installs and knotx instance.
     <td>
       Template path for logback.xml file
     </td>
-    <td><tt>knotx</tt></td>
+    <td><tt>knotx/logback.xml.erb</tt></td>
   </tr>
 </table>
 
