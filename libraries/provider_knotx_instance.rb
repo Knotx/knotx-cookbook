@@ -162,7 +162,8 @@ class Chef
           new_resource.max_heap,
           new_resource.max_permsize,
           new_resource.code_cache,
-          new_resource.extra_opts
+          new_resource.extra_opts,
+          new_resource.gc_opts
         )
 
         # Update knotx config

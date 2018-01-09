@@ -154,7 +154,8 @@ module Knotx
       max_heap,
       max_permsize,
       code_cache,
-      extra_opts
+      extra_opts,
+      gc_opts
     )
       app_config_path = absolute_path(root_dir, app_config_path)
 
@@ -183,7 +184,8 @@ module Knotx
         max_heap:               max_heap,
         max_permsize:           max_permsize,
         code_cache:             code_cache,
-        extra_opts:             extra_opts
+        extra_opts:             extra_opts,
+        gc_opts:                gc_opts
       )
       template.run_action(:create)
       template.updated_by_last_action?

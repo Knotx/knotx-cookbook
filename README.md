@@ -171,6 +171,14 @@ Cookbook that installs and knotx instance.
     <td><tt></tt></td>
   </tr>
   <tr>
+    <td><tt>default['knotx']['gc_opts']</tt></td>
+    <td>String</td>
+    <td>
+      Base garbage collection settings
+    </td>
+    <td><tt></tt></td>
+  </tr>
+  <tr>
     <td><tt>default['knotx']['app_config_path']</tt></td>
     <td>String</td>
     <td>

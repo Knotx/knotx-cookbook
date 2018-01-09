@@ -33,6 +33,7 @@ module Knotx
         max_heap
         code_cache
         extra_opts
+        gc_opts
       ).each do |var|
         if node['knotx'].key?(new_resource.id) &&
            node['knotx'][new_resource.id].key?(var)

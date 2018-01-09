@@ -16,6 +16,7 @@ KNOTX_EXTRA_OPTS=<%= @extra_opts %>
 KNOTX_GENERAL_OPTS="-Djava.net.preferIPv4Stack=true"
 
 KNOTX_GC_OPTS="\
+  <%= @gc_opts %> \
   -Xloggc:<%= @knotx_log_dir %>/gc-<%= @knotx_id %>.log \
   -XX:+PrintGCApplicationStoppedTime \
   -XX:+PrintGCApplicationConcurrentTime \

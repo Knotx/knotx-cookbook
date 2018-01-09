@@ -42,6 +42,7 @@ class Chef
       attr_accessor :max_permsize
       attr_accessor :code_cache
       attr_accessor :extra_opts
+      attr_accessor :gc_opts
       attr_accessor :jmx_ip
       attr_accessor :jmx_port
       attr_accessor :debug_port
