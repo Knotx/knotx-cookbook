@@ -21,6 +21,7 @@ default['knotx']['user'] = 'knotx'
 default['knotx']['group'] = 'knotx'
 default['knotx']['base_dir'] = '/opt/knotx'
 default['knotx']['log_dir'] = '/var/log/knotx'
+default['knotx']['open_file_limit'] = '65536'
 
 default['knotx']['log_level']['main'] = 'INFO'
 default['knotx']['log_level']['root'] = 'ERROR'
@@ -71,6 +72,10 @@ default['knotx']['source']['knotx_init_path'] = 'etc/init.d/knotx.erb'
 default['knotx']['source']['knotx_systemd_cookbook'] = 'knotx'
 default['knotx']['source']['knotx_systemd_path'] =
   'etc/systemd/system/knotx.service.erb'
+
+default['knotx']['source']['knotx_ulimit_cookbook'] = 'knotx'
+default['knotx']['source']['knotx_ulimit_path'] =
+  'etc/security/limits.d/knotx_limits.conf.erb'
 
 default['knotx']['source']['knotx_conf_cookbook'] = 'knotx'
 default['knotx']['source']['knotx_conf_path'] = 'knotx/knotx.conf.erb'

@@ -24,6 +24,7 @@ ExecStart=/bin/sh -c '/usr/bin/java \
 Type=simple
 PIDFile=/var/run/<%= @knotx_id %>
 User=<%= @knotx_user %>
+LimitNOFILE=<%= @knotx_open_file_limit %>
 
 [Install]
 WantedBy=default.target

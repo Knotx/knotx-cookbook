@@ -74,6 +74,8 @@ module Knotx
         knotx_init_path
         knotx_systemd_cookbook
         knotx_systemd_path
+        knotx_ulimit_cookbook
+        knotx_ulimit_path
         knotx_conf_cookbook
         knotx_conf_path
         config_json_cookbook

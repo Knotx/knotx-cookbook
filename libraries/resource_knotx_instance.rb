@@ -63,6 +63,8 @@ class Chef
       attr_accessor :knotx_init_path
       attr_accessor :knotx_systemd_cookbook
       attr_accessor :knotx_systemd_path
+      attr_accessor :knotx_ulimit_cookbook
+      attr_accessor :knotx_ulimit_path
       attr_accessor :knotx_conf_cookbook
       attr_accessor :knotx_conf_path
       attr_accessor :config_json_cookbook

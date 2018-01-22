@@ -114,6 +114,27 @@ module Knotx
       template.updated_by_last_action?
     end
 
+    # Update ulimit values (valid only for Centos 6)
+    def ulimit_update
+      ulimit_file = '/etc/security/limits.d/knotx_limits.conf'
+      template = Chef::Resource::Template.new(
+        ulimit_file,
+        run_context
+      )
+      template.owner('root')
+      template.group('root')
+      template.cookbook(new_resource.knotx_ulimit_cookbook)
+      template.source(new_resource.knotx_ulimit_path)
+      template.mode('0644')
+      template.variables(
+        knotx_user:             node['knotx']['user'],
+        knotx_open_file_limit:  node['knotx']['open_file_limit']
+      )
+      template.run_action(:create)
+      template.updated_by_last_action?
+    end
+
+    # Create/update systemd script
     def systemd_script_update(full_id, root_dir, log_dir)
       systemd_script = ::File.join(
         '/etc/systemd/system/', "#{full_id}.service"
@@ -128,10 +149,11 @@ module Knotx
       template.source(new_resource.knotx_systemd_path)
       template.mode('0755')
       template.variables(
-        knotx_root_dir: root_dir,
-        knotx_log_dir:  log_dir,
-        knotx_id:       full_id,
-        knotx_user:     node['knotx']['user']
+        knotx_root_dir:         root_dir,
+        knotx_log_dir:          log_dir,
+        knotx_id:               full_id,
+        knotx_user:             node['knotx']['user'],
+        knotx_open_file_limit:  node['knotx']['open_file_limit']
       )
       template.run_action(:create)
       systemd_daemon_reload if template.updated_by_last_action?

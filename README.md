@@ -43,6 +43,14 @@ Cookbook that installs and knotx instance.
     <td><tt>/opt/knotx</tt></td>
   </tr>
   <tr>
+    <td><tt>default['knotx']['open_file_limit']</tt></td>
+    <td>String</td>
+    <td>
+      File descript limit for knotx user
+    </td>
+    <td><tt>65536</tt></td>
+  </tr>
+  <tr>
     <td><tt>default['knotx']['log_dir']</tt></td>
     <td>String</td>
     <td>
@@ -273,6 +281,22 @@ Cookbook that installs and knotx instance.
       Template path for knotx systemd script
     </td>
     <td><tt>etc/systemd/system/knotx.service.erb</tt></td>
+  </tr>
+  <tr>
+    <td><tt>default['knotx']['source']['knotx_ulimit_cookbook']</tt></td>
+    <td>String</td>
+    <td>
+      Source cookbook for knotx ulimit template
+    </td>
+    <td><tt>knotx</tt></td>
+  </tr>
+  <tr>
+    <td><tt>default['knotx']['source']['knotx_ulimit_path']</tt></td>
+    <td>String</td>
+    <td>
+      Template path for knotx ulimit
+    </td>
+    <td><tt>etc/security/limits.d/knotx_limitx.conf.erb</tt></td>
   </tr>
   <tr>
     <td><tt>default['knotx']['source']['knotx_conf_cookbook']</tt></td>

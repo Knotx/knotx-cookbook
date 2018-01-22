@@ -142,6 +142,7 @@ class Chef
             new_resource.install_dir,
             new_resource.log_dir
           )
+          changed = true if ulimit_update
         end
 
         # Update startup JVM config
