@@ -16,6 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+extend Knotx::ResourceHelpers
+
 # OS specific attributes
 default['knotx']['user'] = 'knotx'
 default['knotx']['group'] = 'knotx'
@@ -49,13 +51,13 @@ default['knotx']['port'] = '8092'
 default['knotx']['min_heap'] = '256'
 default['knotx']['max_heap'] = '1024'
 default['knotx']['code_cache'] = '64'
-default['knotx']['extra_opts'] = ''
+default['knotx']['extra_opts'] = '-Dtest'
 default['knotx']['gc_opts'] =
   '-XX:+UseConcMarkSweepGC -XX:ParallelGCThreads=2 -XX:ParallelCMSThreads=1'
 
 # KNOTX CONFIG
 default['knotx']['app_config_path'] = 'config.json'
-default['knotx']['app_config_extra'] = ''
+default['knotx']['app_config_extra'] = '-test'
 
 default['knotx']['config']['git_enabled'] = false
 default['knotx']['config']['git_dir'] = nil

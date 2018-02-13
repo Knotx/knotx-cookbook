@@ -40,7 +40,7 @@ start()
   -Dio.knotx.KnotxServer.options.config.serverOptions.port=${KNOTX_PORT} \
   -cp \"<%= @knotx_root_dir %>/app/*\" io.knotx.launcher.LogbackLauncher \
   ${KNOTX_CONFIG} \
-  ${KNOTX_CONFIG_EXTRA} >> <%= @knotx_log_dir %>/<%= @knotx_id %>.log 2>&1 &" && echo_success || echo_failure
+  ${KNOTX_CONFIG_EXTRA} >> /dev/null 2>&1 &" && echo_success || echo_failure
   RETVAL=$?
   echo
   if [ $RETVAL -ne 0 ] ; then

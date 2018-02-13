@@ -257,7 +257,7 @@ module Knotx
       end
     end
 
-    def log_config_update
+    def log_config_update(id, log_dir)
       template = Chef::Resource::Template.new(
         "#{new_resource.install_dir}/logback.xml",
         run_context
@@ -268,6 +268,8 @@ module Knotx
       template.source(new_resource.logback_xml_path)
       template.mode('0644')
       template.variables(
+        knotx_id:       id,
+        knotx_log_dir:  log_dir,
         main_log_level: node['knotx']['log_level']['main'],
         root_log_level: node['knotx']['log_level']['root']
       )
