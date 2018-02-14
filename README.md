@@ -67,20 +67,28 @@ Cookbook that installs and knotx instance.
     <td><tt>INFO</tt></td>
   </tr>
   <tr>
-    <td><tt>default['knotx']['log_level']['netty']</tt></td>
-    <td>String</td>
-    <td>
-      Netty logging level
-    </td>
-    <td><tt>INFO</tt></td>
-  </tr>
-  <tr>
     <td><tt>default['knotx']['log_level']['root']</tt></td>
     <td>String</td>
     <td>
       Root logging level
     </td>
     <td><tt>ERROR</tt></td>
+  </tr>
+  <tr>
+    <td><tt>default['knotx']['log_history']['main']</tt></td>
+    <td>String</td>
+    <td>
+      Days how long main knotx logs should be kept
+    </td>
+    <td><tt>30</tt></td>
+  </tr>
+  <tr>
+    <td><tt>default['knotx']['log_history']['root']</tt></td>
+    <td>String</td>
+    <td>
+      Days how long root knotx logs should be kept
+    </td>
+    <td><tt>30</tt></td>
   </tr>
   <tr>
     <td><tt>default['knotx']['release_url']</tt></td>

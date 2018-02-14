@@ -1,4 +1,11 @@
+<%- extend Knotx::ResourceHelpers %>
+<%- if systemd_available? %>
+#
+# !! This is not bash file. This is systemd EnvironmentFile !!
+#
+<%- else %>
 #!/bin/bash
+<%- end %>
 
 # Knotx general attributes
 
@@ -15,29 +22,12 @@ KNOTX_EXTRA_OPTS=<%= @extra_opts %>
 
 KNOTX_GENERAL_OPTS="-Djava.net.preferIPv4Stack=true"
 
-KNOTX_GC_OPTS="\
-  <%= @gc_opts %> \
-  -Xloggc:<%= @knotx_log_dir %>/gc-<%= @knotx_id %>.log \
-  -XX:+PrintGCApplicationStoppedTime \
-  -XX:+PrintGCApplicationConcurrentTime \
-  -XX:+PrintGC \
-  -XX:+PrintGCTimeStamps \
-  -XX:+PrintGCDetails \
-  -XX:+UseGCLogFileRotation \
-  -XX:NumberOfGCLogFiles=10 \
-  -XX:GCLogFileSize=5M"
+KNOTX_GC_OPTS=" <%= @gc_opts %> -Xloggc:<%= @knotx_log_dir %>/<%= @knotx_id %>/gc.log -XX:+PrintGCApplicationStoppedTime -XX:+PrintGCApplicationConcurrentTime -XX:+PrintGC -XX:+PrintGCTimeStamps -XX:+PrintGCDetails -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=10 -XX:GCLogFileSize=5M"
 
 <%- if @jmx_enabled == true -%>
-KNOTX_JMX_OPTS="\
-  -Dcom.sun.management.jmxremote \
-  -Dcom.sun.management.jmxremote.port=<%= @jmx_port %> \
-  -Dcom.sun.management.jmxremote.rmi.port=<%= @jmx_port %> \
-  -Djava.rmi.server.hostname=<%= @jmx_ip %> \
-  -Dcom.sun.management.jmxremote.ssl=false \
-  -Dcom.sun.management.jmxremote.authenticate=false"
+KNOTX_JMX_OPTS="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=<%= @jmx_port %> -Dcom.sun.management.jmxremote.rmi.port=<%= @jmx_port%> -Djava.rmi.server.hostname=<%= @jmx_ip %> -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false"
 <%- end -%>
 
 <%- if @debug_enabled == true -%>
-KNOTX_DEBUG_OPTS="\
-  -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=<%= @debug_port %>"
+KNOTX_DEBUG_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=<%= @debug_port %>"
 <%- end -%>

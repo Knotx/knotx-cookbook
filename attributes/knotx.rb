@@ -26,6 +26,9 @@ default['knotx']['open_file_limit'] = '65536'
 default['knotx']['log_level']['main'] = 'INFO'
 default['knotx']['log_level']['root'] = 'ERROR'
 
+default['knotx']['log_history']['main'] = '30'
+default['knotx']['log_history']['root'] = '30'
+
 # Knotx source attributes
 default['knotx']['release_url'] =
   'https://oss.sonatype.org/content/groups/public/io/knotx/knotx-standalone'

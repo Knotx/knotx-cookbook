@@ -106,18 +106,26 @@ class Chef
 
       # Check if appropriate knotx is installed
       def knotx_installed?
-        # Currently deployed JAR checksum verification
-        if ::File.exist?(new_resource.install_path)
+        installed = true
 
-          new_checksum = new_resource.checksum
-          current_checksum = md5sum(new_resource.install_path)
-          # If checksum doesn't match deployment is required
-          return true if new_checksum == current_checksum
+        # Currently deployed JAR checksum verification
+        current_checksum = md5sum(new_resource.install_path) if
+          ::File.exist?(new_resource.install_path)
+        new_checksum = new_resource.checksum
+
+        # If checksum doesn't match deployment is required
+        installed = false unless new_checksum == current_checksum
+
+        [
+          new_resource.install_dir,
+          "#{new_resource.install_dir}/app",
+          "#{new_resource.log_dir}/#{new_resource.id}",
+          "#{node['knotx']['base_dir']}/file-uploads",
+        ].each do |f|
+          installed = false unless ::File.exist?(f)
         end
 
-        # TODO: Implement additional checks for log_dir, base_dir etc.
-
-        false
+        installed
       end
 
       def knotx_reconfigured?
@@ -171,7 +179,10 @@ class Chef
         changed = true if knotx_config_update
 
         # Update logging config
-        changed = true if log_config_update
+        changed = true if log_config_update(
+          new_resource.id,
+          new_resource.log_dir
+        )
 
         # Add knotx service to managed resources
         configure_service(new_resource.full_id)
@@ -185,19 +196,14 @@ class Chef
       def install_knotx
         changed = false
 
-        # Create base installation directory
-        changed = true if create_directory(new_resource.install_dir)
-
-        # Create jar directory
-        changed = true if create_directory("#{new_resource.install_dir}/app")
-
-        # Create logging directory
-        changed = true if create_directory(new_resource.log_dir)
-
-        # Temporary workaround for file-upload directory
-        changed = true if create_directory(
-          "#{node['knotx']['base_dir']}/file-uploads"
-        )
+        [
+          new_resource.install_dir,
+          "#{new_resource.install_dir}/app",
+          "#{new_resource.log_dir}/#{new_resource.id}",
+          "#{node['knotx']['base_dir']}/file-uploads",
+        ].each do |f|
+          changed = true if create_directory(f)
+        end
 
         # Copy current knotx version to install directory
         get_file(

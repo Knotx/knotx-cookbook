@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 EnvironmentFile=<%= @knotx_root_dir %>/knotx.conf
-ExecStart=/bin/sh -c '/usr/bin/java \
+ExecStart=/usr/bin/java \
   -Dlogback.configurationFile=<%= @knotx_root_dir %>/logback.xml \
   -Dvertx.cacheDirBase=<%= @knotx_root_dir %>/.vertx \
   -Xms${KNOTX_MIN_HEAP}m \
@@ -12,15 +12,15 @@ ExecStart=/bin/sh -c '/usr/bin/java \
   -XX:ReservedCodeCacheSize=${KNOTX_CODE_CACHE}m \
   -XX:+UseBiasedLocking \
   -XX:BiasedLockingStartupDelay=0 \
-  ${KNOTX_GENERAL_OPTS} \
-  ${KNOTX_JMX_OPTS} \
-  ${KNOTX_DEBUG_OPTS} \
-  ${KNOTX_GC_OPTS} \
-  ${KNOTX_EXTRA_OPTS} \
+  $KNOTX_GENERAL_OPTS \
+  $KNOTX_JMX_OPTS \
+  $KNOTX_GC_OPTS \
+  $KNOTX_DEBUG_OPTS \
+  $KNOTX_EXTRA_OPTS \
   -Dio.knotx.KnotxServer.options.config.serverOptions.port=${KNOTX_PORT} \
   -cp "<%= @knotx_root_dir %>/app/*" io.knotx.launcher.LogbackLauncher \
-  ${KNOTX_CONFIG} \
-  ${KNOTX_CONFIG_EXTRA} >> <%= @knotx_log_dir %>/<%= @knotx_id %>.log 2>&1'
+  $KNOTX_CONFIG \
+  $KNOTX_CONFIG_EXTRA
 Type=simple
 PIDFile=/var/run/<%= @knotx_id %>
 User=<%= @knotx_user %>

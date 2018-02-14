@@ -80,7 +80,7 @@ class Chef
         @action = :install
 
         @id = name
-        @version = '1.1.2'
+        @version = '1.2.0'
         @source = nil
         @install_dir = nil
         @log_dir = nil
