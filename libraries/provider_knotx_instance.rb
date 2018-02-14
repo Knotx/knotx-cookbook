@@ -180,7 +180,7 @@ class Chef
 
         # Update logging config
         changed = true if log_config_update(
-          new_resource.full_id,
+          new_resource.id,
           new_resource.log_dir
         )
 

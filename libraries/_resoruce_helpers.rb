@@ -271,7 +271,9 @@ module Knotx
         knotx_id:       id,
         knotx_log_dir:  log_dir,
         main_log_level: node['knotx']['log_level']['main'],
-        root_log_level: node['knotx']['log_level']['root']
+        root_log_level: node['knotx']['log_level']['root'],
+        main_log_history: node['knotx']['log_history']['main'],
+        root_log_history: node['knotx']['log_history']['root']
       )
       template.run_action(:create)
       template.updated_by_last_action?

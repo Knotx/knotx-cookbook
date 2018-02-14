@@ -18,17 +18,21 @@
     limitations under the License.
 
 -->
-<?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+
+    <property name="LOG_PATH" value="/var/log/knotx/<%= @knotx_id %>/"/>
+    <property name="KNOTX_LOG_FILE_MAX_HISTORY" value="<%= @main_log_history %>"/>
+    <property name="ACCESS_LOG_FILE_MAX_HISTORY" value="<%= @root_log_history %>"/>
+
     <include resource="io/knotx/logging/logback/defaults.xml" />
     <include resource="io/knotx/logging/logback/file-appender.xml" />
     <include resource="io/knotx/logging/logback/access.xml" />
 
-    <property name="LOG_PATH" value="/var/log/knotx/<%= @id %>/"/>
-    <property name="KNOTX_LOG_FILE_MAX_HISTORY" value="30"/>
-    <property name="ACCESS_LOG_FILE_MAX_HISTORY" value="30"/>
-
-    <root level="INFO">
+    <root level="<%= @root_log_level %>">
         <appender-ref ref="FILE" />
     </root>
+
+    <logger name="io.knotx" level="<%= @main_log_level %>">
+        <appender-ref ref="FILE" />
+    </logger>
 </configuration>
