@@ -57,20 +57,20 @@ class Chef
 
         if new_resource.install_dir.nil?
           @new_resource.install_dir = ::File.join(
-            node['knotx']['base_dir'], '/', new_resource.id
+            node['knotx']['base_dir'], new_resource.id
           )
         end
         Chef::Log.debug("Install dir: #{new_resource.install_dir}")
 
         @new_resource.install_path = ::File.join(
-          new_resource.install_dir, '/', new_resource.filename
+          new_resource.install_dir, new_resource.filename
         )
         Chef::Log.debug(
           "Knotx install path: #{new_resource.install_path}"
         )
 
         @new_resource.jvm_config_path = ::File.join(
-          new_resource.install_dir, "/knotx.conf"
+          new_resource.install_dir, "knotx.conf"
         )
         Chef::Log.debug(
           "Knotx config path: #{new_resource.jvm_config_path}"
@@ -82,7 +82,7 @@ class Chef
         Chef::Log.debug("Log dir: #{new_resource.log_dir}")
 
         @new_resource.download_path = ::File.join(
-          Chef::Config[:file_cache_path], '/', new_resource.filename
+          Chef::Config[:file_cache_path], new_resource.filename
         )
         Chef::Log.debug(
           "Knotx install path: #{new_resource.download_path}"
