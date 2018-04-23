@@ -28,6 +28,7 @@ class Chef
       attr_accessor :install_dir
       attr_accessor :lib_dir
       attr_accessor :conf_dir
+      attr_accessor :checksum_path
       attr_accessor :app_config_path
       attr_accessor :app_config_extra
       attr_accessor :full_id
@@ -50,14 +51,6 @@ class Chef
       attr_accessor :jmx_enabled
       attr_accessor :debug_enabled
 
-      # GIT opts
-      attr_accessor :git_enabled
-      attr_accessor :git_dir
-      attr_accessor :git_url
-      attr_accessor :git_user
-      attr_accessor :git_pass
-      attr_accessor :git_revision
-
       # SOURCE opts
       attr_accessor :knotx_init_cookbook
       attr_accessor :knotx_init_path
@@ -67,8 +60,6 @@ class Chef
       attr_accessor :knotx_ulimit_path
       attr_accessor :knotx_conf_cookbook
       attr_accessor :knotx_conf_path
-      attr_accessor :config_json_cookbook
-      attr_accessor :config_json_path
       attr_accessor :logback_xml_cookbook
       attr_accessor :logback_xml_path
 

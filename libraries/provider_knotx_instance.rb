@@ -63,6 +63,10 @@ class Chef
           new_resource.install_dir, 'conf'
         )
 
+        @new_resource.checksum_path = ::File.join(
+          new_resource.install_dir, '.dist_checksum'
+        )
+
         @new_resource.jvm_config_path = ::File.join(
           new_resource.install_dir, "knotx.conf"
         )
@@ -161,9 +165,6 @@ class Chef
           new_resource.gc_opts
         )
 
-        # Update knotx config
-        changed = true if knotx_config_update
-
         # Update logging config
         changed = true if log_config_update(
           new_resource.id,
@@ -184,22 +185,50 @@ class Chef
 
         [
           new_resource.install_dir,
-          "#{new_resource.log_dir}/#{new_resource.id}",
+          new_resource.lib_dir,
+          new_resource.conf_dir,
+          ::File.join(new_resource.log_dir, new_resource.id)
         ].each do |f|
           changed = true if create_directory(f)
         end
 
-        # Copy current knotx version to install directory
-        get_file(
-          "file://#{new_resource.download_path}",
-          new_resource.install_path
+        curr_checksum = read_dist_checksum(new_resource.checksum_path)
+
+        Chef::Log.debug("Current checksum: #{curr_checksum}")
+
+        new_checksum = download_distribution(
+          new_resource.source,
+          new_resource.download_path,
         )
 
-        # Link current knotx version to common name
-        changed = true if link_current_version(
-          new_resource.install_path,
-          "#{new_resource.install_dir}/app"
-        )
+        Chef::Log.debug("New checksum: #{new_checksum}")
+
+        # Redeploy knot.x if checksum doesn't match
+        if curr_checksum != new_checksum
+          # Get rid of exiting JAR and config files
+          rm_rf(::File.join(new_resource.lib_dir, '*'))
+          rm_rf(::File.join(new_resource.conf_dir, '*'))
+
+          # Unzip the distribution
+          unzip(new_resource.download_path, new_resource.install_dir)
+
+          # Move relevant parts to installation dir
+          cp_r(
+            ::File.join(new_resource.install_dir, 'knotx', 'lib', '.'),
+            new_resource.lib_dir
+          )
+
+          cp_r(
+            ::File.join(new_resource.install_dir, 'knotx', 'conf', '.'),
+            new_resource.conf_dir
+          )
+
+          # Remove extracted distribution
+          rm_rf(::File.join(new_resource.install_dir, 'knotx'))
+
+          # Update checksum
+          save_dist_checksum(new_checksum, new_resource.checksum_path)
+        end
 
         new_resource.updated_by_last_action(true) if changed
         changed

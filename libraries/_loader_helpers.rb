@@ -55,8 +55,6 @@ module Knotx
         knotx_ulimit_path
         knotx_conf_cookbook
         knotx_conf_path
-        config_json_cookbook
-        config_json_path
         logback_xml_cookbook
         logback_xml_path
       ).each do |var|

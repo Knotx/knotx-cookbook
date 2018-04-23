@@ -75,7 +75,7 @@ module Knotx
     end
 
     # Download of webapp package to work on it
-    def get_file(src, dst)
+    def download_distribution(src, dst)
       remote_file = Chef::Resource::RemoteFile.new(
         dst,
         run_context
@@ -93,7 +93,44 @@ module Knotx
     end
 
     def unzip(zip, dst_dir)
+      cmd_str = "unzip -o -b #{zip} -d #{dst_dir}"
+      Chef::Log.debug("Unzip command: #{cmd_str}")
 
+      cmd = Mixlib::ShellOut.new(cmd_str)
+      cmd.run_command
+      cmd.error!
+
+      Chef::Log.debug("ZIP file was successfully extracted: #{cmd.stdout}")
+    rescue => e
+      Chef::Application.fatal!("Can't extract #{zip}: #{e}")
+    end
+
+    def rm_rf(dir)
+      require 'fileutils'
+
+      ::FileUtils.rm_rf(::Dir.glob(dir))
+    end
+
+    def cp_r(src, dst)
+      require 'fileutils'
+
+      ::FileUtils.cp_r(src, dst)
+      ::FileUtils.chown_R(node['knotx']['user'], node['knotx']['group'], dst)
+    end
+
+    def save_dist_checksum(checksum, dst_file)
+      file = Chef::Resource::File.new(dst_file, run_context)
+      file.content = checksum
+      file.backup = false
+      file.owner(node['knotx']['user'])
+      file.group(node['knotx']['group'])
+      file.mode('0644')
+
+      file.run_action(:create)
+    end
+
+    def read_dist_checksum(dst_file)
+      ::File.file?(dst_file) ? ::File.read(dst_file) : ''
     end
 
     # Create/update init script
@@ -231,34 +268,6 @@ module Knotx
       git.revision(revision)
       git.run_action(:sync)
       git.updated_by_last_action?
-    end
-
-    # TODO: Consider rewrite to File operations
-    def knotx_config_update
-      if new_resource.git_enabled
-        git_dir = "#{new_resource.install_dir}/config"
-        git_dir = new_resource.git_dir unless new_resource.git_dir.nil?
-
-        get_remote_config(
-          git_dir,
-          new_resource.git_url,
-          new_resource.git_user,
-          new_resource.git_pass,
-          new_resource.git_revision
-        )
-      else
-        file = Chef::Resource::CookbookFile.new(
-          "#{new_resource.install_dir}/config.json",
-          run_context
-        )
-        file.owner(node['knotx']['user'])
-        file.group(node['knotx']['group'])
-        file.cookbook(new_resource.config_json_cookbook)
-        file.source(new_resource.config_json_path)
-        file.mode('0644')
-        file.run_action(:create)
-        file.updated_by_last_action?
-      end
     end
 
     def log_config_update(id, log_dir)
