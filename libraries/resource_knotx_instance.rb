@@ -25,13 +25,13 @@ class Chef
       attr_accessor :installed
       attr_accessor :reconfigured
       attr_accessor :download_path
-      attr_accessor :install_path
       attr_accessor :install_dir
+      attr_accessor :lib_dir
+      attr_accessor :conf_dir
       attr_accessor :app_config_path
       attr_accessor :app_config_extra
       attr_accessor :full_id
       attr_accessor :log_dir
-      attr_accessor :checksum
       attr_accessor :source
       attr_accessor :filename
 

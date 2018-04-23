@@ -40,58 +40,47 @@ class Chef
 
         if new_resource.source.nil?
           ver = new_resource.version
-          Chef::Log.debug("Knotx download version: #{new_resource.version}")
-
           @new_resource.source = "#{node['knotx']['release_url']}/"\
-            "#{ver}/knotx-standalone-#{ver}.fat.jar"
-
-          Chef::Log.debug("Knotx download source: #{new_resource.source}")
+            "#{ver}/knotx-stack-manager-#{ver}.zip"
         end
 
         @new_resource.filename = url_basename(new_resource.source)
-        Chef::Log.debug("Knotx filename: #{new_resource.filename}")
 
         # Prefereably in future simplified naming if single instance used
         @new_resource.full_id = "knotx-#{new_resource.id}"
-        Chef::Log.debug("Knotx filename: #{new_resource.full_id}")
 
         if new_resource.install_dir.nil?
           @new_resource.install_dir = ::File.join(
             node['knotx']['base_dir'], new_resource.id
           )
         end
-        Chef::Log.debug("Install dir: #{new_resource.install_dir}")
 
-        @new_resource.install_path = ::File.join(
-          new_resource.install_dir, new_resource.filename
+        @new_resource.lib_dir = ::File.join(
+          new_resource.install_dir, 'lib'
         )
-        Chef::Log.debug(
-          "Knotx install path: #{new_resource.install_path}"
+
+        @new_resource.conf_dir = ::File.join(
+          new_resource.install_dir, 'conf'
         )
 
         @new_resource.jvm_config_path = ::File.join(
           new_resource.install_dir, "knotx.conf"
         )
-        Chef::Log.debug(
-          "Knotx config path: #{new_resource.jvm_config_path}"
-        )
 
         if new_resource.log_dir.nil?
           @new_resource.log_dir = node['knotx']['log_dir']
         end
-        Chef::Log.debug("Log dir: #{new_resource.log_dir}")
 
         @new_resource.download_path = ::File.join(
           Chef::Config[:file_cache_path], new_resource.filename
         )
-        Chef::Log.debug(
-          "Knotx install path: #{new_resource.download_path}"
-        )
 
-        @new_resource.checksum =
-          get_file(new_resource.source, new_resource.download_path)
+        # Print out all instance variables defined so far
+        new_resource.instance_variables.each do |v|
+          Chef::Log.debug("#{v}: #{new_resource.instance_variable_get(v)}")
+        end
 
-        # Cumulative loaders for bervity
+        # Cumulative loaders for brevity
         load_config_vars
         load_git_vars
         load_source_vars
@@ -104,28 +93,26 @@ class Chef
         @current_resource.reconfigured = knotx_reconfigured?
       end
 
-      # Check if appropriate knotx is installed
       def knotx_installed?
-        installed = true
+        # To consider knot.x as installed neither lib nor conf sub-directory
+        # must be empty
+        libs = if ::File.directory?(new_resource.lib_dir)
+                 ::Dir.entries(new_resource.lib_dir).select do |f|
+                   ::File.file?(f) && f.match?(/knotx-.+\.jar/)
+                 end.length > 0
+               else
+                 false
+               end
 
-        # Currently deployed JAR checksum verification
-        current_checksum = md5sum(new_resource.install_path) if
-          ::File.exist?(new_resource.install_path)
-        new_checksum = new_resource.checksum
+        configs = if ::File.directory?(new_resource.conf_dir)
+                    ::Dir.entries(new_resource.conf_dir).select do |f|
+                      ::File.file?(f) && f.match?(/.+\.(conf|xml|json)/)
+                    end.length > 0
+                  else
+                    false
+                  end
 
-        # If checksum doesn't match deployment is required
-        installed = false unless new_checksum == current_checksum
-
-        [
-          new_resource.install_dir,
-          "#{new_resource.install_dir}/app",
-          "#{new_resource.log_dir}/#{new_resource.id}",
-          "#{node['knotx']['base_dir']}/file-uploads",
-        ].each do |f|
-          installed = false unless ::File.exist?(f)
-        end
-
-        installed
+        libs && configs
       end
 
       def knotx_reconfigured?
@@ -200,7 +187,6 @@ class Chef
           new_resource.install_dir,
           "#{new_resource.install_dir}/app",
           "#{new_resource.log_dir}/#{new_resource.id}",
-          "#{node['knotx']['base_dir']}/file-uploads",
         ].each do |f|
           changed = true if create_directory(f)
         end
@@ -258,9 +244,9 @@ class Chef
 
         # If restart required, restart knotx
         restart_knotx if restart_required
-      rescue
+      rescue => e
         Chef::Application.fatal!(
-          "Installing knotx instance '#{new_resource.id}' failed!"
+          "knot.x '#{new_resource.id}' installation failed: #{e}"
         )
       end
     end
