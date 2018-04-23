@@ -92,6 +92,10 @@ module Knotx
       md5sum(new_resource.download_path)
     end
 
+    def unzip(zip, dst_dir)
+
+    end
+
     # Create/update init script
     def init_script_update(full_id, root_dir, log_dir)
       init_script = ::File.join('/etc/init.d/', full_id)

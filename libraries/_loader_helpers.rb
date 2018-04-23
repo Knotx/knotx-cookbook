@@ -45,29 +45,6 @@ module Knotx
       end
     end
 
-    def load_git_vars
-      %w(
-        git_enabled
-        git_dir
-        git_url
-        git_user
-        git_pass
-        git_revision
-      ).each do |var|
-        if node['knotx'].key?(new_resource.id) &&
-           node['knotx'][new_resource.id].key?('config') &&
-           node['knotx'][new_resource.id]['config'].key?(var)
-          @new_resource.send(
-            "#{var}=",
-            node['knotx'][new_resource.id]['config'][var]
-          )
-        else
-          @new_resource.send("#{var}=", node['knotx']['config'][var])
-        end
-        Chef::Log.debug("Value of #{var}: #{new_resource.send(var)}")
-      end
-    end
-
     def load_source_vars
       %w(
         knotx_init_cookbook

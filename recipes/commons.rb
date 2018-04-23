@@ -18,7 +18,7 @@
 
 include_recipe 'java::default'
 
-package %w(git unzip)
+package 'unzip'
 
 group node['knotx']['group'] do
   system true

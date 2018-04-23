@@ -39,9 +39,9 @@ class Chef
         # TODO: This part will have to be simplified
 
         if new_resource.source.nil?
-          ver = new_resource.version
-          @new_resource.source = "#{node['knotx']['release_url']}/"\
-            "#{ver}/knotx-stack-manager-#{ver}.zip"
+          @new_resource.source =
+            "#{node['knotx']['release_url']}/#{new_resource.version}/"\
+            "knotx-stack-manager-#{new_resource.version}.zip"
         end
 
         @new_resource.filename = url_basename(new_resource.source)
@@ -82,7 +82,6 @@ class Chef
 
         # Cumulative loaders for brevity
         load_config_vars
-        load_git_vars
         load_source_vars
 
         knotx_state
@@ -185,7 +184,6 @@ class Chef
 
         [
           new_resource.install_dir,
-          "#{new_resource.install_dir}/app",
           "#{new_resource.log_dir}/#{new_resource.id}",
         ].each do |f|
           changed = true if create_directory(f)
