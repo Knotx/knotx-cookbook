@@ -177,8 +177,13 @@ class Chef
 
       def configure_knotx
         # Update startup script
-        start_script =
-          systemd_available? ? systemd_script_update : init_script_update
+        start_script = if systemd_available?
+                         systemd_script_update
+                       else
+                         init_script_update
+                         ulimit_update
+                       end
+
 
         # Update startup JVM config
         jvm_config = jvm_config_update

@@ -129,12 +129,12 @@ module Knotx
       template.source(new_resource.knotx_init_path)
       template.mode('0755')
       template.variables(
-        id:               new_resource.full_id,
-        java_home:        node['java']['java_home'],
-        home_dir:         new_resource.install_dir,
-        conf_dir:         new_resource.conf_dir,
-        lib_dir:          new_resource.lib_dir,
-        user:             node['knotx']['user']
+        id:        new_resource.full_id,
+        java_home: node['java']['java_home'],
+        home_dir:  new_resource.install_dir,
+        conf_dir:  new_resource.conf_dir,
+        lib_dir:   new_resource.lib_dir,
+        user:      node['knotx']['user']
       )
       template.run_action(:create)
 
@@ -154,8 +154,8 @@ module Knotx
       template.source(new_resource.knotx_ulimit_path)
       template.mode('0644')
       template.variables(
-        knotx_user:             node['knotx']['user'],
-        knotx_open_file_limit:  node['knotx']['open_file_limit']
+        knotx_user:            node['knotx']['user'],
+        knotx_open_file_limit: node['knotx']['open_file_limit']
       )
       template.run_action(:create)
 
