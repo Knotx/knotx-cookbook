@@ -191,6 +191,12 @@ end
 
 # Work in progress
 
+---
+
+Information placed here may be out of date!
+
+---
+
 TODO:
 * extensions installation
 * further improve logic in HWRP
