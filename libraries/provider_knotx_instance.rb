@@ -89,8 +89,8 @@ class Chef
         # Print out all new_resource data defined so far
         new_resource.instance_variables.each do |v|
           Chef::Log.debug(
-            "new_resource.#{v} = " +
-            new_resource.instance_variable_get(v)
+            "new_resource.#{v}"\
+            " = #{new_resource.instance_variable_get(v)}"
           )
         end
 
@@ -115,8 +115,8 @@ class Chef
         # Print out all current_resource data defined so far
         current_resource.instance_variables.each do |v|
           Chef::Log.debug(
-            "current_resource.#{v} = " +
-            current_resource.instance_variable_get(v)
+            "current_resource.#{v}"\
+            "= #{current_resource.instance_variable_get(v)}"
           )
         end
       end
