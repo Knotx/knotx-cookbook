@@ -20,7 +20,7 @@ module Knotx
   module ResourceHelpers
     # Check if systemd is available
     def systemd_available?
-      File.directory?('/etc/systemd/system') && node[:platform] != 'amazon'
+      File.directory?('/etc/systemd/system') && node['platform'] != 'amazon'
     end
 
     def systemd_daemon_reload
