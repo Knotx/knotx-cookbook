@@ -77,23 +77,23 @@ class Chef
       end
 
       def id(arg = nil)
-        set_or_return(:id, arg, :kind_of => String)
+        set_or_return(:id, arg, kind_of: String)
       end
 
       def version(arg = nil)
-        set_or_return(:version, arg, :kind_of => String)
+        set_or_return(:version, arg, kind_of: String)
       end
 
       def source(arg = nil)
-        set_or_return(:source, arg, :kind_of => String)
+        set_or_return(:source, arg, kind_of: String)
       end
 
       def install_dir(arg = nil)
-        set_or_return(:install_dir, arg, :kind_of => String)
+        set_or_return(:install_dir, arg, kind_of: String)
       end
 
       def log_dir(arg = nil)
-        set_or_return(:log_dir, arg, :kind_of => String)
+        set_or_return(:log_dir, arg, kind_of: String)
       end
 
       def custom_logback(arg = nil)

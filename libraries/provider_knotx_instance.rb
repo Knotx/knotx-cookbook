@@ -75,7 +75,7 @@ class Chef
         )
 
         @new_resource.jvm_config_path = ::File.join(
-          new_resource.install_dir, "knotx.conf"
+          new_resource.install_dir, 'knotx.conf'
         )
 
         if new_resource.log_dir.nil?
@@ -137,26 +137,26 @@ class Chef
       def knotx_installed?
         libs =
           if ::File.directory?(new_resource.lib_dir)
-            ::Dir.glob(::File.join(new_resource.lib_dir, '*')).select do |f|
+            !::Dir.glob(::File.join(new_resource.lib_dir, '*')).select do |f|
               ::File.file?(f) && f.match?(/knotx-.+\.jar/)
-            end.length > 0
+            end.empty?
           else
             false
           end
 
         configs =
           if ::File.directory?(new_resource.conf_dir)
-            ::Dir.glob(::File.join(new_resource.conf_dir, '*')).select do |f|
+            !::Dir.glob(::File.join(new_resource.conf_dir, '*')).select do |f|
               ::File.file?(f) && f.match?(/.+\.(conf|xml|json)/)
-            end.length > 0
+            end.empty?
           else
             false
           end
 
         checksum =
           if ::File.file?(new_resource.checksum_path) &&
-              !::File.read(new_resource.checksum_path).empty? &&
-              ::File.read(new_resource.checksum_path).length == 32
+             !::File.read(new_resource.checksum_path).empty? &&
+             ::File.read(new_resource.checksum_path).length == 32
             true
           else
             false
@@ -224,7 +224,7 @@ class Chef
           new_resource.install_dir,
           new_resource.lib_dir,
           new_resource.conf_dir,
-          new_resource.log_dir
+          new_resource.log_dir,
         ].each do |f|
           status << create_directory(f)
         end
@@ -232,7 +232,7 @@ class Chef
         # Download distribution ZIP file
         new_checksum = download_distribution(
           new_resource.source,
-          new_resource.download_path,
+          new_resource.download_path
         )
 
         Chef::Log.debug("New checksum: #{new_checksum}")
@@ -297,7 +297,7 @@ class Chef
         if current_resource.reconfigured
           Chef::Log.info(
             "#{new_resource.id} knot.x instance will be restarted, as "\
-            " configuration has changed. Restarting..."
+            'configuration has changed. Restarting...'
           )
 
           restart_knotx

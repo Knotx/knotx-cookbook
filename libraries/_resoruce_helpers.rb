@@ -24,7 +24,7 @@ module Knotx
     end
 
     def systemd_daemon_reload
-      cmd_str = "systemctl daemon-reload"
+      cmd_str = 'systemctl daemon-reload'
       cmd = Mixlib::ShellOut.new(cmd_str)
       cmd.run_command
       cmd.error!
@@ -134,7 +134,7 @@ module Knotx
         home_dir:         new_resource.install_dir,
         conf_dir:         new_resource.conf_dir,
         lib_dir:          new_resource.lib_dir,
-        user:             node['knotx']['user'],
+        user:             node['knotx']['user']
       )
       template.run_action(:create)
 
