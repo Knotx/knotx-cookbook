@@ -18,18 +18,20 @@
 
 include_recipe 'knotx::commons'
 
-node.default['knotx']['primary']['jmx_port'] = '1234'
-
+# Nearly all settings (except logging ones) are derived either from default
+# attributes or configuration files shipped with knotx-stack distribution
 knotx_instance 'Primary knot.x instance' do
   id 'primary'
   source node['knotx']['url']
 end
 
-# node.default['knotx']['secondary']['jmx_port'] = '5678'
-# node.default['knotx']['secondary']['debug_enabled'] = true
-# node.default['knotx']['secondary']['debug_port'] = '28093'
+# Use attributes to overwrite default parameters
+node.default['knotx']['secondary']['extra_opts'] = '-Dknotx.port=8093'
+node.default['knotx']['secondary']['jmx_port'] = '18093'
+node.default['knotx']['secondary']['debug_enabled'] = true
+node.default['knotx']['secondary']['debug_port'] = '28093'
 
-# knotx_instance 'Secondary knot.x instance' do
-#   id 'secondary'
-#   source node['knotx']['url']
-# end
+knotx_instance 'Secondary knot.x instance' do
+  id 'secondary'
+  source node['knotx']['url']
+end
