@@ -18,15 +18,18 @@
 
 include_recipe 'knotx::commons'
 
+node.default['knotx']['primary']['jmx_port'] = '1234'
+
 knotx_instance 'Primary knot.x instance' do
   id 'primary'
-  source node['knotx']['source']
+  source node['knotx']['url']
 end
 
-# node.default['knotx']['secondary']['jmx_port'] = '18093'
+# node.default['knotx']['secondary']['jmx_port'] = '5678'
+# node.default['knotx']['secondary']['debug_enabled'] = true
 # node.default['knotx']['secondary']['debug_port'] = '28093'
 
 # knotx_instance 'Secondary knot.x instance' do
 #   id 'secondary'
-#   source node['knotx']['source']
+#   source node['knotx']['url']
 # end
