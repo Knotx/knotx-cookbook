@@ -252,7 +252,7 @@ module Knotx
 
     def log_config_update(id, log_dir)
       template = Chef::Resource::Template.new(
-        "#{new_resource.install_dir}/logback.xml",
+        "#{new_resource.conf_dir}/logback.xml",
         run_context
       )
       template.owner(node['knotx']['user'])
@@ -263,10 +263,12 @@ module Knotx
       template.variables(
         knotx_id:       id,
         knotx_log_dir:  log_dir,
+        knotx_log_history: node['knotx']['log_history']['knotx'],
+        knotx_log_size: node['knotx']['log_size']['knotx'],
+        access_log_history: node['knotx']['log_history']['access'],
+        access_log_size: node['knotx']['log_size']['access'],
         main_log_level: node['knotx']['log_level']['main'],
-        root_log_level: node['knotx']['log_level']['root'],
-        main_log_history: node['knotx']['log_history']['main'],
-        root_log_history: node['knotx']['log_history']['root']
+        knotx_log_level: node['knotx']['log_level']['knotx']
       )
       template.run_action(:create)
 

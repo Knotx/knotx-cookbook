@@ -20,19 +20,23 @@
 -->
 <configuration>
 
-    <property name="LOG_PATH" value="/var/log/knotx/<%= @knotx_id %>/"/>
-    <property name="KNOTX_LOG_FILE_MAX_HISTORY" value="<%= @main_log_history %>"/>
-    <property name="ACCESS_LOG_FILE_MAX_HISTORY" value="<%= @root_log_history %>"/>
+    <property name="LOG_PATH" value="<%= @knotx_log_dir %>/<%= @knotx_id %>/"/>
+
+    <property name="KNOTX_LOG_FILE_MAX_HISTORY" value="<%= @knotx_log_history %>"/>
+    <property name="KNOTX_LOG_FILE_MAX_SIZE" value="<%= @knotx_log_size %>"/>
+
+    <property name="ACCESS_LOG_FILE_MAX_HISTORY" value="<%= @access_log_history %>"/>
+    <property name="ACCESS_LOG_FILE_MAX_SIZE" value="<%= @access_log_size %>"/>
 
     <include resource="io/knotx/logging/logback/defaults.xml" />
     <include resource="io/knotx/logging/logback/file-appender.xml" />
     <include resource="io/knotx/logging/logback/access.xml" />
 
-    <root level="<%= @root_log_level %>">
+    <root level="<%= @main_log_level %>">
         <appender-ref ref="FILE" />
     </root>
 
-    <logger name="io.knotx" level="<%= @main_log_level %>">
+    <logger name="io.knotx" level="<%= @knotx_log_level %>">
         <appender-ref ref="FILE" />
     </logger>
 </configuration>

@@ -24,10 +24,13 @@ default['knotx']['log_dir'] = '/var/log/knotx'
 default['knotx']['open_file_limit'] = '65536'
 
 default['knotx']['log_level']['main'] = 'INFO'
-default['knotx']['log_level']['root'] = 'ERROR'
+default['knotx']['log_level']['knotx'] = 'ERROR'
 
-default['knotx']['log_history']['main'] = '30'
-default['knotx']['log_history']['root'] = '30'
+default['knotx']['log_history']['knotx'] = '30'
+default['knotx']['log_history']['access'] = '30'
+
+default['knotx']['log_size']['knotx'] = '10MB'
+default['knotx']['log_size']['access'] = '10MB'
 
 # Knotx source attributes
 default['knotx']['release_url'] =
