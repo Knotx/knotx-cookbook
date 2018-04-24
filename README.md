@@ -118,8 +118,8 @@ Attributes from [java](https://supermarket.chef.io/cookbooks/java) cookbook
   written to `['knotx']['log_dir']/id` directory
 * `custom_logback` - `logback.xml` used to be delivered with ZIP distribution
   package, however most of the time this is not what you want, as stdout is
-  commonly used as an output. This property accepts boolean values (`true` by
-  default) and generates `logback.xml` according to attributes
+  commonly used as an output there. This property accepts boolean values (
+  `true` by default) and generates `logback.xml` according to attributes
 
 ### Customizations
 
