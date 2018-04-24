@@ -76,6 +76,7 @@ class Chef
         @source = nil
         @install_dir = nil
         @log_dir = nil
+        @custom_logback = true
       end
 
       def id(arg = nil)
@@ -96,6 +97,10 @@ class Chef
 
       def log_dir(arg = nil)
         set_or_return(:log_dir, arg, :kind_of => String)
+      end
+
+      def custom_logback(arg = nil)
+        set_or_return(:custom_logback, arg, kind_of: [TrueClass, FalseClass])
       end
     end
   end

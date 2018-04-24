@@ -208,10 +208,12 @@ class Chef
         )
 
         # Update logging config
-        changed = true if log_config_update(
-          new_resource.id,
-          new_resource.log_dir
-        )
+        if new_resource.custom_logback
+          changed = true if log_config_update(
+            new_resource.id,
+            new_resource.log_dir
+          )
+        end
 
         # Add knotx service to managed resources
         configure_service(new_resource.full_id)

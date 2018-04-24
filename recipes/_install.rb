@@ -20,17 +20,18 @@ include_recipe 'knotx::commons'
 
 knotx_instance 'Knotx Main: Install' do
   id 'main'
+  source 'https://oss.sonatype.org/content/groups/public/io/knotx/knotx-stack-manager/1.3.0-SNAPSHOT/knotx-stack-manager-1.3.0-20180417.122358-11.zip'
 end
 
-node.default['knotx']['main2']['jmx_port'] = '18093'
-node.default['knotx']['main2']['debug_port'] = '28093'
-node.default['knotx']['main2']['port'] = '8093'
+# node.default['knotx']['main2']['jmx_port'] = '18093'
+# node.default['knotx']['main2']['debug_port'] = '28093'
+# node.default['knotx']['main2']['port'] = '8093'
 
-knotx_instance 'Knotx Main2: Install' do
-  id 'main2'
-end
+# knotx_instance 'Knotx Main2: Install' do
+#   id 'main2'
+# end
 
-service 'knotx-main' do
-  supports :status => true, :restart => true, :reload => true
-  action :start
-end
+# service 'knotx-main' do
+#   supports :status => true, :restart => true, :reload => true
+#   action :start
+# end
