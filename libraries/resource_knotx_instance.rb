@@ -28,6 +28,7 @@ class Chef
       attr_accessor :install_dir
       attr_accessor :lib_dir
       attr_accessor :conf_dir
+      attr_accessor :tmp_dir
       attr_accessor :checksum_path
       attr_accessor :app_config_path
       attr_accessor :app_config_extra
@@ -71,7 +72,7 @@ class Chef
         @action = :install
 
         @id = name
-        @version = '1.2.0'
+        @version = '1.2.1'
         @source = nil
         @install_dir = nil
         @log_dir = nil

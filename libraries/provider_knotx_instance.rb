@@ -38,6 +38,9 @@ class Chef
 
         # TODO: This part will have to be simplified
 
+        # ---------------------------------------------------------------------
+        # New resource dynamic defaults
+        # ---------------------------------------------------------------------
         if new_resource.source.nil?
           @new_resource.source =
             "#{node['knotx']['release_url']}/#{new_resource.version}/"\
@@ -63,6 +66,10 @@ class Chef
           new_resource.install_dir, 'conf'
         )
 
+        @new_resource.tmp_dir = ::File.join(
+          new_resource.install_dir, 'tmp'
+        )
+
         @new_resource.checksum_path = ::File.join(
           new_resource.install_dir, '.dist_checksum'
         )
@@ -79,26 +86,53 @@ class Chef
           Chef::Config[:file_cache_path], new_resource.filename
         )
 
-        # Print out all instance variables defined so far
+        # Print out all new_resource data defined so far
         new_resource.instance_variables.each do |v|
-          Chef::Log.debug("#{v}: #{new_resource.instance_variable_get(v)}")
+          Chef::Log.debug(
+            "new_resource.#{v} = " +
+            new_resource.instance_variable_get(v)
+          )
         end
 
-        # Cumulative loaders for brevity
+        # Calculate knot.x instance attributes (derive from global ones if
+        # anythig is missing)
         load_config_vars
         load_source_vars
 
-        knotx_state
-      end
-
-      def knotx_state
+        # ---------------------------------------------------------------------
+        # Current resource properties
+        # ---------------------------------------------------------------------
         @current_resource.installed = knotx_installed?
+
+        if @current_resource.installed
+          @current_resource.checksum_path = dist_checksum(
+            new_resource.checksum_path
+          )
+        end
+
         @current_resource.reconfigured = knotx_reconfigured?
+
+        # Print out all current_resource data defined so far
+        current_resource.instance_variables.each do |v|
+          Chef::Log.debug(
+            "current_resource.#{v} = " +
+            current_resource.instance_variable_get(v)
+          )
+        end
       end
 
+      # To consider knot.x as installed the following options have to be met:
+      # * $KNOTX_HOME/lib directory exists and contains JAR files
+      # * $KNOTX_HOME/conf directoru exists and contains configuration files
+      # * $KNOTX_HOME/.dist_checksum exists and contains MD5 checksum
+      #
+      # It's not 100% accurate, as distribution ZIP content changes over time.
+      # More detailed check would have to look into the ZIP file to see whether
+      # its content matches to the deployed one.
+      #
+      # TODO: improve installation check by comparing ZIP file content with
+      # files that have been deployed in $KNOTX_HOME
       def knotx_installed?
-        # To consider knot.x as installed neither lib nor conf sub-directory
-        # must be empty
         libs = if ::File.directory?(new_resource.lib_dir)
                  ::Dir.entries(new_resource.lib_dir).select do |f|
                    ::File.file?(f) && f.match?(/knotx-.+\.jar/)
@@ -115,7 +149,15 @@ class Chef
                     false
                   end
 
-        libs && configs
+        checksum = if ::File.file?(new_resource.checksum_path) &&
+                       !::File.read(new_resource.checksum_path).empty? &&
+                       ::File.read(new_resource.checksum_path).length == 32
+                     true
+                   else
+                     false
+                   end
+
+        libs && configs && checksum
       end
 
       def knotx_reconfigured?
@@ -183,6 +225,11 @@ class Chef
       def install_knotx
         changed = false
 
+        # Create core directory structure
+        # * $KNOTX_HOME
+        # * $KNOTX_HOME/lib
+        # * $KNOTX_HOME/conf
+        # * $KNOTX_LOG/$KNOTX_ID
         [
           new_resource.install_dir,
           new_resource.lib_dir,
@@ -192,10 +239,7 @@ class Chef
           changed = true if create_directory(f)
         end
 
-        curr_checksum = read_dist_checksum(new_resource.checksum_path)
-
-        Chef::Log.debug("Current checksum: #{curr_checksum}")
-
+        # Download distribution ZIP file
         new_checksum = download_distribution(
           new_resource.source,
           new_resource.download_path,
@@ -204,30 +248,30 @@ class Chef
         Chef::Log.debug("New checksum: #{new_checksum}")
 
         # Redeploy knot.x if checksum doesn't match
-        if curr_checksum != new_checksum
+        if current_resource.checksum_path != new_checksum
           # Get rid of exiting JAR and config files
           rm_rf(::File.join(new_resource.lib_dir, '*'))
           rm_rf(::File.join(new_resource.conf_dir, '*'))
 
           # Unzip the distribution
-          unzip(new_resource.download_path, new_resource.install_dir)
+          unzip(new_resource.download_path, new_resource.tmp_dir)
 
           # Move relevant parts to installation dir
           cp_r(
-            ::File.join(new_resource.install_dir, 'knotx', 'lib', '.'),
+            ::File.join(new_resource.tmp_dir, 'knotx', 'lib', '.'),
             new_resource.lib_dir
           )
 
           cp_r(
-            ::File.join(new_resource.install_dir, 'knotx', 'conf', '.'),
+            ::File.join(new_resource.tmp_dir, 'knotx', 'conf', '.'),
             new_resource.conf_dir
           )
 
           # Remove extracted distribution
-          rm_rf(::File.join(new_resource.install_dir, 'knotx'))
+          rm_rf(new_resource.tmp_dir)
 
           # Update checksum
-          save_dist_checksum(new_checksum, new_resource.checksum_path)
+          update_dist_checksum(new_checksum, new_resource.checksum_path)
         end
 
         new_resource.updated_by_last_action(true) if changed
@@ -240,37 +284,34 @@ class Chef
 
       # Performing install action
       def action_install
-        install_required = false
-        restart_required = false
-
         # Install requirement check
         if !current_resource.installed
-          install_required = true
-          Chef::Log.info("Knotx instance #{current_resource.id}' "\
-            'requires installation. Installing...')
-        else
-          Chef::Log.info("Knotx instance '#{current_resource.id}' "\
-            'is already installed in appropriate version.')
-        end
+          Chef::Log.info(
+            "#{new_resource.id} knot.x instance requires installation. "\
+            ' Installing...'
+          )
 
-        # If install is required, install knotx and perform first time config
-        if install_required
           install_knotx
           configure_knotx
+        else
+          Chef::Log.info(
+            "#{new_resource.id} knot.x instance is already installed"
+          )
         end
 
         # Restart requirement check
         if current_resource.reconfigured
-          restart_required = true
-          Chef::Log.info("Knotx instance #{current_resource.id}' "\
-            'requires restart. Restart scheduled...')
-        else
-          Chef::Log.info("Knotx instance '#{current_resource.id}' "\
-            'does not require restart.')
-        end
+          Chef::Log.info(
+            "#{new_resource.id} knot.x instance will be restarted, as "\
+            " configuration has changed. Restarting..."
+          )
 
-        # If restart required, restart knotx
-        restart_knotx if restart_required
+          restart_knotx
+        else
+          Chef::Log.info(
+            "#{new_resource.id} knot.x instance doesn't require restart"
+          )
+        end
       rescue => e
         Chef::Application.fatal!(
           "knot.x '#{new_resource.id}' installation failed: #{e}"

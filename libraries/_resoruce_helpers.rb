@@ -53,6 +53,7 @@ module Knotx
       directory.recursive(true)
 
       directory.run_action(:create)
+
       directory.updated_by_last_action?
     end
 
@@ -108,7 +109,7 @@ module Knotx
       ::FileUtils.chown_R(node['knotx']['user'], node['knotx']['group'], dst)
     end
 
-    def save_dist_checksum(checksum, dst_file)
+    def update_dist_checksum(checksum, dst_file)
       file = Chef::Resource::File.new(dst_file, run_context)
       file.content = checksum
       file.backup = false
@@ -119,7 +120,7 @@ module Knotx
       file.run_action(:create)
     end
 
-    def read_dist_checksum(dst_file)
+    def dist_checksum(dst_file)
       ::File.file?(dst_file) ? ::File.read(dst_file) : ''
     end
 
@@ -268,6 +269,7 @@ module Knotx
         root_log_history: node['knotx']['log_history']['root']
       )
       template.run_action(:create)
+
       template.updated_by_last_action?
     end
 
@@ -280,6 +282,7 @@ module Knotx
       service.supports(status: true)
       service.run_action(:start)
       service.run_action(:enable)
+
       service.updated_by_last_action?
     end
 
