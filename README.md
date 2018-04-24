@@ -100,7 +100,7 @@ cookbook!
 
 ## commons.rb
 
-Attributes from [java cookbook](https://supermarket.chef.io/cookbooks/java) 
+Attributes from [java](https://supermarket.chef.io/cookbooks/java) cookbook
 
 # Custom resources
 
