@@ -31,24 +31,14 @@ module Knotx
     end
 
     def systemd_daemon_reload
-      `systemctl daemon-reload`
-    end
+      cmd_str = "systemctl daemon-reload"
+      cmd = Mixlib::ShellOut.new(cmd_str)
+      cmd.run_command
+      cmd.error!
 
-    # Parse repo url to include credentials
-    def repo_url(address, login, password)
-      require 'uri'
-
-      uri = URI.parse(address)
-      protocol = uri.scheme
-      host = uri.host
-
-      # If port is not provided, the default for given protocol is used
-      port = uri.port
-      path = uri.path
-
-      return "#{protocol}://#{host}:#{port}#{path}" if
-        login.empty? || password.empty?
-      "#{protocol}://#{login}:#{password}@#{host}:#{port}#{path}"
+      Chef::Log.debug("#{cmd_str} executed successfully: #{cmd.stdout}")
+    rescue => e
+      Chef::Application.fatal!("Can't reload systemd daemons: #{e}")
     end
 
     # Create defined directory
@@ -152,6 +142,7 @@ module Knotx
         knotx_user:     node['knotx']['user']
       )
       template.run_action(:create)
+
       template.updated_by_last_action?
     end
 
@@ -172,6 +163,7 @@ module Knotx
         knotx_open_file_limit:  node['knotx']['open_file_limit']
       )
       template.run_action(:create)
+
       template.updated_by_last_action?
     end
 
@@ -198,6 +190,8 @@ module Knotx
       )
       template.run_action(:create)
       systemd_daemon_reload if template.updated_by_last_action?
+
+      template.updated_by_last_action?
     end
 
     def jvm_config_update(
@@ -251,23 +245,8 @@ module Knotx
         gc_opts:                gc_opts
       )
       template.run_action(:create)
+
       template.updated_by_last_action?
-    end
-
-    def get_remote_config(dir, address, login, password, revision)
-      # Create config root directory
-      create_directory(dir)
-
-      # Include credentials in repo URL
-      git_url = repo_url(address, login, password)
-
-      git = Chef::Resource::Git.new(dir, run_context)
-      git.user(node['knotx']['user'])
-      git.group(node['knotx']['group'])
-      git.repository(git_url)
-      git.revision(revision)
-      git.run_action(:sync)
-      git.updated_by_last_action?
     end
 
     def log_config_update(id, log_dir)
@@ -290,17 +269,6 @@ module Knotx
       )
       template.run_action(:create)
       template.updated_by_last_action?
-    end
-
-    def link_current_version(src, dst)
-      link_name = ::File.join(dst, '/knotx.jar')
-      link = Chef::Resource::Link.new(
-        link_name,
-        run_context
-      )
-      link.to(src)
-      link.run_action(:create)
-      link.updated_by_last_action?
     end
 
     def configure_service(service_name)
