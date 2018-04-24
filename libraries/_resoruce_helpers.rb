@@ -169,12 +169,9 @@ module Knotx
     end
 
     # Create/update systemd script
-    def systemd_script_update(full_id, root_dir, log_dir)
-      systemd_script = ::File.join(
-        '/etc/systemd/system/', "#{full_id}.service"
-      )
+    def systemd_script_update
       template = Chef::Resource::Template.new(
-        systemd_script,
+        ::File.join('/etc/systemd/system', "#{new_resource.full_id}.service"),
         run_context
       )
       template.owner('root')
@@ -183,11 +180,13 @@ module Knotx
       template.source(new_resource.knotx_systemd_path)
       template.mode('0755')
       template.variables(
-        knotx_root_dir:         root_dir,
-        knotx_log_dir:          log_dir,
-        knotx_id:               full_id,
-        knotx_user:             node['knotx']['user'],
-        knotx_open_file_limit:  node['knotx']['open_file_limit']
+        id:               new_resource.full_id,
+        java_home:        node['java']['java_home'],
+        home_dir:         new_resource.install_dir,
+        conf_dir:         new_resource.conf_dir,
+        lib_dir:          new_resource.lib_dir,
+        user:             node['knotx']['user'],
+        open_file_limit:  node['knotx']['open_file_limit']
       )
       template.run_action(:create)
       systemd_daemon_reload if template.updated_by_last_action?
@@ -195,30 +194,9 @@ module Knotx
       template.updated_by_last_action?
     end
 
-    def jvm_config_update(
-      id,
-      jvm_config_path,
-      app_config_path,
-      app_config_extra,
-      root_dir,
-      log_dir,
-      debug_enabled,
-      jmx_enabled,
-      jmx_ip,
-      jmx_port,
-      debug_port,
-      port,
-      min_heap,
-      max_heap,
-      max_permsize,
-      code_cache,
-      extra_opts,
-      gc_opts
-    )
-      app_config_path = absolute_path(root_dir, app_config_path)
-
+    def jvm_config_update
       template = Chef::Resource::Template.new(
-        ::File.join(root_dir, jvm_config_path),
+        new_resource.jvm_config_path,
         run_context
       )
       template.owner(node['knotx']['user'])
@@ -227,30 +205,24 @@ module Knotx
       template.source(new_resource.knotx_conf_path)
       template.mode('0644')
       template.variables(
-        knotx_id:               id,
-        knotx_app_config_path:  app_config_path,
-        knotx_app_config_extra: app_config_extra,
-        knotx_root_dir:         root_dir,
-        knotx_log_dir:          log_dir,
-        debug_enabled:          debug_enabled,
-        jmx_enabled:            jmx_enabled,
-        jmx_ip:                 jmx_ip,
-        jmx_port:               jmx_port,
-        debug_port:             debug_port,
-        port:                   port,
-        min_heap:               min_heap,
-        max_heap:               max_heap,
-        max_permsize:           max_permsize,
-        code_cache:             code_cache,
-        extra_opts:             extra_opts,
-        gc_opts:                gc_opts
+        id:            new_resource.full_id,
+        log_dir:       new_resource.log_dir,
+        min_heap:      new_resource.min_heap,
+        max_heap:      new_resource.max_heap,
+        extra_opts:    new_resource.extra_opts,
+        gc_opts:       new_resource.gc_opts,
+        jmx_enabled:   new_resource.jmx_enabled,
+        jmx_ip:        new_resource.jmx_ip,
+        jmx_port:      new_resource.jmx_port,
+        debug_enabled: new_resource.debug_enabled,
+        debug_port:    new_resource.debug_port
       )
       template.run_action(:create)
 
       template.updated_by_last_action?
     end
 
-    def log_config_update(id, log_dir)
+    def log_config_update
       template = Chef::Resource::Template.new(
         "#{new_resource.conf_dir}/logback.xml",
         run_context
@@ -261,14 +233,14 @@ module Knotx
       template.source(new_resource.logback_xml_path)
       template.mode('0644')
       template.variables(
-        knotx_id:       id,
-        knotx_log_dir:  log_dir,
-        knotx_log_history: node['knotx']['log_history']['knotx'],
-        knotx_log_size: node['knotx']['log_size']['knotx'],
+        id:                 new_resource.full_id,
+        log_dir:            new_resource.log_dir,
+        knotx_log_history:  node['knotx']['log_history']['knotx'],
+        knotx_log_size:     node['knotx']['log_size']['knotx'],
         access_log_history: node['knotx']['log_history']['access'],
-        access_log_size: node['knotx']['log_size']['access'],
-        main_log_level: node['knotx']['log_level']['main'],
-        knotx_log_level: node['knotx']['log_level']['knotx']
+        access_log_size:    node['knotx']['log_size']['access'],
+        main_log_level:     node['knotx']['log_level']['main'],
+        knotx_log_level:    node['knotx']['log_level']['knotx']
       )
       template.run_action(:create)
 

@@ -21,19 +21,15 @@ module Knotx
     def load_config_vars
       %w(
         jvm_config_path
-        app_config_path
-        app_config_extra
-        debug_enabled
+        min_heap
+        max_heap
+        extra_opts
+        gc_opts
         jmx_enabled
         jmx_ip
         jmx_port
+        debug_enabled
         debug_port
-        port
-        min_heap
-        max_heap
-        code_cache
-        extra_opts
-        gc_opts
       ).each do |var|
         if node['knotx'].key?(new_resource.id) &&
            node['knotx'][new_resource.id].key?(var)

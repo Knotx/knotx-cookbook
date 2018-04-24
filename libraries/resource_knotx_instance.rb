@@ -41,16 +41,13 @@ class Chef
       attr_accessor :jvm_config_path
       attr_accessor :min_heap
       attr_accessor :max_heap
-      attr_accessor :max_permsize
-      attr_accessor :code_cache
       attr_accessor :extra_opts
       attr_accessor :gc_opts
+      attr_accessor :jmx_enabled
       attr_accessor :jmx_ip
       attr_accessor :jmx_port
-      attr_accessor :debug_port
-      attr_accessor :port
-      attr_accessor :jmx_enabled
       attr_accessor :debug_enabled
+      attr_accessor :debug_port
 
       # SOURCE opts
       attr_accessor :knotx_init_cookbook

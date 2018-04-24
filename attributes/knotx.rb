@@ -41,27 +41,21 @@ default['knotx']['release_url'] =
 # For example default['knotx']['main']['debug_enabled'] = true will override
 # current setting for 'main' knotx instance.
 
-default['knotx']['debug_enabled'] = false
-default['knotx']['jmx_enabled'] = true
-
 # JVM config file relative to instance root dir
 default['knotx']['jvm_config_path'] = 'knotx.conf'
 
-default['knotx']['jmx_ip'] = '0.0.0.0'
-default['knotx']['jmx_port'] = '18092'
-default['knotx']['debug_port'] = '28092'
-default['knotx']['port'] = '8092'
-
 default['knotx']['min_heap'] = '256'
 default['knotx']['max_heap'] = '1024'
-default['knotx']['code_cache'] = '64'
 default['knotx']['extra_opts'] = ''
 default['knotx']['gc_opts'] =
   '-XX:+UseConcMarkSweepGC -XX:ParallelGCThreads=2 -XX:ParallelCMSThreads=1'
 
-# KNOTX CONFIG
-default['knotx']['app_config_path'] = 'config.json'
-default['knotx']['app_config_extra'] = ''
+default['knotx']['jmx_enabled'] = true
+default['knotx']['jmx_ip'] = '0.0.0.0'
+default['knotx']['jmx_port'] = '18092'
+
+default['knotx']['debug_enabled'] = false
+default['knotx']['debug_port'] = '28092'
 
 # TEMPLATE SOURCES
 default['knotx']['source']['knotx_init_cookbook'] = 'knotx'

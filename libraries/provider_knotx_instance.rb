@@ -171,11 +171,7 @@ class Chef
 
         # Update startup script
         if systemd_available?
-          changed = true if systemd_script_update(
-            new_resource.full_id,
-            new_resource.install_dir,
-            new_resource.log_dir
-          )
+          changed = true if systemd_script_update
         else
           changed = true if init_script_update(
             new_resource.full_id,
@@ -186,33 +182,11 @@ class Chef
         end
 
         # Update startup JVM config
-        changed = true if jvm_config_update(
-          new_resource.id,
-          new_resource.jvm_config_path,
-          new_resource.app_config_path,
-          new_resource.app_config_extra,
-          new_resource.install_dir,
-          new_resource.log_dir,
-          new_resource.debug_enabled,
-          new_resource.jmx_enabled,
-          new_resource.jmx_ip,
-          new_resource.jmx_port,
-          new_resource.debug_port,
-          new_resource.port,
-          new_resource.min_heap,
-          new_resource.max_heap,
-          new_resource.max_permsize,
-          new_resource.code_cache,
-          new_resource.extra_opts,
-          new_resource.gc_opts
-        )
+        changed = true if jvm_config_update
 
         # Update logging config
         if new_resource.custom_logback
-          changed = true if log_config_update(
-            new_resource.id,
-            new_resource.log_dir
-          )
+          changed = true if log_config_update
         end
 
         # Add knotx service to managed resources
