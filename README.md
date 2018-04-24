@@ -34,16 +34,16 @@ This cookbook installs [knot.x](http://knotx.io/)
 
 ## knot.x versions
 
-* knot.x 1.3.x
-
 ---
 
 **IMPORTANT**
 
-If you're using knot.x 1.1.x or 1.2.x please use previous versions of this
-cookbook.
+If you're using knot.x 1.1.x or 1.2.x please stick to 0.4.x version of this
+cookbook!
 
 ---
+
+* knot.x 1.3.x
 
 # Attributes
 
