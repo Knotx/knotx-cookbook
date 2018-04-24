@@ -98,41 +98,6 @@ cookbook!
 * `['knotx']['source']['logback_xml_path']` - path to `logback.xml` template
   within a cookbook
 
-### knotx_instance resource attributes
-
-<table>
-  <tr>
-    <th>Key</th>
-    <th>Type</th>
-    <th>Description</th>
-    <th>Default</th>
-  </tr>
-  <tr>
-    <td><tt>id</tt></td>
-    <td>String</td>
-    <td>
-      Isntance ID. Used to create init scripts, instance directory and logfiles
-    </td>
-    <td><tt>Value of resoruce name</tt></td>
-  </tr>
-  <tr>
-    <td><tt>version</tt></td>
-    <td>String</td>
-    <td>
-      Which version of knotx should be deployed
-    </td>
-    <td><tt>1.0.1</tt></td>
-  </tr>
-  <tr>
-    <td><tt>source</tt></td>
-    <td>String</td>
-    <td>
-      Direct link to knotx jar that should be deployed. It overwrites 'version' attrbiute
-    </td>
-    <td><tt></tt></td>
-  </tr>
-</table>
-
 ## commons.rb
 
 Attributes from [java cookbook](https://supermarket.chef.io/cookbooks/java) 
