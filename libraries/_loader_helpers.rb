@@ -20,7 +20,6 @@ module Knotx
   module LoaderHelpers
     def load_config_vars
       %w(
-        jvm_config_path
         min_heap
         max_heap
         extra_opts

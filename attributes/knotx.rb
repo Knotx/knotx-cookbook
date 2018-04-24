@@ -41,9 +41,6 @@ default['knotx']['release_url'] =
 # For example default['knotx']['main']['debug_enabled'] = true will override
 # current setting for 'main' knotx instance.
 
-# JVM config file relative to instance root dir
-default['knotx']['jvm_config_path'] = 'knotx.conf'
-
 default['knotx']['min_heap'] = '256'
 default['knotx']['max_heap'] = '1024'
 default['knotx']['extra_opts'] = ''
