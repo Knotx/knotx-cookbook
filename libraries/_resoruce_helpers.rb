@@ -18,16 +18,9 @@
 
 module Knotx
   module ResourceHelpers
-
     # Check if systemd is available
     def systemd_available?
-      require 'rubygems'
-      require 'ohai'
-
-      @ohai = Ohai::System.new
-      @ohai.all_plugins
-      # Temporarily excluding Amazon Linux.
-      File.directory?('/etc/systemd/system') && @ohai[:platform] != 'amazon'
+      File.directory?('/etc/systemd/system') && node[:platform] != 'amazon'
     end
 
     def systemd_daemon_reload
@@ -247,12 +240,12 @@ module Knotx
       template.updated_by_last_action?
     end
 
-    def configure_service(service_name)
+    def configure_service
       service = Chef::Resource::Service.new(
-        service_name,
+        new_resource.full_id,
         run_context
       )
-      service.service_name(service_name)
+      service.service_name(new_resource.full_id)
       service.supports(status: true)
       service.run_action(:start)
       service.run_action(:enable)
@@ -260,13 +253,13 @@ module Knotx
       service.updated_by_last_action?
     end
 
-    def execute_restart(service_name)
+    def execute_restart
       # This restart happens exatly at the end of current knotx resource
       service = Chef::Resource::Service.new(
-        "restart-#{service_name}",
+        "restart-#{new_resource.full_id}",
         run_context
       )
-      service.service_name(service_name)
+      service.service_name(new_resource.full_id)
       service.run_action(:restart)
     end
   end

@@ -116,7 +116,7 @@ class Chef
         current_resource.instance_variables.each do |v|
           Chef::Log.debug(
             "current_resource.#{v}"\
-            "= #{current_resource.instance_variable_get(v)}"
+            " = #{current_resource.instance_variable_get(v)}"
           )
         end
       end
@@ -160,9 +160,9 @@ class Chef
             false
           end
 
-        Chef::Log.debug("Libs status = #{libs}")
-        Chef::Log.debug("Config status = #{configs}")
-        Chef::Log.debug("Checksum status = #{checksum}")
+        Chef::Log.debug("libs = #{libs}")
+        Chef::Log.debug("configs = #{configs}")
+        Chef::Log.debug("checksum = #{checksum}")
 
         libs && configs && checksum
       end
@@ -174,39 +174,44 @@ class Chef
       end
 
       def configure_knotx
-        changed = false
-
         # Update startup script
-        if systemd_available?
-          changed = true if systemd_script_update
-        else
-          changed = true if init_script_update(
-            new_resource.full_id,
-            new_resource.install_dir,
-            new_resource.log_dir
-          )
-          changed = true if ulimit_update
-        end
+        start_script =
+          systemd_available? ? systemd_script_update : init_script_update
 
         # Update startup JVM config
-        changed = true if jvm_config_update
+        jvm_config = jvm_config_update
 
-        # Update logging config
-        if new_resource.custom_logback
-          changed = true if log_config_update
-        end
+        # Update log config
+        logback = new_resource.custom_logback ? log_config_update : false
 
         # Add knotx service to managed resources
-        configure_service(new_resource.full_id)
+        service = configure_service
 
-        # We cannot assign 'changed' directly to input as it can have false
-        # value and it can override status from install action
-        new_resource.updated_by_last_action(true) if changed
-        changed
+        Chef::Log.debug("start_script = #{start_script}")
+        Chef::Log.debug("jvm_config = #{jvm_config}")
+        Chef::Log.debug("logback = #{logback}")
+        Chef::Log.debug("service = #{service}")
+
+        # Mark resource as changed if any of supprting files requires update
+        status = start_script || jvm_config || logback || service
+        new_resource.updated_by_last_action(true) if status
+        status
       end
 
       def install_knotx
-        changed = false
+        # Execution status of all sub-resources is stored here. If anything
+        # required update there will be at least 1 "true" in the array.
+        #
+        # Example:
+        # * install_dir is fine, false was added
+        # * lib dir permissions were wrong, true was added
+        # * conf dir was fine, false was added
+        # * log dir was fine, false was added
+        # * distribution checksum matches, so false was added
+        # * [false, true, false, false, false] was assigned to status
+        # * new_resource status has to be set to true, as there's at least one
+        #   true in the array
+        status = []
 
         # Create core directory structure
         # * $KNOTX_HOME
@@ -219,7 +224,7 @@ class Chef
           new_resource.conf_dir,
           ::File.join(new_resource.log_dir, new_resource.id)
         ].each do |f|
-          changed = true if create_directory(f)
+          status += create_directory(f)
         end
 
         # Download distribution ZIP file
@@ -255,14 +260,18 @@ class Chef
 
           # Update checksum
           update_dist_checksum(new_checksum, new_resource.checksum_path)
+
+          # Update status
+          status += true
         end
 
-        new_resource.updated_by_last_action(true) if changed
-        changed
+        Chef::Log.debug("Installation status = #{status}")
+
+        new_resource.updated_by_last_action(true) if status.any?
       end
 
       def restart_knotx
-        execute_restart(new_resource.full_id)
+        execute_restart
       end
 
       # Performing install action
