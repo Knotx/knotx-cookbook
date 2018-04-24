@@ -23,6 +23,8 @@ platforms:
       box: bento/<%= p %>
       require_chef_omnibus: <%= chef_version %>
     attributes:
+      knotx:
+        source: 'https://oss.sonatype.org/content/groups/public/io/knotx/knotx-stack-manager/1.3.0-SNAPSHOT/knotx-stack-manager-1.3.0-20180417.122358-11.zip'
       java:
         jdk:
           '8':
@@ -36,6 +38,3 @@ suites:
   - name: default
     run_list:
       - recipe[knotx::_install]
-    attributes:
-      knotx:
-        debug_enabled: true
