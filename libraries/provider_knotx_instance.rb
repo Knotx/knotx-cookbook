@@ -194,13 +194,13 @@ class Chef
 
         # Mark resource as changed if any of supprting files requires update
         status = start_script || jvm_config || logback || service
-        new_resource.updated_by_last_action(true) if status
+        new_resource.updated_by_last_action(status)
         status
       end
 
       def install_knotx
         # Execution status of all sub-resources is stored here. If anything
-        # required update there will be at least 1 "true" in the array.
+        # required update there will be at least one "true" in the array.
         #
         # Example:
         # * install_dir is fine, false was added
@@ -265,9 +265,9 @@ class Chef
           status += true
         end
 
-        Chef::Log.debug("Installation status = #{status}")
+        Chef::Log.debug("Installation required? #{status.any}")
 
-        new_resource.updated_by_last_action(true) if status.any?
+        new_resource.updated_by_last_action(status.any?)
       end
 
       def restart_knotx

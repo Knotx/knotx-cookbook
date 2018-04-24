@@ -22,6 +22,13 @@ platforms:
     driver_config:
       box: bento/<%= p %>
       require_chef_omnibus: <%= chef_version %>
+    attributes:
+      java:
+        jdk:
+          '8':
+            x86_64:
+              url: <%= ENV['JAVA_JDK_8_X86_64_URL'] || 'http://download.oracle.com/otn-pub/java/jdk/8u162-b12/0da788060d494f5095bf8624735fa2f1/jdk-8u162-linux-x64.tar.gz' %>
+              checksum: <%= ENV['JAVA_JDK_8_X86_64_CHECKSUM'] || '68ec82d47fd9c2b8eb84225b6db398a72008285fafc98631b1ff8d2229680257' %>
 <%   end %>
 <% end %>
 
