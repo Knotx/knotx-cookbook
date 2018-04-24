@@ -29,9 +29,8 @@ class Chef
       attr_accessor :lib_dir
       attr_accessor :conf_dir
       attr_accessor :tmp_dir
-      attr_accessor :checksum_path
-      attr_accessor :app_config_path
-      attr_accessor :app_config_extra
+      attr_accessor :dist_checksum
+      attr_accessor :dist_checksum_path
       attr_accessor :full_id
       attr_accessor :log_dir
       attr_accessor :source

@@ -70,7 +70,7 @@ class Chef
           new_resource.install_dir, 'tmp'
         )
 
-        @new_resource.checksum_path = ::File.join(
+        @new_resource.dist_checksum_path = ::File.join(
           new_resource.install_dir, '.dist_checksum'
         )
 
@@ -86,6 +86,11 @@ class Chef
 
         @new_resource.download_path = ::File.join(
           Chef::Config[:file_cache_path], new_resource.filename
+        )
+
+        @new_resource.dist_checksum = download_distribution(
+          new_resource.source,
+          new_resource.download_path
         )
 
         # Print out all new_resource data defined so far
@@ -107,9 +112,19 @@ class Chef
         @current_resource.installed = knotx_installed?
 
         if @current_resource.installed
-          @current_resource.checksum_path = dist_checksum(
-            new_resource.checksum_path
+          @current_resource.dist_checksum = dist_checksum(
+            new_resource.dist_checksum_path
           )
+
+          # Consider knot.x as NOT installed if checksum doesn't match
+          if current_resource.dist_checksum != new_resource.dist_checksum
+            Chef::Log.info(
+              "knot.x distribution checksum mismatch:\n"\
+              "- current: #{current_resource.dist_checksum}\n"\
+              "- new: #{new_resource.dist_checksum}"
+            )
+            @current_resource.installed = false
+          end
         end
 
         @current_resource.reconfigured = knotx_reconfigured?
@@ -133,7 +148,14 @@ class Chef
       # its content matches to the deployed one.
       #
       # TODO: improve installation check by comparing ZIP file content with
-      # files that have been deployed in $KNOTX_HOME
+      # files deployed in $KNOTX_HOME
+      #
+      # ---------
+      # IMPORTANT
+      # ---------
+      # This method doesn't verify distribution checksum, as we need to make
+      # sure that basic file/directory structure got deployed first. Checksum
+      # is evaluated once this is passed
       def knotx_installed?
         libs =
           if ::File.directory?(new_resource.lib_dir)
@@ -154,9 +176,9 @@ class Chef
           end
 
         checksum =
-          if ::File.file?(new_resource.checksum_path) &&
-             !::File.read(new_resource.checksum_path).empty? &&
-             ::File.read(new_resource.checksum_path).length == 32
+          if ::File.file?(new_resource.dist_checksum_path) &&
+             !::File.read(new_resource.dist_checksum_path).empty? &&
+             ::File.read(new_resource.dist_checksum_path).length == 32
             true
           else
             false
@@ -183,7 +205,6 @@ class Chef
                          init_script_update
                          ulimit_update
                        end
-
 
         # Update startup JVM config
         jvm_config = jvm_config_update
@@ -234,16 +255,8 @@ class Chef
           status << create_directory(f)
         end
 
-        # Download distribution ZIP file
-        new_checksum = download_distribution(
-          new_resource.source,
-          new_resource.download_path
-        )
-
-        Chef::Log.debug("New checksum: #{new_checksum}")
-
-        # Redeploy knot.x if checksum doesn't match
-        if current_resource.checksum_path != new_checksum
+        # Redeploy knot.x only if checksum doesn't match
+        if current_resource.dist_checksum != new_resource.dist_checksum
           # Get rid of exiting JAR and config files
           rm_rf(::File.join(new_resource.lib_dir, '*'))
           rm_rf(::File.join(new_resource.conf_dir, '*'))
@@ -266,7 +279,10 @@ class Chef
           rm_rf(new_resource.tmp_dir)
 
           # Update checksum
-          update_dist_checksum(new_checksum, new_resource.checksum_path)
+          update_dist_checksum(
+            new_resource.dist_checksum,
+            new_resource.dist_checksum_path
+          )
 
           # Update status
           status << true
