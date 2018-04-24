@@ -1,12 +1,14 @@
 ---
+<% chef_versions = %w( 13 14 ) %>
+<% platforms = %w( centos-6 centos-7 ) %>
+
 driver:
   name: vagrant
   linked_clone: true
-  require_chef_omnibus: 13
 
 provisioner:
   name: chef_zero
-  log_level: debug
+  log_level: <%= ENV['TK_CHEF_LOG_LEVEL'] || 'info' %>
 
 verifier:
   name: inspec
@@ -14,8 +16,14 @@ verifier:
     - test/inspec
 
 platforms:
-  - name: centos-6
-  - name: centos-7
+<% platforms.each do |p| %>
+<%   chef_versions.each do |chef_version| %>
+  - name: <%= p %>-chef-<%= chef_version %>
+    driver_config:
+      box: bento/<%= p %>
+      require_chef_omnibus: <%= chef_version %>
+<%   end %>
+<% end %>
 
 suites:
   - name: default
