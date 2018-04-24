@@ -36,6 +36,15 @@ This cookbook installs [knot.x](http://knotx.io/)
 
 * knot.x 1.3.x
 
+---
+
+**IMPORTANT**
+
+If you're using knot.x 1.1.x or 1.2.x please use previous versions of this
+cookbook.
+
+---
+
 # Attributes
 
 ## knotx.rb
