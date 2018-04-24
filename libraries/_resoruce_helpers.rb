@@ -118,10 +118,9 @@ module Knotx
     end
 
     # Create/update init script
-    def init_script_update(full_id, root_dir, log_dir)
-      init_script = ::File.join('/etc/init.d/', full_id)
+    def init_script_update
       template = Chef::Resource::Template.new(
-        init_script,
+        ::File.join('/etc/init.d', new_resource.full_id),
         run_context
       )
       template.owner('root')
@@ -130,10 +129,12 @@ module Knotx
       template.source(new_resource.knotx_init_path)
       template.mode('0755')
       template.variables(
-        knotx_root_dir: root_dir,
-        knotx_log_dir:  log_dir,
-        knotx_id:       full_id,
-        knotx_user:     node['knotx']['user']
+        id:               new_resource.full_id,
+        java_home:        node['java']['java_home'],
+        home_dir:         new_resource.install_dir,
+        conf_dir:         new_resource.conf_dir,
+        lib_dir:          new_resource.lib_dir,
+        user:             node['knotx']['user'],
       )
       template.run_action(:create)
 

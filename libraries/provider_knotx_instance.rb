@@ -224,7 +224,7 @@ class Chef
           new_resource.conf_dir,
           ::File.join(new_resource.log_dir, new_resource.id)
         ].each do |f|
-          status += create_directory(f)
+          status << create_directory(f)
         end
 
         # Download distribution ZIP file
@@ -262,10 +262,10 @@ class Chef
           update_dist_checksum(new_checksum, new_resource.checksum_path)
 
           # Update status
-          status += true
+          status << true
         end
 
-        Chef::Log.debug("Installation required? #{status.any}")
+        Chef::Log.debug("Installation required? #{status.any?}")
 
         new_resource.updated_by_last_action(status.any?)
       end
@@ -280,7 +280,7 @@ class Chef
         if !current_resource.installed
           Chef::Log.info(
             "#{new_resource.id} knot.x instance requires installation. "\
-            ' Installing...'
+            'Installing...'
           )
 
           install_knotx

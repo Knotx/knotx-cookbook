@@ -2,62 +2,62 @@
 
 #
 # chkconfig: - 80 20
-# processname: <%= @knotx_id %>
+# processname: <%= @id %>
 # description: Knotx - reactive microservice assembler
 #
 
 ### BEGIN INIT INFO
-# Provides: <%= @knotx_id %>
+# Provides: <%= @id %>
 # Required-Start: $network $syslog
 # Required-Stop: $network $syslog
 # Default-Start:
 # Default-Stop:
-# Short-Description: start and stop <%= @knotx_id %>
+# Short-Description: start and stop <%= @id %>
 ### END INIT INFO
 
 . /etc/rc.d/init.d/functions
 
-CONFIG_FILE="<%= @knotx_root_dir %>/knotx.conf"
+CONFIG_FILE="<%= @home_dir %>/knotx.conf"
 
 [ -e $CONFIG_FILE ] && . $CONFIG_FILE
 
 start()
 {
-  echo -n $"Starting <%= @knotx_id %>: "
-  runuser -l "<%= @knotx_user %>" -c "java \
-  -Dlogback.configurationFile=<%= @knotx_root_dir %>/logback.xml \
-  -Dvertx.cacheDirBase=<%= @knotx_root_dir %>/.vertx \
-  -Xms${KNOTX_MIN_HEAP}m \
-  -Xmx${KNOTX_MAX_HEAP}m \
-  -XX:ReservedCodeCacheSize=${KNOTX_CODE_CACHE}m \
-  -XX:+UseBiasedLocking \
-  -XX:BiasedLockingStartupDelay=0 \
+  echo -n $"Starting <%= @id %>: "
+  runuser -l "<%= @user %>" -c "<%= @java_home %>/bin/java \
   ${KNOTX_GENERAL_OPTS} \
+  ${KNOTX_GC_OPTS} \
   ${KNOTX_JMX_OPTS} \
   ${KNOTX_DEBUG_OPTS} \
-  ${KNOTX_GC_OPTS} \
-  ${KNOTX_EXTRA_OPTS} \
-  -Dio.knotx.KnotxServer.options.config.serverOptions.port=${KNOTX_PORT} \
-  -cp \"<%= @knotx_root_dir %>/app/*\" io.knotx.launcher.LogbackLauncher \
-  ${KNOTX_CONFIG} \
-  ${KNOTX_CONFIG_EXTRA} >> /dev/null 2>&1 &" && echo_success || echo_failure
+  -Xms${KNOTX_MIN_HEAP}m \
+  -Xmx${KNOTX_MAX_HEAP}m \
+  -XX:+UseBiasedLocking \
+  -XX:BiasedLockingStartupDelay=0 \
+  -Dlogback.configurationFile=<%= ::File.join(@conf_dir, 'logback.xml') %> \
+  -Dvertx.logger-delegate-factory-class-name=io.vertx.core.logging.SLF4JLogDelegateFactory \
+  -Dknotx.home=<%= @home_dir %> \
+  -Dvertx.cacheDirBase=<%= ::File.join(@home_dir, '.vertx' ) %> \
+  -Dvertx.cli.usage.prefix=knotx \
+  -classpath ':<%= @conf_dir %>:<%= ::File.join(@lib_dir, '*') %>' \
+  $KNOTX_EXTRA_OPTS \
+  io.vertx.core.Launcher run-knotx 2>&1 &" && echo_success || echo_failure
   RETVAL=$?
   echo
   if [ $RETVAL -ne 0 ] ; then
-    echo "Error while starting <%= @knotx_id %>. Error code from java: [$RETVAL]"
+    echo "Error while starting <%= @id %>. Error code from java: [$RETVAL]"
   fi
 }
 
 get_pid()
 {
-  ps -aefw | grep "cp <%= @knotx_root_dir %>/" | grep -v " grep " | awk '{print $2}'
+  ps -aefw | grep "<%= @home_dir %>" | grep -v " grep " | awk '{print $2}'
 }
 
 do_start()
 {
   PID=`get_pid`
   if [ ! -z $PID ] ; then
-    echo "<%= @knotx_id %> is already running"
+    echo "<%= @id %> is already running"
     RETVAL=0
   else
     start
@@ -68,15 +68,15 @@ do_stop()
 {
   PID=`get_pid`
   if [ ! -z $PID ] ; then
-    echo -n $"Stopping <%= @knotx_id %>: "
+    echo -n $"Stopping <%= @id %>: "
     kill -9 $PID > /dev/null 2>&1 && echo_success || echo_failure
     RETVAL=$?
     echo
     if [ $RETVAL -ne 0 ] ; then
-      echo "<%= @knotx_id %> failed to stop"
+      echo "<%= @id %> failed to stop"
     fi
   else
-    echo "<%= @knotx_id %> is already stopped"
+    echo "<%= @id %> is already stopped"
   fi
 }
 
@@ -84,10 +84,10 @@ do_status()
 {
   PID=`get_pid`
   if [ ! -z $PID ] ; then
-    echo "<%= @knotx_id %> is running"
+    echo "<%= @id %> is running"
     RETVAL=0
   else
-    echo "<%= @knotx_id %> is stopped"
+    echo "<%= @id %> is stopped"
     RETVAL=3
   fi
 }
