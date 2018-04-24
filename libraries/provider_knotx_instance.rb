@@ -79,7 +79,9 @@ class Chef
         )
 
         if new_resource.log_dir.nil?
-          @new_resource.log_dir = node['knotx']['log_dir']
+          @new_resource.log_dir = ::File.join(
+            node['knotx']['log_dir'], new_resource.id
+          )
         end
 
         @new_resource.download_path = ::File.join(
@@ -222,7 +224,7 @@ class Chef
           new_resource.install_dir,
           new_resource.lib_dir,
           new_resource.conf_dir,
-          ::File.join(new_resource.log_dir, new_resource.id)
+          new_resource.log_dir
         ].each do |f|
           status << create_directory(f)
         end

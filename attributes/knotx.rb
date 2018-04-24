@@ -23,7 +23,7 @@ default['knotx']['base_dir'] = '/opt/knotx'
 default['knotx']['log_dir'] = '/var/log/knotx'
 default['knotx']['open_file_limit'] = '65536'
 
-default['knotx']['log_level']['main'] = 'INFO'
+default['knotx']['log_level']['root'] = 'INFO'
 default['knotx']['log_level']['knotx'] = 'ERROR'
 
 default['knotx']['log_history']['knotx'] = '30'
@@ -38,8 +38,8 @@ default['knotx']['release_url'] =
 
 # JVM default parameters (those can be specifically overridden per instance)
 #
-# For example default['knotx']['main']['debug_enabled'] = true will override
-# current setting for 'main' knotx instance.
+# For example default['knotx']['primary']['debug_enabled'] = true will override
+# current setting for 'primary' knotx instance.
 
 default['knotx']['min_heap'] = '256'
 default['knotx']['max_heap'] = '1024'

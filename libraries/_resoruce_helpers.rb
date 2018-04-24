@@ -199,7 +199,6 @@ module Knotx
       template.source(new_resource.knotx_conf_path)
       template.mode('0644')
       template.variables(
-        id:            new_resource.full_id,
         log_dir:       new_resource.log_dir,
         min_heap:      new_resource.min_heap,
         max_heap:      new_resource.max_heap,
@@ -227,13 +226,12 @@ module Knotx
       template.source(new_resource.logback_xml_path)
       template.mode('0644')
       template.variables(
-        id:                 new_resource.full_id,
         log_dir:            new_resource.log_dir,
         knotx_log_history:  node['knotx']['log_history']['knotx'],
         knotx_log_size:     node['knotx']['log_size']['knotx'],
         access_log_history: node['knotx']['log_history']['access'],
         access_log_size:    node['knotx']['log_size']['access'],
-        main_log_level:     node['knotx']['log_level']['main'],
+        root_log_level:     node['knotx']['log_level']['root'],
         knotx_log_level:    node['knotx']['log_level']['knotx']
       )
       template.run_action(:create)
