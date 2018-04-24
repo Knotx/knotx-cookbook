@@ -1,6 +1,6 @@
 # knotx-cookbook
 
-Cookbook that installs and [knot.x](http://knotx.io/)
+This cookbook installs [knot.x](http://knotx.io/)
 
 # Table of contents
 
