@@ -113,9 +113,9 @@ Attributes from [java](https://supermarket.chef.io/cookbooks/java) cookbook
   calculate download URL)
 * `source` - full URL to knot.x ZIP distribution package. Overwrites `version`
 * `install_dir` - where knot.x instance should be deployed. If not set, knot.x
-  gets deployed to `['knotx']['base_dir']/ID` directory 
+  gets deployed to `['knotx']['base_dir']/id` directory 
 * `log_dir` - directory where all logs will be stored. If not set logs are
-  written to `['knotx']['log_dir']/ID` directory
+  written to `['knotx']['log_dir']/id` directory
 * `custom_logback` - `logback.xml` used to be delivered with ZIP distribution
   package, however most of the time this is not what you want, as stdout is
   commonly used as an output. This property accepts boolean values (`true` by
