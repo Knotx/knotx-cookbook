@@ -133,29 +133,36 @@ class Chef
       # TODO: improve installation check by comparing ZIP file content with
       # files that have been deployed in $KNOTX_HOME
       def knotx_installed?
-        libs = if ::File.directory?(new_resource.lib_dir)
-                 ::Dir.entries(new_resource.lib_dir).select do |f|
-                   ::File.file?(f) && f.match?(/knotx-.+\.jar/)
-                 end.length > 0
-               else
-                 false
-               end
+        libs =
+          if ::File.directory?(new_resource.lib_dir)
+            ::Dir.glob(::File.join(new_resource.lib_dir, '*')).select do |f|
+              ::File.file?(f) && f.match?(/knotx-.+\.jar/)
+            end.length > 0
+          else
+            false
+          end
 
-        configs = if ::File.directory?(new_resource.conf_dir)
-                    ::Dir.entries(new_resource.conf_dir).select do |f|
-                      ::File.file?(f) && f.match?(/.+\.(conf|xml|json)/)
-                    end.length > 0
-                  else
-                    false
-                  end
+        configs =
+          if ::File.directory?(new_resource.conf_dir)
+            ::Dir.glob(::File.join(new_resource.conf_dir, '*')).select do |f|
+              ::File.file?(f) && f.match?(/.+\.(conf|xml|json)/)
+            end.length > 0
+          else
+            false
+          end
 
-        checksum = if ::File.file?(new_resource.checksum_path) &&
-                       !::File.read(new_resource.checksum_path).empty? &&
-                       ::File.read(new_resource.checksum_path).length == 32
-                     true
-                   else
-                     false
-                   end
+        checksum =
+          if ::File.file?(new_resource.checksum_path) &&
+              !::File.read(new_resource.checksum_path).empty? &&
+              ::File.read(new_resource.checksum_path).length == 32
+            true
+          else
+            false
+          end
+
+        Chef::Log.debug("Libs status = #{libs}")
+        Chef::Log.debug("Config status = #{configs}")
+        Chef::Log.debug("Checksum status = #{checksum}")
 
         libs && configs && checksum
       end
