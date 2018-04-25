@@ -18,7 +18,7 @@ ExecStart=<%= @java_home %>/bin/java \
   -Dknotx.home=<%= @home_dir %> \
   -Dvertx.cacheDirBase=<%= ::File.join(@home_dir, '.vertx' ) %> \
   -Dvertx.cli.usage.prefix=knotx \
-  -classpath ':<%= @conf_dir %>:<%= ::File.join(@lib_dir, '*') %>' \
+  -classpath '<%= @conf_dir %>:<%= ::File.join(@lib_dir, '*') %>' \
   $KNOTX_EXTRA_OPTS \
   io.vertx.core.Launcher run-knotx
 Type=simple
