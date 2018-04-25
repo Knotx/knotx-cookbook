@@ -19,7 +19,7 @@
 
 CONFIG_FILE="<%= @home_dir %>/knotx.conf"
 
-[ -e $CONFIG_FILE ] && . $CONFIG_FILE
+[ -e ${CONFIG_FILE} ] && . ${CONFIG_FILE}
 
 start()
 {
@@ -39,13 +39,13 @@ start()
   -Dvertx.cacheDirBase=<%= ::File.join(@home_dir, '.vertx' ) %> \
   -Dvertx.cli.usage.prefix=knotx \
   -classpath '<%= @conf_dir %>:<%= ::File.join(@lib_dir, '*') %>' \
-  $KNOTX_EXTRA_OPTS \
+  ${KNOTX_EXTRA_OPTS} \
   io.vertx.core.Launcher run-knotx \
   >> <%= ::File.join(@log_dir, 'start.log') %> 2>&1 &" && echo_success || echo_failure
   RETVAL=$?
   echo
-  if [ $RETVAL -ne 0 ] ; then
-    echo "Error while starting <%= @id %>. Error code from java: [$RETVAL]"
+  if [ ${RETVAL} -ne 0 ] ; then
+    echo "Error while starting <%= @id %>. Error code from java: [${RETVAL}]"
   fi
 }
 
@@ -57,7 +57,7 @@ get_pid()
 do_start()
 {
   PID=`get_pid`
-  if [ ! -z $PID ] ; then
+  if [ ! -z ${PID} ] ; then
     echo "<%= @id %> is already running"
     RETVAL=0
   else
@@ -68,12 +68,12 @@ do_start()
 do_stop()
 {
   PID=`get_pid`
-  if [ ! -z $PID ] ; then
+  if [ ! -z ${PID} ] ; then
     echo -n $"Stopping <%= @id %>: "
-    kill -9 $PID > /dev/null 2>&1 && echo_success || echo_failure
+    kill -9 ${PID} > /dev/null 2>&1 && echo_success || echo_failure
     RETVAL=$?
     echo
-    if [ $RETVAL -ne 0 ] ; then
+    if [ ${RETVAL} -ne 0 ] ; then
       echo "<%= @id %> failed to stop"
     fi
   else
@@ -84,7 +84,7 @@ do_stop()
 do_status()
 {
   PID=`get_pid`
-  if [ ! -z $PID ] ; then
+  if [ ! -z ${PID} ] ; then
     echo "<%= @id %> is running"
     RETVAL=0
   else
@@ -112,4 +112,4 @@ echo "Usage: $0 {start|stop|restart}"
 RETVAL=1
 esac
 
-exit $RETVAL
+exit ${RETVAL}
