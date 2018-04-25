@@ -5,10 +5,10 @@ After=network.target
 [Service]
 EnvironmentFile=<%= @home_dir %>/knotx.conf
 ExecStart=<%= @java_home %>/bin/java \
-  ${KNOTX_GENERAL_OPTS} \
-  ${KNOTX_GC_OPTS} \
-  ${KNOTX_JMX_OPTS} \
-  ${KNOTX_DEBUG_OPTS} \
+  $KNOTX_GENERAL_OPTS \
+  $KNOTX_GC_OPTS \
+  $KNOTX_JMX_OPTS \
+  $KNOTX_DEBUG_OPTS \
   -Xms${KNOTX_MIN_HEAP}m \
   -Xmx${KNOTX_MAX_HEAP}m \
   -XX:+UseBiasedLocking \
@@ -19,7 +19,7 @@ ExecStart=<%= @java_home %>/bin/java \
   -Dvertx.cacheDirBase=<%= ::File.join(@home_dir, '.vertx' ) %> \
   -Dvertx.cli.usage.prefix=knotx \
   -classpath '<%= @conf_dir %>:<%= ::File.join(@lib_dir, '*') %>' \
-  ${KNOTX_EXTRA_OPTS} \
+  $KNOTX_EXTRA_OPTS \
   io.vertx.core.Launcher run-knotx
 Type=simple
 PIDFile=/var/run/<%= @id %>
