@@ -25,6 +25,7 @@ Type=simple
 PIDFile=/var/run/<%= @id %>
 User=<%= @user %>
 LimitNOFILE=<%= @open_file_limit %>
+SuccessExitStatus=143
 
 [Install]
 WantedBy=default.target
