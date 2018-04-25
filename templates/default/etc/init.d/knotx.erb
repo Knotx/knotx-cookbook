@@ -40,7 +40,8 @@ start()
   -Dvertx.cli.usage.prefix=knotx \
   -classpath ':<%= @conf_dir %>:<%= ::File.join(@lib_dir, '*') %>' \
   $KNOTX_EXTRA_OPTS \
-  io.vertx.core.Launcher run-knotx >> /dev/null 2>&1 &" && echo_success || echo_failure
+  io.vertx.core.Launcher run-knotx \
+  >> <%= ::File.join(@log_dir, 'start.log') %> 2>&1 &" && echo_success || echo_failure
   RETVAL=$?
   echo
   if [ $RETVAL -ne 0 ] ; then

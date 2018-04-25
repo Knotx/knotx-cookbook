@@ -134,6 +134,7 @@ module Knotx
         home_dir:  new_resource.install_dir,
         conf_dir:  new_resource.conf_dir,
         lib_dir:   new_resource.lib_dir,
+        log_dir:   new_resource.log_dir,
         user:      node['knotx']['user']
       )
       template.run_action(:create)
