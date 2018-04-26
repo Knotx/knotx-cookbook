@@ -9,9 +9,9 @@
 
 KNOTX_GENERAL_OPTS="-Djava.net.preferIPv4Stack=true"
 
-KNOTX_MIN_HEAP=<%= @min_heap %>
-KNOTX_MAX_HEAP=<%= @max_heap %>
-KNOTX_EXTRA_OPTS=<%= @extra_opts %>
+KNOTX_MIN_HEAP="<%= @min_heap %>"
+KNOTX_MAX_HEAP="<%= @max_heap %>"
+KNOTX_EXTRA_OPTS="<%= @extra_opts %>"
 
 KNOTX_GC_OPTS="<%= @gc_opts %> -Xloggc:<%= @log_dir %>/gc.log -XX:+PrintGCApplicationStoppedTime -XX:+PrintGCApplicationConcurrentTime -XX:+PrintGC -XX:+PrintGCTimeStamps -XX:+PrintGCDetails -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=10 -XX:GCLogFileSize=5M"
 
