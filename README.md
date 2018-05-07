@@ -66,8 +66,8 @@ cookbook!
   file
 * `['knotx']['release_url']` - base URL used to calculate download URL when
   only version was specified
-* `'knotx']['min_heap']` - `-Xms` JVM parameter (in MB) 
-* `'knotx']['max_heap']` - `-Xmx` JVM parameter (in MB)
+* `['knotx']['min_heap']` - `-Xms` JVM parameter (in MB) 
+* `['knotx']['max_heap']` - `-Xmx` JVM parameter (in MB)
 * `['knotx']['extra_opts']` - custom JVM parameters you'd like to add upon
   service start
 * `['knotx']['gc_opts']` - Garbage Collector JVM options
