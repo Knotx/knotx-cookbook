@@ -58,8 +58,8 @@ cookbook!
   user can open
 * `['knotx']['log_level']['root']` - default log level for all knot.x modules
 * `['knotx']['log_level']['knotx']` - log level for `io.knotx` modules
-* `'knotx']['log_history']['knotx']` - maximum age (in days) for knot.x logs
-* `'knotx']['log_history']['access']` - maximum age (in days) for knot.x access
+* `['knotx']['log_history']['knotx']` - maximum age (in days) for knot.x logs
+* `['knotx']['log_history']['access']` - maximum age (in days) for knot.x access
   log
 * `['knotx']['log_size']['knotx']` - maximum file size of knot.x log file 
 * `['knotx']['log_size']['access']` - maximum file size of knot.x access log
