@@ -257,6 +257,13 @@ class Chef
 
         # Redeploy knot.x only if checksum doesn't match
         if current_resource.dist_checksum != new_resource.dist_checksum
+          # Unzip the distribution
+          Chef::Log.debug(
+            "Unzipping #{new_resource.download_path} file to "\
+            "#{new_resource.tmp_dir} directory..."
+          )
+          unzip(new_resource.download_path, new_resource.tmp_dir)
+
           # Get rid of exiting JAR and config files
           Chef::Log.debug(
             "Removing content of #{new_resource.lib_dir} and "\
@@ -264,13 +271,6 @@ class Chef
           )
           rm_rf(::File.join(new_resource.lib_dir, '*'))
           rm_rf(::File.join(new_resource.conf_dir, '*'))
-
-          # Unzip the distribution
-          Chef::Log.debug(
-            "Unzipping #{new_resource.download_path} file to "\
-            "#{new_resource.tmp_dir} directory..."
-          )
-          unzip(new_resource.download_path, new_resource.tmp_dir)
 
           # Move relevant parts to installation dir
           Chef::Log.debug(
