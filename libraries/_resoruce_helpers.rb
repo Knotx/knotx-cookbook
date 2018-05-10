@@ -72,6 +72,8 @@ module Knotx
 
       remote_file.run_action(:create)
 
+      Chef::Log.debug("remote_file resource: #{remote_file}")
+
       # Returning downloaded file checksum
       md5sum(dst)
     end
