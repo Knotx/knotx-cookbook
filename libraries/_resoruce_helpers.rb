@@ -73,7 +73,7 @@ module Knotx
       remote_file.run_action(:create)
 
       # Returning downloaded file checksum
-      md5sum(new_resource.download_path)
+      md5sum(dst)
     end
 
     def unzip(zip, dst_dir)
