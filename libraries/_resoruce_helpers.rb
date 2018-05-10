@@ -64,10 +64,10 @@ module Knotx
         dst,
         run_context
       )
-      remote_file.owner(node['knotx']['user'])
-      remote_file.group(node['knotx']['group'])
+      remote_file.owner('root')
+      remote_file.group('root')
       remote_file.source(src)
-      remote_file.mode('0755')
+      remote_file.mode('0644')
       remote_file.backup(false)
 
       remote_file.run_action(:create)
