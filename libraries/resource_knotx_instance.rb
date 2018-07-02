@@ -25,13 +25,14 @@ class Chef
       attr_accessor :installed
       attr_accessor :reconfigured
       attr_accessor :download_path
-      attr_accessor :install_path
       attr_accessor :install_dir
-      attr_accessor :app_config_path
-      attr_accessor :app_config_extra
+      attr_accessor :lib_dir
+      attr_accessor :conf_dir
+      attr_accessor :tmp_dir
+      attr_accessor :dist_checksum
+      attr_accessor :dist_checksum_path
       attr_accessor :full_id
       attr_accessor :log_dir
-      attr_accessor :checksum
       attr_accessor :source
       attr_accessor :filename
 
@@ -39,24 +40,13 @@ class Chef
       attr_accessor :jvm_config_path
       attr_accessor :min_heap
       attr_accessor :max_heap
-      attr_accessor :max_permsize
-      attr_accessor :code_cache
       attr_accessor :extra_opts
       attr_accessor :gc_opts
+      attr_accessor :jmx_enabled
       attr_accessor :jmx_ip
       attr_accessor :jmx_port
-      attr_accessor :debug_port
-      attr_accessor :port
-      attr_accessor :jmx_enabled
       attr_accessor :debug_enabled
-
-      # GIT opts
-      attr_accessor :git_enabled
-      attr_accessor :git_dir
-      attr_accessor :git_url
-      attr_accessor :git_user
-      attr_accessor :git_pass
-      attr_accessor :git_revision
+      attr_accessor :debug_port
 
       # SOURCE opts
       attr_accessor :knotx_init_cookbook
@@ -67,8 +57,6 @@ class Chef
       attr_accessor :knotx_ulimit_path
       attr_accessor :knotx_conf_cookbook
       attr_accessor :knotx_conf_path
-      attr_accessor :config_json_cookbook
-      attr_accessor :config_json_path
       attr_accessor :logback_xml_cookbook
       attr_accessor :logback_xml_path
 
@@ -80,30 +68,35 @@ class Chef
         @action = :install
 
         @id = name
-        @version = '1.2.0'
+        @version = '1.2.1'
         @source = nil
         @install_dir = nil
         @log_dir = nil
+        @custom_logback = true
       end
 
       def id(arg = nil)
-        set_or_return(:id, arg, :kind_of => String)
+        set_or_return(:id, arg, kind_of: String)
       end
 
       def version(arg = nil)
-        set_or_return(:version, arg, :kind_of => String)
+        set_or_return(:version, arg, kind_of: String)
       end
 
       def source(arg = nil)
-        set_or_return(:source, arg, :kind_of => String)
+        set_or_return(:source, arg, kind_of: String)
       end
 
       def install_dir(arg = nil)
-        set_or_return(:install_dir, arg, :kind_of => String)
+        set_or_return(:install_dir, arg, kind_of: String)
       end
 
       def log_dir(arg = nil)
-        set_or_return(:log_dir, arg, :kind_of => String)
+        set_or_return(:log_dir, arg, kind_of: String)
+      end
+
+      def custom_logback(arg = nil)
+        set_or_return(:custom_logback, arg, kind_of: [TrueClass, FalseClass])
       end
     end
   end

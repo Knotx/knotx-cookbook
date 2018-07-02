@@ -20,49 +20,21 @@ module Knotx
   module LoaderHelpers
     def load_config_vars
       %w(
-        jvm_config_path
-        app_config_path
-        app_config_extra
-        debug_enabled
+        min_heap
+        max_heap
+        extra_opts
+        gc_opts
         jmx_enabled
         jmx_ip
         jmx_port
+        debug_enabled
         debug_port
-        port
-        min_heap
-        max_heap
-        code_cache
-        extra_opts
-        gc_opts
       ).each do |var|
         if node['knotx'].key?(new_resource.id) &&
            node['knotx'][new_resource.id].key?(var)
           @new_resource.send("#{var}=", node['knotx'][new_resource.id][var])
         else
           @new_resource.send("#{var}=", node['knotx'][var])
-        end
-        Chef::Log.debug("Value of #{var}: #{new_resource.send(var)}")
-      end
-    end
-
-    def load_git_vars
-      %w(
-        git_enabled
-        git_dir
-        git_url
-        git_user
-        git_pass
-        git_revision
-      ).each do |var|
-        if node['knotx'].key?(new_resource.id) &&
-           node['knotx'][new_resource.id].key?('config') &&
-           node['knotx'][new_resource.id]['config'].key?(var)
-          @new_resource.send(
-            "#{var}=",
-            node['knotx'][new_resource.id]['config'][var]
-          )
-        else
-          @new_resource.send("#{var}=", node['knotx']['config'][var])
         end
         Chef::Log.debug("Value of #{var}: #{new_resource.send(var)}")
       end
@@ -78,8 +50,6 @@ module Knotx
         knotx_ulimit_path
         knotx_conf_cookbook
         knotx_conf_path
-        config_json_cookbook
-        config_json_path
         logback_xml_cookbook
         logback_xml_path
       ).each do |var|

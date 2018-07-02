@@ -18,37 +18,20 @@
 
 module Knotx
   module ResourceHelpers
-
     # Check if systemd is available
     def systemd_available?
-      require 'rubygems'
-      require 'ohai'
-
-      @ohai = Ohai::System.new
-      @ohai.all_plugins
-      # Temporarily excluding Amazon Linux.
-      File.directory?('/etc/systemd/system') && @ohai[:platform] != 'amazon'
+      File.directory?('/etc/systemd/system') && node['platform'] != 'amazon'
     end
 
     def systemd_daemon_reload
-      `systemctl daemon-reload`
-    end
+      cmd_str = 'systemctl daemon-reload'
+      cmd = Mixlib::ShellOut.new(cmd_str)
+      cmd.run_command
+      cmd.error!
 
-    # Parse repo url to include credentials
-    def repo_url(address, login, password)
-      require 'uri'
-
-      uri = URI.parse(address)
-      protocol = uri.scheme
-      host = uri.host
-
-      # If port is not provided, the default for given protocol is used
-      port = uri.port
-      path = uri.path
-
-      return "#{protocol}://#{host}:#{port}#{path}" if
-        login.empty? || password.empty?
-      "#{protocol}://#{login}:#{password}@#{host}:#{port}#{path}"
+      Chef::Log.debug("#{cmd_str} executed successfully: #{cmd.stdout}")
+    rescue => e
+      Chef::Application.fatal!("Can't reload systemd daemons: #{e}")
     end
 
     # Create defined directory
@@ -63,6 +46,7 @@ module Knotx
       directory.recursive(true)
 
       directory.run_action(:create)
+
       directory.updated_by_last_action?
     end
 
@@ -75,28 +59,73 @@ module Knotx
     end
 
     # Download of webapp package to work on it
-    def get_file(src, dst)
+    def download_distribution(src, dst)
       remote_file = Chef::Resource::RemoteFile.new(
         dst,
         run_context
       )
-      remote_file.owner(node['knotx']['user'])
-      remote_file.group(node['knotx']['group'])
+      remote_file.owner('root')
+      remote_file.group('root')
       remote_file.source(src)
-      remote_file.mode('0755')
+      remote_file.mode('0644')
       remote_file.backup(false)
 
       remote_file.run_action(:create)
 
+      Chef::Log.debug("remote_file.source: #{remote_file.source}")
+      Chef::Log.debug("remote_file.path: #{remote_file.path}")
+      Chef::Log.debug("remote_file.atomic_update : #{remote_file.atomic_update}")
+      Chef::Log.debug("remote_file.checksum : #{remote_file.checksum}")
+
       # Returning downloaded file checksum
-      md5sum(new_resource.download_path)
+      md5sum(dst)
+    end
+
+    def unzip(zip, dst_dir)
+      cmd_str = "unzip -o -b #{zip} -d #{dst_dir}"
+      Chef::Log.debug("Unzip command: #{cmd_str}")
+
+      cmd = Mixlib::ShellOut.new(cmd_str)
+      cmd.run_command
+      cmd.error!
+
+      Chef::Log.debug("ZIP file was successfully extracted: #{cmd.stdout}")
+    rescue => e
+      Chef::Application.fatal!("Can't extract #{zip}: #{e}")
+    end
+
+    def rm_rf(dir)
+      require 'fileutils'
+
+      ::FileUtils.rm_rf(::Dir.glob(dir))
+    end
+
+    def cp_r(src, dst)
+      require 'fileutils'
+
+      ::FileUtils.cp_r(src, dst)
+      ::FileUtils.chown_R(node['knotx']['user'], node['knotx']['group'], dst)
+    end
+
+    def update_dist_checksum(checksum, dst_file)
+      file = Chef::Resource::File.new(dst_file, run_context)
+      file.content = checksum
+      file.backup = false
+      file.owner(node['knotx']['user'])
+      file.group(node['knotx']['group'])
+      file.mode('0644')
+
+      file.run_action(:create)
+    end
+
+    def dist_checksum(dst_file)
+      ::File.file?(dst_file) ? ::File.read(dst_file) : ''
     end
 
     # Create/update init script
-    def init_script_update(full_id, root_dir, log_dir)
-      init_script = ::File.join('/etc/init.d/', full_id)
+    def init_script_update
       template = Chef::Resource::Template.new(
-        init_script,
+        ::File.join('/etc/init.d', new_resource.full_id),
         run_context
       )
       template.owner('root')
@@ -105,12 +134,16 @@ module Knotx
       template.source(new_resource.knotx_init_path)
       template.mode('0755')
       template.variables(
-        knotx_root_dir: root_dir,
-        knotx_log_dir:  log_dir,
-        knotx_id:       full_id,
-        knotx_user:     node['knotx']['user']
+        id:        new_resource.full_id,
+        java_home: node['java']['java_home'],
+        home_dir:  new_resource.install_dir,
+        conf_dir:  new_resource.conf_dir,
+        lib_dir:   new_resource.lib_dir,
+        log_dir:   new_resource.log_dir,
+        user:      node['knotx']['user']
       )
       template.run_action(:create)
+
       template.updated_by_last_action?
     end
 
@@ -127,20 +160,18 @@ module Knotx
       template.source(new_resource.knotx_ulimit_path)
       template.mode('0644')
       template.variables(
-        knotx_user:             node['knotx']['user'],
-        knotx_open_file_limit:  node['knotx']['open_file_limit']
+        knotx_user:            node['knotx']['user'],
+        knotx_open_file_limit: node['knotx']['open_file_limit']
       )
       template.run_action(:create)
+
       template.updated_by_last_action?
     end
 
     # Create/update systemd script
-    def systemd_script_update(full_id, root_dir, log_dir)
-      systemd_script = ::File.join(
-        '/etc/systemd/system/', "#{full_id}.service"
-      )
+    def systemd_script_update
       template = Chef::Resource::Template.new(
-        systemd_script,
+        ::File.join('/etc/systemd/system', "#{new_resource.full_id}.service"),
         run_context
       )
       template.owner('root')
@@ -149,40 +180,23 @@ module Knotx
       template.source(new_resource.knotx_systemd_path)
       template.mode('0755')
       template.variables(
-        knotx_root_dir:         root_dir,
-        knotx_log_dir:          log_dir,
-        knotx_id:               full_id,
-        knotx_user:             node['knotx']['user'],
-        knotx_open_file_limit:  node['knotx']['open_file_limit']
+        id:               new_resource.full_id,
+        java_home:        node['java']['java_home'],
+        home_dir:         new_resource.install_dir,
+        conf_dir:         new_resource.conf_dir,
+        lib_dir:          new_resource.lib_dir,
+        user:             node['knotx']['user'],
+        open_file_limit:  node['knotx']['open_file_limit']
       )
       template.run_action(:create)
       systemd_daemon_reload if template.updated_by_last_action?
+
+      template.updated_by_last_action?
     end
 
-    def jvm_config_update(
-      id,
-      jvm_config_path,
-      app_config_path,
-      app_config_extra,
-      root_dir,
-      log_dir,
-      debug_enabled,
-      jmx_enabled,
-      jmx_ip,
-      jmx_port,
-      debug_port,
-      port,
-      min_heap,
-      max_heap,
-      max_permsize,
-      code_cache,
-      extra_opts,
-      gc_opts
-    )
-      app_config_path = absolute_path(root_dir, app_config_path)
-
+    def jvm_config_update
       template = Chef::Resource::Template.new(
-        ::File.join(root_dir, jvm_config_path),
+        new_resource.jvm_config_path,
         run_context
       )
       template.owner(node['knotx']['user'])
@@ -191,75 +205,25 @@ module Knotx
       template.source(new_resource.knotx_conf_path)
       template.mode('0644')
       template.variables(
-        knotx_id:               id,
-        knotx_app_config_path:  app_config_path,
-        knotx_app_config_extra: app_config_extra,
-        knotx_root_dir:         root_dir,
-        knotx_log_dir:          log_dir,
-        debug_enabled:          debug_enabled,
-        jmx_enabled:            jmx_enabled,
-        jmx_ip:                 jmx_ip,
-        jmx_port:               jmx_port,
-        debug_port:             debug_port,
-        port:                   port,
-        min_heap:               min_heap,
-        max_heap:               max_heap,
-        max_permsize:           max_permsize,
-        code_cache:             code_cache,
-        extra_opts:             extra_opts,
-        gc_opts:                gc_opts
+        log_dir:       new_resource.log_dir,
+        min_heap:      new_resource.min_heap,
+        max_heap:      new_resource.max_heap,
+        extra_opts:    new_resource.extra_opts,
+        gc_opts:       new_resource.gc_opts,
+        jmx_enabled:   new_resource.jmx_enabled,
+        jmx_ip:        new_resource.jmx_ip,
+        jmx_port:      new_resource.jmx_port,
+        debug_enabled: new_resource.debug_enabled,
+        debug_port:    new_resource.debug_port
       )
       template.run_action(:create)
+
       template.updated_by_last_action?
     end
 
-    def get_remote_config(dir, address, login, password, revision)
-      # Create config root directory
-      create_directory(dir)
-
-      # Include credentials in repo URL
-      git_url = repo_url(address, login, password)
-
-      git = Chef::Resource::Git.new(dir, run_context)
-      git.user(node['knotx']['user'])
-      git.group(node['knotx']['group'])
-      git.repository(git_url)
-      git.revision(revision)
-      git.run_action(:sync)
-      git.updated_by_last_action?
-    end
-
-    # TODO: Consider rewrite to File operations
-    def knotx_config_update
-      if new_resource.git_enabled
-        git_dir = "#{new_resource.install_dir}/config"
-        git_dir = new_resource.git_dir unless new_resource.git_dir.nil?
-
-        get_remote_config(
-          git_dir,
-          new_resource.git_url,
-          new_resource.git_user,
-          new_resource.git_pass,
-          new_resource.git_revision
-        )
-      else
-        file = Chef::Resource::CookbookFile.new(
-          "#{new_resource.install_dir}/config.json",
-          run_context
-        )
-        file.owner(node['knotx']['user'])
-        file.group(node['knotx']['group'])
-        file.cookbook(new_resource.config_json_cookbook)
-        file.source(new_resource.config_json_path)
-        file.mode('0644')
-        file.run_action(:create)
-        file.updated_by_last_action?
-      end
-    end
-
-    def log_config_update(id, log_dir)
+    def log_config_update
       template = Chef::Resource::Template.new(
-        "#{new_resource.install_dir}/logback.xml",
+        "#{new_resource.conf_dir}/logback.xml",
         run_context
       )
       template.owner(node['knotx']['user'])
@@ -268,47 +232,39 @@ module Knotx
       template.source(new_resource.logback_xml_path)
       template.mode('0644')
       template.variables(
-        knotx_id:       id,
-        knotx_log_dir:  log_dir,
-        main_log_level: node['knotx']['log_level']['main'],
-        root_log_level: node['knotx']['log_level']['root'],
-        main_log_history: node['knotx']['log_history']['main'],
-        root_log_history: node['knotx']['log_history']['root']
+        log_dir:            new_resource.log_dir,
+        knotx_log_history:  node['knotx']['log_history']['knotx'],
+        knotx_log_size:     node['knotx']['log_size']['knotx'],
+        access_log_history: node['knotx']['log_history']['access'],
+        access_log_size:    node['knotx']['log_size']['access'],
+        root_log_level:     node['knotx']['log_level']['root'],
+        knotx_log_level:    node['knotx']['log_level']['knotx']
       )
       template.run_action(:create)
+
       template.updated_by_last_action?
     end
 
-    def link_current_version(src, dst)
-      link_name = ::File.join(dst, '/knotx.jar')
-      link = Chef::Resource::Link.new(
-        link_name,
-        run_context
-      )
-      link.to(src)
-      link.run_action(:create)
-      link.updated_by_last_action?
-    end
-
-    def configure_service(service_name)
+    def configure_service
       service = Chef::Resource::Service.new(
-        service_name,
+        new_resource.full_id,
         run_context
       )
-      service.service_name(service_name)
+      service.service_name(new_resource.full_id)
       service.supports(status: true)
       service.run_action(:start)
       service.run_action(:enable)
+
       service.updated_by_last_action?
     end
 
-    def execute_restart(service_name)
+    def execute_restart
       # This restart happens exatly at the end of current knotx resource
       service = Chef::Resource::Service.new(
-        "restart-#{service_name}",
+        "restart-#{new_resource.full_id}",
         run_context
       )
-      service.service_name(service_name)
+      service.service_name(new_resource.full_id)
       service.run_action(:restart)
     end
   end
