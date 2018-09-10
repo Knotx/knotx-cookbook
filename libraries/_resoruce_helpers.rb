@@ -170,6 +170,9 @@ module Knotx
       jmx_enabled,
       jmx_ip,
       jmx_port,
+      jmx_authorization_enabled,
+      jvm_security_access_config_path,
+      jvm_security_password_config_path,
       debug_port,
       port,
       min_heap,
@@ -191,27 +194,77 @@ module Knotx
       template.source(new_resource.knotx_conf_path)
       template.mode('0644')
       template.variables(
-        knotx_id:               id,
-        knotx_app_config_path:  app_config_path,
-        knotx_app_config_extra: app_config_extra,
-        knotx_root_dir:         root_dir,
-        knotx_log_dir:          log_dir,
-        debug_enabled:          debug_enabled,
-        jmx_enabled:            jmx_enabled,
-        jmx_ip:                 jmx_ip,
-        jmx_port:               jmx_port,
-        debug_port:             debug_port,
-        port:                   port,
-        min_heap:               min_heap,
-        max_heap:               max_heap,
-        max_permsize:           max_permsize,
-        code_cache:             code_cache,
-        extra_opts:             extra_opts,
-        gc_opts:                gc_opts
+        knotx_id:                          id,
+        knotx_app_config_path:             app_config_path,
+        knotx_app_config_extra:            app_config_extra,
+        knotx_root_dir:                    root_dir,
+        knotx_log_dir:                     log_dir,
+        debug_enabled:                     debug_enabled,
+        jmx_enabled:                       jmx_enabled,
+        jmx_ip:                            jmx_ip,
+        jmx_port:                          jmx_port,
+        jmx_authorization_enabled:              jmx_authorization_enabled,
+        jvm_security_access_config_path:   jvm_security_access_config_path,
+        jvm_security_password_config_path: jvm_security_password_config_path,
+        debug_port:                        debug_port,
+        port:                              port,
+        min_heap:                          min_heap,
+        max_heap:                          max_heap,
+        max_permsize:                      max_permsize,
+        code_cache:                        code_cache,
+        extra_opts:                        extra_opts,
+        gc_opts:                           gc_opts
       )
       template.run_action(:create)
       template.updated_by_last_action?
     end
+
+    def jvm_security_access_file_update(
+      jvm_security_access_config_path,
+      jmx_user
+    )
+      # Rights file
+      template = Chef::Resource::Template.new(
+        jvm_security_access_config_path,
+        run_context
+      )
+      template.owner(node['knotx']['user'])
+      template.group(node['knotx']['group'])
+      template.cookbook(new_resource.knotx_jvm_security_access_cookbook)
+      template.source(new_resource.knotx_jvm_security_access_path)
+      template.mode('0600')
+      template.variables(
+        jmx_user: jmx_user
+      )
+      template.run_action(:create)
+
+      template.updated_by_last_action?
+    end
+
+    def jvm_security_password_file_update(
+      jvm_security_password_config_path,
+      jmx_user,
+      jmx_password
+    )
+      # Password file
+      template  = Chef::Resource::Template.new(
+        jvm_security_password_config_path,
+        run_context
+      )
+      template.owner(node['knotx']['user'])
+      template.group(node['knotx']['group'])
+      template.cookbook(new_resource.knotx_jvm_security_password_cookbook)
+      template.source(new_resource.knotx_jvm_security_password_path)
+      template.mode('0600')
+      template.variables(
+        jmx_user:     jmx_user,
+        jmx_password: jmx_password
+      )
+      template.run_action(:create)
+
+      template.updated_by_last_action?
+    end      
+
 
     def get_remote_config(dir, address, login, password, revision)
       # Create config root directory

@@ -76,6 +76,20 @@ class Chef
           "Knotx config path: #{new_resource.jvm_config_path}"
         )
 
+        @new_resource.jvm_security_access_config_path = ::File.join(
+          new_resource.install_dir, 'jmxremote.access.erb'
+        )
+        Chef::Log.debug(
+          "Knotx JVM security access path: #{new_resource.jvm_security_access_config_path}"
+        )
+
+        @new_resource.jvm_security_password_config_path = ::File.join(
+          new_resource.install_dir, 'jmxremote.password.erb'
+        )
+        Chef::Log.debug(
+          "Knotx JVM security password path: #{new_resource.jvm_security_password_config_path}"
+        )
+
         if new_resource.log_dir.nil?
           @new_resource.log_dir = node['knotx']['log_dir']
         end
@@ -153,6 +167,8 @@ class Chef
           changed = true if ulimit_update
         end
 
+        Chef::Log.warn(new_resource.jmx_authorization_enabled)
+
         # Update startup JVM config
         changed = true if jvm_config_update(
           new_resource.id,
@@ -165,6 +181,9 @@ class Chef
           new_resource.jmx_enabled,
           new_resource.jmx_ip,
           new_resource.jmx_port,
+          new_resource.jmx_authorization_enabled,
+          new_resource.jvm_security_access_config_path,
+          new_resource.jvm_security_password_config_path,
           new_resource.debug_port,
           new_resource.port,
           new_resource.min_heap,
@@ -174,6 +193,21 @@ class Chef
           new_resource.extra_opts,
           new_resource.gc_opts
         )
+
+        if new_resource.jmx_authorization_enabled
+          # JVM security access file
+          changed = true if jvm_security_access_file_update(
+            new_resource.jvm_security_access_config_path,
+            new_resource.jmx_user
+          )
+  
+          # JVM security password file
+          changed = true if jvm_security_password_file_update(
+            new_resource.jvm_security_password_config_path,
+            new_resource.jmx_user,
+            new_resource.jmx_password
+          )
+        end
 
         # Update knotx config
         changed = true if knotx_config_update
