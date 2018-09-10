@@ -27,7 +27,7 @@ module Knotx
         jmx_enabled
         jmx_ip
         jmx_port
-        jmx_security_enabled
+        jmx_authorization_enabled
         jmx_user
         jmx_password
         debug_port

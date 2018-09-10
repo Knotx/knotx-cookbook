@@ -52,7 +52,7 @@ class Chef
       attr_accessor :debug_port
       attr_accessor :port
       attr_accessor :jmx_enabled
-      attr_accessor :jmx_security_enabled
+      attr_accessor :jmx_authorization_enabled
       attr_accessor :debug_enabled
 
       # GIT opts
