@@ -167,7 +167,7 @@ class Chef
           changed = true if ulimit_update
         end
 
-        Chef::Log.warn(new_resource.jmx_security_enabled)
+        Chef::Log.warn(new_resource.jmx_authorization_enabled)
 
         # Update startup JVM config
         changed = true if jvm_config_update(
@@ -181,7 +181,7 @@ class Chef
           new_resource.jmx_enabled,
           new_resource.jmx_ip,
           new_resource.jmx_port,
-          new_resource.jmx_security_enabled,
+          new_resource.jmx_authorization_enabled,
           new_resource.jvm_security_access_config_path,
           new_resource.jvm_security_password_config_path,
           new_resource.debug_port,
@@ -194,7 +194,7 @@ class Chef
           new_resource.gc_opts
         )
 
-        if new_resource.jmx_security_enabled
+        if new_resource.jmx_authorization_enabled
           # JVM security access file
           changed = true if jvm_security_access_file_update(
             new_resource.jvm_security_access_config_path,

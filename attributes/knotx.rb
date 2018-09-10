@@ -47,7 +47,7 @@ default['knotx']['jvm_config_path'] = 'knotx.conf'
 default['knotx']['jmx_ip'] = '0.0.0.0'
 default['knotx']['jmx_port'] = '18092'
 
-default['knotx']['jmx_security_enabled'] = true
+default['knotx']['jmx_authorization_enabled'] = false
 default['knotx']['jmx_user'] = 'admin'
 default['knotx']['jmx_password'] = 'admin'
 

@@ -27,7 +27,7 @@ KNOTX_GC_OPTS=" <%= @gc_opts %> -Xloggc:<%= @knotx_log_dir %>/<%= @knotx_id %>/g
 <%- if @jmx_enabled == true -%>
 
 <%- 
-  if @jmx_security_enabled == true
+  if @jmx_authorization_enabled == true
     jmx_auth = "-Dcom.sun.management.jmxremote.authenticate=true " \
       "-Dcom.sun.management.jmxremote.password.file=#{@jvm_security_password_config_path} " \
       "-Dcom.sun.management.jmxremote.access.file=#{@jvm_security_access_config_path}"

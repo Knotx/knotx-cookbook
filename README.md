@@ -115,6 +115,30 @@ Cookbook that installs and knotx instance.
     <td><tt>true</tt></td>
   </tr>
   <tr>
+    <td><tt>default['knotx']['jmx_authorization_enabled']</tt></td>
+    <td>Boolean</td>
+    <td>
+      Enable JMX user/password authorization
+    </td>
+    <td><tt>false</tt></td>
+  </tr>
+  <tr>
+    <td><tt>default['knotx']['jmx_user']</tt></td>
+    <td>String</td>
+    <td>
+      Username for JMX authorization
+    </td>
+    <td><tt>admin</tt></td>
+  </tr>
+  <tr>
+    <td><tt>default['knotx']['jmx_password']</tt></td>
+    <td>String</td>
+    <td>
+      Password for JMX authorization
+    </td>
+    <td><tt>admin</tt></td>
+  </tr>
+  <tr>
     <td><tt>default['knotx']['jvm_config_path']</tt></td>
     <td>String</td>
     <td>
