@@ -27,6 +27,9 @@ module Knotx
         jmx_enabled
         jmx_ip
         jmx_port
+        jmx_security_enabled
+        jmx_user
+        jmx_password
         debug_port
         port
         min_heap
@@ -78,6 +81,10 @@ module Knotx
         knotx_ulimit_path
         knotx_conf_cookbook
         knotx_conf_path
+        knotx_jvm_security_access_cookbook
+        knotx_jvm_security_access_path
+        knotx_jvm_security_password_cookbook
+        knotx_jvm_security_password_path
         config_json_cookbook
         config_json_path
         logback_xml_cookbook
