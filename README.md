@@ -61,12 +61,12 @@ cookbook!
 * `['knotx']['log_history']['knotx']` - maximum age (in days) for knot.x logs
 * `['knotx']['log_history']['access']` - maximum age (in days) for knot.x access
   log
-* `['knotx']['log_size']['knotx']` - maximum file size of knot.x log file 
+* `['knotx']['log_size']['knotx']` - maximum file size of knot.x log file
 * `['knotx']['log_size']['access']` - maximum file size of knot.x access log
   file
 * `['knotx']['release_url']` - base URL used to calculate download URL when
   only version was specified
-* `['knotx']['min_heap']` - `-Xms` JVM parameter (in MB) 
+* `['knotx']['min_heap']` - `-Xms` JVM parameter (in MB)
 * `['knotx']['max_heap']` - `-Xmx` JVM parameter (in MB)
 * `['knotx']['extra_opts']` - custom JVM parameters you'd like to add upon
   service start
@@ -113,7 +113,7 @@ Attributes from [java](https://supermarket.chef.io/cookbooks/java) cookbook
   calculate download URL)
 * `source` - full URL to knot.x ZIP distribution package. Overwrites `version`
 * `install_dir` - where knot.x instance should be deployed. If not set, knot.x
-  gets deployed to `['knotx']['base_dir']/id` directory 
+  gets deployed to `['knotx']['base_dir']/id` directory
 * `log_dir` - directory where all logs will be stored. If not set logs are
   written to `['knotx']['log_dir']/id` directory
 * `custom_logback` - `logback.xml` used to be delivered with ZIP distribution
@@ -189,6 +189,17 @@ knotx_instance 'Secondary knot.x instance' do
 end
 ```
 
+## Knot.x stack package
+Cookbook installs Knot.x instance that base on [knotx-stack](https://github.com/Knotx/knotx-stack)
+distribution. The structure of the package must keep following structure:
+```
+.
+└── ** (any folder name, e.g. `my-stack` or `knotx`)
+   ├── conf
+   └── lib
+```
+There should be only one top level folder (e.g. `my-stack` or `knotx`)
+
 # Work in progress
 
 ---
@@ -204,4 +215,3 @@ TODO:
 * jar cleanup after version switch
 * all actions including restart/start/stop
 * add extensions testing with multiple knotx instances
-

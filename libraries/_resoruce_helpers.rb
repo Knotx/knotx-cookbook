@@ -108,7 +108,7 @@ module Knotx
     end
 
     def get_top_level_distro_directory(tmp_dir_path)
-      Dir.entries(tmp_dir_path).select {
+      Dir.entries(tmp_dir_path).find {
         |entry| File.directory? ::File.join(tmp_dir_path, entry) and !(entry == '.' || entry == '..')
       }
     end
@@ -124,7 +124,7 @@ module Knotx
     def validate_distro_structure(tmp_dir_path)
       Chef::Log.debug("Validating distro structure of: #{tmp_dir_path}")
       top_folder = get_top_level_distro_directory(tmp_dir_path)
-      if top_folder.size == 1
+      if top_folder != nil
         tmp_lib_path = ::File.join(tmp_dir_path, top_folder, 'lib')
         tmp_lib_exists = ::File.exist? tmp_lib_path
 
@@ -133,12 +133,12 @@ module Knotx
 
         if !(tmp_lib_exists && tmp_conf_exists)
           Chef::Application.fatal!(
-            "Expected `lib` and `conf` folders inside #{top_folder} not found!"
+            "Expected lib and conf folders inside #{top_folder} not found!"
           )
         end
       else
         Chef::Application.fatal!(
-          "Expected exactly one folder inside Knot.x distribution, found #{top_folder.size} (#{top_folder})"
+          "Expected exactly one folder inside Knot.x distribution: #{tmp_dir_path.size}"
         )
       end
     end
