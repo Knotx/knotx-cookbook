@@ -39,23 +39,7 @@ When changing or fixing anything related with changes in Knot.x configuration (e
 snippet structure (e.g. change convention of naming services) remember to include detailed description of changes that needs to be done in order to upgrade from the latest version o Knot.x in the `Upgrade notes` section of the issue.
 This information will be later included in the [Release Notes blog post](http://knotx.io/blog/).
 
-## Tests naming convention
-Tests written in Knot.x should be named with `methodName_whenStateUnderTest_expectBehavior` convention proposed as the first example in [7 Popular Unit Test Naming Conventions](https://dzone.com/articles/7-popular-unit-test-naming).
-
-### Examples:
-**Unit tests**
-`canServeRequest_whenNoFormIdAndPostAttribute_expectRequestNotServed`
-
-**Integration tests**
-In integration tests method name is omitted, and test class name should suggest what part of system we test:
-`whenRepositoryDidNotReturnTemplateBody_expectNoSnippetsProcessing`
-
 ## Coding Conventions
 Below is short list of things that will help us keep Knot.x quality and accept pull requests:
-- Follow Google Style Guide code formatting from Knot.x Github, particularly set your IDE `tab size`/`ident` to 2 spaces and `continuation ident` to 4 spaces.
-  - [Google Style Guide for Eclipse](https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml)
-  - [Google Style Guide for IntelliJ](https://raw.githubusercontent.com/google/styleguide/gh-pages/intellij-java-google-style.xml)
-- write tests (integration and Unit Tests) following defined convention,
-- write javadoc, especially for interfaces and abstract methods,
 - update [`README.md`](README.md) for any documentation updates,
 - when logging use proper levels: `INFO` and `WARNING` should log only very important messages.
