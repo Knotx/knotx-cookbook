@@ -250,7 +250,8 @@ module Knotx
         jmx_ip:        new_resource.jmx_ip,
         jmx_port:      new_resource.jmx_port,
         debug_enabled: new_resource.debug_enabled,
-        debug_port:    new_resource.debug_port
+        debug_port:    new_resource.debug_port,
+        instance_opts: new_resource.instance_opts
       )
       template.run_action(:create)
 

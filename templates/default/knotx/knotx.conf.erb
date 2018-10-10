@@ -22,3 +22,5 @@ KNOTX_JMX_OPTS="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.po
 <%- if @debug_enabled == true -%>
 KNOTX_DEBUG_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=<%= @debug_port %>"
 <%- end -%>
+
+KNOTX_INSTNCE_OPTS="<%= @instance_opts %>"

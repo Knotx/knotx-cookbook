@@ -47,6 +47,7 @@ class Chef
       attr_accessor :jmx_port
       attr_accessor :debug_enabled
       attr_accessor :debug_port
+      attr_accessor :instance_opts
 
       # SOURCE opts
       attr_accessor :knotx_init_cookbook
@@ -68,7 +69,7 @@ class Chef
         @action = :install
 
         @id = name
-        @version = '1.2.1'
+        @version = '1.4.0'
         @source = nil
         @install_dir = nil
         @log_dir = nil
