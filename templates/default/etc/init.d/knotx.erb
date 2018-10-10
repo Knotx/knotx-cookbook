@@ -40,7 +40,7 @@ start()
   -Dvertx.cli.usage.prefix=knotx \
   -classpath '<%= @conf_dir %>:<%= ::File.join(@lib_dir, '*') %>' \
   ${KNOTX_EXTRA_OPTS} \
-  io.vertx.core.Launcher run-knotx ${KNOTX_INSTNCE_OPTS} \
+  io.vertx.core.Launcher run-knotx ${$KNOTX_INSTANCE_OPTS} \
   >> <%= ::File.join(@log_dir, 'start.log') %> 2>&1 &" && echo_success || echo_failure
   RETVAL=$?
   echo
