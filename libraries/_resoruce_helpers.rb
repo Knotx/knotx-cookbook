@@ -107,6 +107,42 @@ module Knotx
       ::FileUtils.chown_R(node['knotx']['user'], node['knotx']['group'], dst)
     end
 
+    def get_top_level_distro_directory(tmp_dir_path)
+      Dir.entries(tmp_dir_path).find {
+        |entry| File.directory? ::File.join(tmp_dir_path, entry) and !(entry == '.' || entry == '..')
+      }
+    end
+
+    # Validates Knot.x stack distribution structure
+    # Expected one is:
+    # .
+    # └── ** (any folder name, e.g. `my-stack` or `knotx`)
+    #     ├── conf
+    #     └── lib
+    #
+    # If validation is successfull then returns top folder name
+    def validate_distro_structure(tmp_dir_path)
+      Chef::Log.debug("Validating distro structure of: #{tmp_dir_path}")
+      top_folder = get_top_level_distro_directory(tmp_dir_path)
+      if top_folder != nil
+        tmp_lib_path = ::File.join(tmp_dir_path, top_folder, 'lib')
+        tmp_lib_exists = ::File.exist? tmp_lib_path
+
+        tmp_conf_path = ::File.join(tmp_dir_path, top_folder, 'conf')
+        tmp_conf_exists = ::File.exist? tmp_conf_path
+
+        if !(tmp_lib_exists && tmp_conf_exists)
+          Chef::Application.fatal!(
+            "Expected lib and conf folders inside #{top_folder} not found!"
+          )
+        end
+      else
+        Chef::Application.fatal!(
+          "Expected exactly one folder inside Knot.x distribution: #{tmp_dir_path.size}"
+        )
+      end
+    end
+
     def update_dist_checksum(checksum, dst_file)
       file = Chef::Resource::File.new(dst_file, run_context)
       file.content = checksum

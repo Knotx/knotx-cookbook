@@ -263,6 +263,8 @@ class Chef
             "#{new_resource.tmp_dir} directory..."
           )
           unzip(new_resource.download_path, new_resource.tmp_dir)
+          validate_distro_structure(new_resource.tmp_dir)
+          tmp_top_dir = get_top_level_distro_directory(new_resource.tmp_dir)
 
           # Get rid of exiting JAR and config files
           Chef::Log.debug(
@@ -274,20 +276,20 @@ class Chef
 
           # Move relevant parts to installation dir
           Chef::Log.debug(
-            "Copying #{::File.join(new_resource.tmp_dir, 'knotx', 'lib')} "\
+            "Copying #{::File.join(new_resource.tmp_dir, tmp_top_dir, 'lib')} "\
             "to #{new_resource.lib_dir}..."
           )
           cp_r(
-            ::File.join(new_resource.tmp_dir, 'knotx', 'lib', '.'),
+            ::File.join(new_resource.tmp_dir, tmp_top_dir, 'lib', '.'),
             new_resource.lib_dir
           )
 
           Chef::Log.debug(
-            "Copying #{::File.join(new_resource.tmp_dir, 'knotx', 'conf')} "\
+            "Copying #{::File.join(new_resource.tmp_dir, tmp_top_dir, 'conf')} "\
             "to #{new_resource.lib_dir}..."
           )
           cp_r(
-            ::File.join(new_resource.tmp_dir, 'knotx', 'conf', '.'),
+            ::File.join(new_resource.tmp_dir, tmp_top_dir, 'conf', '.'),
             new_resource.conf_dir
           )
 
