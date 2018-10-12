@@ -77,6 +77,7 @@ cookbook!
 * `['knotx']['debug_enabled']` - defines whether JVM debugging interface is
   enabled or not
 * `['knotx']['debug_port']` - port of JVM debug interface
+* `['knotx']['instance_opts']` - custom parameters you'd like to pass to [knotx command](https://github.com/Cognifide/knotx/blob/master/knotx-core/src/main/java/io/knotx/launcher/KnotxCommand.java)
 * `['knotx']['source']['knotx_init_cookbook']` - cookbook where SysVinit script
   is located
 * `['knotx']['source']['knotx_init_path']` path under `templates` where
@@ -151,6 +152,7 @@ The following attributes can be set this way:
 * `node['knotx'][ID]['jmx_port']`
 * `node['knotx'][ID]['debug_enabled']`
 * `node['knotx'][ID]['debug_port']`
+* `node['knotx'][ID]['instance_opts']`
 
 # Usage scenarios
 
