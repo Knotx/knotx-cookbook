@@ -54,6 +54,8 @@ default['knotx']['jmx_port'] = '18092'
 default['knotx']['debug_enabled'] = false
 default['knotx']['debug_port'] = '28092'
 
+default['knotx']['instance_opts'] = ''
+
 # TEMPLATE SOURCES
 default['knotx']['source']['knotx_init_cookbook'] = 'knotx'
 default['knotx']['source']['knotx_init_path'] = 'etc/init.d/knotx.erb'

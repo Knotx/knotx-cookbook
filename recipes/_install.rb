@@ -30,6 +30,7 @@ node.default['knotx']['secondary']['extra_opts'] = '-Dknotx.port=8093'
 node.default['knotx']['secondary']['jmx_port'] = '18093'
 node.default['knotx']['secondary']['debug_enabled'] = true
 node.default['knotx']['secondary']['debug_port'] = '28093'
+node.default['knotx']['secondary']['instance_opts'] = '-conf /opt/knotx/secondary/conf/bootstrap.json'
 
 knotx_instance 'Secondary knot.x instance' do
   id 'secondary'

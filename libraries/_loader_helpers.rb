@@ -29,6 +29,7 @@ module Knotx
         jmx_port
         debug_enabled
         debug_port
+        instance_opts
       ).each do |var|
         if node['knotx'].key?(new_resource.id) &&
            node['knotx'][new_resource.id].key?(var)

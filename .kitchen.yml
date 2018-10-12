@@ -24,8 +24,7 @@ platforms:
       require_chef_omnibus: <%= chef_version %>
     attributes:
       knotx:
-        # TODO: replace with proper URL after knot.x 1.3.0 release
-        url: 'https://oss.sonatype.org/content/repositories/snapshots/io/knotx/knotx-stack-manager/1.3.0-SNAPSHOT/knotx-stack-manager-1.3.0-20180425.065432-12.zip'
+        url: 'https://bintray.com/knotx/downloads/download_file?file_path=knotx-example-project-stack-1.4.0.zip'
       java:
         jdk:
           '8':
