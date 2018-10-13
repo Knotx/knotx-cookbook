@@ -44,6 +44,7 @@ cookbook!
 ---
 
 * knot.x 1.3.x
+* knot.x 1.4.x
 
 # Attributes
 
@@ -143,6 +144,7 @@ default['knotx']['main2']['port'] = '8093'
 ```
 
 The following attributes can be set this way:
+
 * `node['knotx'][ID]['min_heap']`
 * `node['knotx'][ID]['max_heap']`
 * `node['knotx'][ID]['extra_opts']`
@@ -201,19 +203,3 @@ distribution. The structure of the package must keep following structure:
    └── lib
 ```
 There should be only one top level folder (e.g. `my-stack` or `knotx`)
-
-# Work in progress
-
----
-
-Information placed here may be out of date!
-
----
-
-TODO:
-* extensions installation
-* further improve logic in HWRP
-* switch between core and example possible
-* jar cleanup after version switch
-* all actions including restart/start/stop
-* add extensions testing with multiple knotx instances
