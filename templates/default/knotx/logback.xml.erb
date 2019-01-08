@@ -35,7 +35,7 @@
         <appender-ref ref="FILE" />
     </root>
 
-    <logger name="io.knotx" level="<%= @knotx_log_level %>">
+    <logger name="io.knotx" level="<%= @knotx_log_level %>" additivity="false">
         <appender-ref ref="FILE" />
     </logger>
 </configuration>
