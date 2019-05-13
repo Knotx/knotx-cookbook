@@ -45,6 +45,7 @@ cookbook!
 
 * knot.x 1.3.x
 * knot.x 1.4.x
+* knot.x 1.5.x
 
 # Attributes
 
