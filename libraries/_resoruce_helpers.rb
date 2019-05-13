@@ -23,6 +23,17 @@ module Knotx
       File.directory?('/etc/systemd/system') && node['platform'] != 'amazon'
     end
 
+    def systemd_verify_unit(unit_name)
+      cmd_str = "systemd-analyze verify #{unit_name}.service"
+      cmd = Mixlib::ShellOut.new(cmd_str)
+      cmd.run_command
+      cmd.error!
+
+      Chef::Log.debug("#{cmd_str} executed successfully: #{cmd.stdout}")
+    rescue => e
+      Chef::Application.fatal!("Can't validate #{unit_name} service: #{e}")
+    end
+
     def systemd_daemon_reload
       cmd_str = 'systemctl daemon-reload'
       cmd = Mixlib::ShellOut.new(cmd_str)
@@ -225,7 +236,11 @@ module Knotx
         open_file_limit:  node['knotx']['open_file_limit']
       )
       template.run_action(:create)
-      systemd_daemon_reload if template.updated_by_last_action?
+
+      if template.updated_by_last_action?
+        systemd_verify_unit(new_resource.full_id)
+        systemd_daemon_reload
+      end
 
       template.updated_by_last_action?
     end
