@@ -225,7 +225,7 @@ module Knotx
       template.group('root')
       template.cookbook(new_resource.knotx_systemd_cookbook)
       template.source(new_resource.knotx_systemd_path)
-      template.mode('0755')
+      template.mode('0644')
       template.variables(
         id:               new_resource.full_id,
         java_home:        node['java']['java_home'],
