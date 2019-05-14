@@ -1,5 +1,7 @@
 # Unreleased
 
+# v0.6.3 (2019-05-14)
+
 * [#24](https://github.com/Knotx/knotx-cookbook/pull/24) Verify systemd unit file on updates
 
 # v0.6.2 (2019-01-09)
