@@ -214,7 +214,7 @@ Cookbook that installs and knotx instance.
     <td><tt>default['knotx']['config']['git_enabled']</tt></td>
     <td>String</td>
     <td>
-      If true, then configuration is pulled from git to 'config' directory residing in instance directory
+      If true, then Knot.x configuration and logback configs is pulled from git to 'config' directory residing in instance directory
     </td>
     <td><tt>false</tt></td>
   </tr>
