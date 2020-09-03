@@ -258,25 +258,38 @@ module Knotx
     end
 
     def log_config_update(id, log_dir)
-      template = Chef::Resource::Template.new(
-        "#{new_resource.install_dir}/logback.xml",
-        run_context
-      )
-      template.owner(node['knotx']['user'])
-      template.group(node['knotx']['group'])
-      template.cookbook(new_resource.logback_xml_cookbook)
-      template.source(new_resource.logback_xml_path)
-      template.mode('0644')
-      template.variables(
-        knotx_id:       id,
-        knotx_log_dir:  log_dir,
-        main_log_level: node['knotx']['log_level']['main'],
-        root_log_level: node['knotx']['log_level']['root'],
-        main_log_history: node['knotx']['log_history']['main'],
-        root_log_history: node['knotx']['log_history']['root']
-      )
-      template.run_action(:create)
-      template.updated_by_last_action?
+      if new_resource.git_enabled
+        git_dir = "#{new_resource.install_dir}/logback"
+        git_dir = new_resource.git_dir unless new_resource.git_dir.nil?
+
+        get_remote_config(
+          git_dir,
+          new_resource.git_url,
+          new_resource.git_user,
+          new_resource.git_pass,
+          new_resource.git_revision
+        )
+      else
+        template = Chef::Resource::Template.new(
+          "#{new_resource.install_dir}/logback.xml",
+          run_context
+        )
+        template.owner(node['knotx']['user'])
+        template.group(node['knotx']['group'])
+        template.cookbook(new_resource.logback_xml_cookbook)
+        template.source(new_resource.logback_xml_path)
+        template.mode('0644')
+        template.variables(
+          knotx_id:       id,
+          knotx_log_dir:  log_dir,
+          main_log_level: node['knotx']['log_level']['main'],
+          root_log_level: node['knotx']['log_level']['root'],
+          main_log_history: node['knotx']['log_history']['main'],
+          root_log_history: node['knotx']['log_history']['root']
+        )
+        template.run_action(:create)
+        template.updated_by_last_action?
+      end
     end
 
     def link_current_version(src, dst)
@@ -297,8 +310,8 @@ module Knotx
       )
       service.service_name(service_name)
       service.supports(status: true)
-      service.run_action(:start)
       service.run_action(:enable)
+      service.run_action(:start)
       service.updated_by_last_action?
     end
 
